@@ -16,7 +16,6 @@ typedef NS_ENUM(NSUInteger, ContainerMoveType) {
     ContainerMoveTypeMiddle,
     ContainerMoveTypeBottom,
     ContainerMoveTypeHide,
-    ContainerMoveTypeCustom,
 };
 
 typedef NS_ENUM(NSUInteger, SelectType) {

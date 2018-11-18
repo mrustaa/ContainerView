@@ -65,6 +65,7 @@
 + (HeaderLabel *)createHeaderLabel {
     
     HeaderLabel *view = [[HeaderLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, CUSTOM_HEADER_HEIGHT)];
+    view.clipsToBounds = YES;
     
     UILabel *
     label = [[UILabel alloc]initWithFrame: (CGRect) { {18, 16}, {161, 30} }];
@@ -86,6 +87,7 @@
 
 + (HeaderSearch *)createHeaderSearch {
     HeaderSearch *view = [[HeaderSearch alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, CUSTOM_HEADER_HEIGHT)];
+    view.clipsToBounds = YES;
     
     UISearchBar *
     searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 4, SCREEN_WIDTH, CUSTOM_HEADER_HEIGHT -4)];
@@ -102,12 +104,14 @@
 }
 
 + (HeaderGrib *)createHeaderGrip {
-    HeaderGrib *view = [[HeaderGrib alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, CUSTOM_HEADER_HEIGHT)];
+    HeaderGrib *view = [[HeaderGrib alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 20)];
+    view.clipsToBounds = YES;
     
     view.grip = [self createGrip];
     [view addSubview:view.grip];
     
     view.separatorLine = [self createSeparatorLine];
+    view.separatorLine.y = 19.5;
     [view addSubview:view.separatorLine];
     return view;
 }

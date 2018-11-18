@@ -58,9 +58,9 @@
  
  @param position Пользовательская позиция
  */
-- (void)containerMoveCustomPosition:(NSInteger)position;
-- (void)containerMoveCustomPosition:(NSInteger)position animated:(BOOL)animated;
-- (void)containerMoveCustomPosition:(NSInteger)position animated:(BOOL)animated completion:(void (^)(void))completion;
+- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType;
+- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated;
+- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion;
 
 /**
  @brief Этот метод для изменения радиуса округления границ
@@ -77,6 +77,8 @@
  @brief При перемещении контейнера, по умолчанию существуют 2 позиции (это перемещение вверх, и вниз). Этот параментр добавляет 3 позицию (перемещение в середину)
  */
 @property BOOL containerAllowMiddlePosition;
+
+@property BOOL containerShadow;
 
 @property (strong, nonatomic) void(^blockChangeShadowLevel)(ContainerMoveType containerMove, CGFloat scale, BOOL animation);
 

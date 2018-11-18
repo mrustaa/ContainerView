@@ -27,7 +27,9 @@
 
 
 @interface DemoViewController () <UISearchBarDelegate> {
-    bool isHidden;
+    BOOL isHidden;
+    BOOL isZoom;
+    BOOL isShadow;
 }
 
 @property (strong, nonatomic) ContainerView                 *containerView;
@@ -68,7 +70,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    isHidden = false;
+    isHidden = NO;
+    isZoom = YES;
+    isShadow = YES;
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -115,8 +119,8 @@
     
     [self.containerView addSubview:self.tableView];
     [self.containerView changeCornerRadius:15];
-    [self.containerView containerMove:ContainerMoveTypeTop animated:NO];
     
+    // [self.containerView containerMove:ContainerMoveTypeTop animated:NO];
     // self.containerView.containerBottomButtonToMoveTop = YES;
     
     [self.view addSubview: self.containerView];
@@ -350,50 +354,53 @@
     
     CGFloat selfCenter = self.containerView.containerMiddle;
     
-    if(containerFrameY < selfCenter) {
-        
-        CGFloat procent = (((selfCenter -containerFrameY) / selfCenter) / 2);
-        
-        CGAffineTransform transform = CGAffineTransformMakeScale( 1. -(procent / 5), 1. -(procent / 5));
-        
-        self.imageView.transform = transform;
-        self.imageView.layer.cornerRadius = (procent * 24);
-        
-        self.settingsView.transform = transform;
-        self.settingsView.layer.cornerRadius = (procent * 24);
-        
-        self.mapView.transform = transform;
-        self.mapView.layer.cornerRadius = (procent * 24);
-        
-        self.mapViewStatusBarBlur.alpha = (1 -procent *2);
-        
-        self.shadowView.alpha = procent;
-        self.shadowView.height = (containerFrameY +self.containerView.containerCornerRadius);
-        
-    } else {
-        
-        self.imageView.transform = CGAffineTransformIdentity;
-        self.imageView.layer.cornerRadius = 0;
-        
-        self.settingsView.transform = CGAffineTransformIdentity;
-        self.settingsView.layer.cornerRadius = 0;
-        
-        self.mapView.transform = CGAffineTransformIdentity;
-        self.mapView.layer.cornerRadius = 0;
-        
-        self.mapViewStatusBarBlur.alpha = 1;
-        
-        self.shadowView.alpha = 0.;
-        self.shadowView.height = SCREEN_HEIGHT;
-    }
+    CGFloat viewsCornerRadius = 0.;
+    CGFloat mapAlpha = 1.;
+    CGFloat shadowAlpha = 0.;
+    CGFloat shadowHeight = SCREEN_HEIGHT;
+    CGAffineTransform transform = CGAffineTransformIdentity;
     
+    
+    if(containerFrameY < selfCenter) {
+        CGFloat percent     = (((selfCenter -containerFrameY) / selfCenter) / 2);
+        
+        if(isZoom) {
+            viewsCornerRadius   = (percent * 24);
+            transform           = CGAffineTransformMakeScale( 1. -(percent / 5), 1. -(percent / 5));
+            
+            mapAlpha            = (1 -percent *2);
+        }
+        if(isShadow) {
+            shadowAlpha         = percent;
+            shadowHeight        = (containerFrameY +self.containerView.containerCornerRadius);
+        }
+    }
+        
+    self.imageView.transform = transform;
+    self.imageView.layer.cornerRadius = viewsCornerRadius;
+    
+    self.settingsView.transform = transform;
+    self.settingsView.layer.cornerRadius = viewsCornerRadius;
+    
+    self.mapView.transform = transform;
+    self.mapView.layer.cornerRadius = viewsCornerRadius;
+    
+    self.mapViewStatusBarBlur.alpha = mapAlpha;
+    
+    self.shadowView.alpha = shadowAlpha;
+    self.shadowView.height = shadowHeight;
 }
 
 
 #pragma mark - SearchBar Delegate
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    [self.containerView containerMove:ContainerMoveTypeTop];
+    if(self.containerView.containerPosition != ContainerMoveTypeTop) [self.containerView containerMove:ContainerMoveTypeTop];
+    GCD_ASYNC_GLOBAL_BEGIN(0) {
+        GCD_ASYNC_MAIN_BEGIN {
+            [searchBar becomeFirstResponder];
+        });
+    });
 }
 
 #pragma mark - Changes in ContainerView
@@ -407,6 +414,18 @@
 - (IBAction)changeContainerMoveType:(UISwitch *)sender {
     self.containerView.containerAllowMiddlePosition = sender.on;
 }
+
+- (IBAction)changeContainerZoom:(UISwitch *)sender {
+    isZoom = sender.on;
+}
+
+- (IBAction)changeShadow:(UISwitch *)sender {
+    isShadow = sender.on;
+}
+- (IBAction)changeContainerShadow:(UISwitch *)sender {
+    self.containerView.containerShadow = sender.on;
+}
+
 
 - (IBAction)changeContainerAlpha:(UISlider *)sender {
     self.containerView.alpha = sender.value;
@@ -501,8 +520,7 @@
 - (IBAction)changeContainerSizeTop:(UISlider *)sender {
     CGFloat top = sender.value;
     
-    [self.containerView containerMoveCustomPosition:top animated:NO];
-    self.containerView.containerPosition = ContainerMoveTypeTop;
+    [self.containerView containerMoveCustomPosition:top moveType:ContainerMoveTypeTop animated:NO];
     
     self.containerView.containerTop = IS_IPHONE_X ? top -24 : top;
     self.containerLabelValueTop.text = SFMT(@"%.0f y", top);
@@ -511,8 +529,7 @@
 - (IBAction)changeContainerSizeBottom:(UISlider *)sender {
     CGFloat bottom = (SCREEN_HEIGHT -((sender.maximumValue +50) -sender.value));
     
-    [self.containerView containerMoveCustomPosition:bottom animated:NO];
-    self.containerView.containerPosition = ContainerMoveTypeBottom;
+    [self.containerView containerMoveCustomPosition:bottom moveType:ContainerMoveTypeBottom animated:NO];
     
     self.containerView.containerBottom = IS_IPHONE_X ? bottom +34 : bottom;
     self.containerLabelValueBottom.text = SFMT(@"%.0f y", bottom);

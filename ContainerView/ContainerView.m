@@ -9,6 +9,7 @@
     CGFloat _containerMiddle;
     CGFloat _containerBottom;
     BOOL _containerAllowMiddlePosition;
+    BOOL _containerShadow;
     UIView * _headerView;
 }
 
@@ -59,7 +60,7 @@
 //    }
 //    containerBottom_ -= (IS_IPHONE_X ?34 :0);
     self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom -(IS_IPHONE_X ?34 :0));
-    
+    self.containerPosition = ContainerMoveTypeBottom;
     
     if(!self.visualEffectView) {
         self.visualEffectView = [[UIView alloc] initWithFrame: (CGRect){ {0, 0}, self.frame.size } ];
@@ -180,7 +181,23 @@
     return _containerAllowMiddlePosition;
 }
 
+- (void)setContainerShadow:(BOOL)containerShadow {
+    _containerShadow = containerShadow;
+    
+    if(containerShadow) {
+        self.layer.shadowOffset  = CGSizeMake(0, 5);
+        self.layer.shadowOpacity = 0.5;
+        self.layer.shadowRadius  = 5;
+    } else {
+        self.layer.shadowOffset  = CGSizeMake(0, 0);
+        self.layer.shadowOpacity = 0.;
+        self.layer.shadowRadius  = 0;
+    }
+}
 
+- (BOOL)containerShadow {
+    return _containerShadow;
+}
 
 
 - (UIView *)headerView {
@@ -327,9 +344,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [self endEditing:YES];
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    [self containerMove:ContainerMoveTypeTop];
-}
 
 - (void)changeBlurStyle:(ContainerStyle)styleType {
     self.containerStyle = styleType;
@@ -384,26 +398,25 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         case ContainerMoveTypeTop:      position = self.containerTop +(IS_IPHONE_X ?24 :0); break;
         case ContainerMoveTypeMiddle:   position = self.containerMiddle; break;
         case ContainerMoveTypeBottom:   position = self.containerBottom -(IS_IPHONE_X ?34 :0); break;
-        case ContainerMoveTypeCustom:
         case ContainerMoveTypeHide:     position = SCREEN_HEIGHT; break;
     }
     
     [self containerMovePosition:position moveType:moveType animated:animated completion:completion];
 }
 
-- (void)containerMoveCustomPosition:(NSInteger)position {
-    [self containerMoveCustomPosition:position animated:YES completion:nil];
+- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType {
+    [self containerMoveCustomPosition:position moveType:moveType animated:YES completion:nil];
 }
 
-- (void)containerMoveCustomPosition:(NSInteger)position animated:(BOOL)animated {
-    [self containerMoveCustomPosition:position animated:animated completion:nil];
+- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated {
+    [self containerMoveCustomPosition:position moveType:moveType animated:animated completion:nil];
 }
 
-- (void)containerMoveCustomPosition:(NSInteger)position animated:(BOOL)animated completion:(void (^)(void))completion {
+- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
     [self calculationScrollViewHeight];
     
-    self.containerPosition = ContainerMoveTypeCustom;
-    [self containerMovePosition:position moveType:ContainerMoveTypeCustom animated:animated completion:completion];
+    self.containerPosition = moveType;
+    [self containerMovePosition:position moveType:moveType animated:animated completion:completion];
 }
 
 - (void)containerMovePosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
