@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		46196CA0211BA06B00BA919B /* imageURLs.json in Resources */ = {isa = PBXBuildFile; fileRef = 46196C9F211BA06B00BA919B /* imageURLs.json */; };
+		4620C5FD219F8D480029326D /* DemoHeaderViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 4620C5FC219F8D480029326D /* DemoHeaderViews.m */; };
 		46343B8020F28E4B00EF63F7 /* ProximaNova-Extrabld.otf in Resources */ = {isa = PBXBuildFile; fileRef = 46343B7E20F28E4B00EF63F7 /* ProximaNova-Extrabld.otf */; };
 		46343B8120F28E4B00EF63F7 /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 46343B7F20F28E4B00EF63F7 /* ProximaNova-Regular.otf */; };
 		4648BFCC210E3FA60007D083 /* DemoTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4648BFCB210E3FA60007D083 /* DemoTableDelegate.m */; };
@@ -22,11 +23,14 @@
 		4689A7DC20EC08DE00BC7C8A /* DemoTableDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4689A7D720EC08DE00BC7C8A /* DemoTableDataSource.m */; };
 		46C519292126267B00A6F607 /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519262126267B00A6F607 /* ContainerView.m */; };
 		46C5192A2126267B00A6F607 /* ContainerScrollDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519272126267B00A6F607 /* ContainerScrollDelegate.m */; };
+		4A274ACC219D7BBD008900D9 /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A274ACB219D7BBD008900D9 /* UIView+Frame.m */; };
 		4A9527E520F8EB4D000DFDFB /* DemoCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A9527E320F8EB4D000DFDFB /* DemoCollectionDataSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		46196C9F211BA06B00BA919B /* imageURLs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = imageURLs.json; sourceTree = "<group>"; };
+		4620C5FB219F8D480029326D /* DemoHeaderViews.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoHeaderViews.h; sourceTree = "<group>"; };
+		4620C5FC219F8D480029326D /* DemoHeaderViews.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoHeaderViews.m; sourceTree = "<group>"; };
 		46343B7E20F28E4B00EF63F7 /* ProximaNova-Extrabld.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Extrabld.otf"; sourceTree = "<group>"; };
 		46343B7F20F28E4B00EF63F7 /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Regular.otf"; sourceTree = "<group>"; };
 		4648BFCA210E3FA60007D083 /* DemoTableDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoTableDelegate.h; sourceTree = "<group>"; };
@@ -48,11 +52,14 @@
 		4689A7D620EC08DE00BC7C8A /* DemoTableDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoTableDataSource.h; sourceTree = "<group>"; };
 		4689A7D720EC08DE00BC7C8A /* DemoTableDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoTableDataSource.m; sourceTree = "<group>"; };
 		46C519232126267A00A6F607 /* ContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerView.h; sourceTree = "<group>"; };
-		46C519242126267B00A6F607 /* ContainerMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerMacros.h; sourceTree = "<group>"; };
+		46C519242126267B00A6F607 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		46C519252126267B00A6F607 /* ContainerScrollDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerScrollDelegate.h; sourceTree = "<group>"; };
 		46C519262126267B00A6F607 /* ContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerView.m; sourceTree = "<group>"; };
 		46C519272126267B00A6F607 /* ContainerScrollDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerScrollDelegate.m; sourceTree = "<group>"; };
 		46C519282126267B00A6F607 /* ContainerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerTypes.h; sourceTree = "<group>"; };
+		4A274AC9219D7B61008900D9 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		4A274ACA219D7BBD008900D9 /* UIView+Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Frame.h"; sourceTree = "<group>"; };
+		4A274ACB219D7BBD008900D9 /* UIView+Frame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Frame.m"; sourceTree = "<group>"; };
 		4A9527E320F8EB4D000DFDFB /* DemoCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoCollectionDataSource.m; sourceTree = "<group>"; };
 		4A9527E420F8EB4D000DFDFB /* DemoCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoCollectionDataSource.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -68,6 +75,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4620C5FE219F8D8C0029326D /* DemoHeaderViews */ = {
+			isa = PBXGroup;
+			children = (
+				4620C5FB219F8D480029326D /* DemoHeaderViews.h */,
+				4620C5FC219F8D480029326D /* DemoHeaderViews.m */,
+			);
+			path = DemoHeaderViews;
+			sourceTree = "<group>";
+		};
 		4648BFD0210E545F0007D083 /* DemoProtocolsTableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +137,10 @@
 			children = (
 				4689A7B720EC081A00BC7C8A /* AppDelegate.h */,
 				4689A7B820EC081A00BC7C8A /* AppDelegate.m */,
+				4A274ACA219D7BBD008900D9 /* UIView+Frame.h */,
+				4A274ACB219D7BBD008900D9 /* UIView+Frame.m */,
+				4A274AC9219D7B61008900D9 /* PrefixHeader.pch */,
+				46C519242126267B00A6F607 /* Defines.h */,
 				46C519222126264600A6F607 /* ContainerView */,
 				46E356C121261C2400850BD8 /* Demo */,
 				46EA455920FD258F00C0FAE0 /* Resources */,
@@ -136,7 +156,6 @@
 		46C519222126264600A6F607 /* ContainerView */ = {
 			isa = PBXGroup;
 			children = (
-				46C519242126267B00A6F607 /* ContainerMacros.h */,
 				46C519252126267B00A6F607 /* ContainerScrollDelegate.h */,
 				46C519272126267B00A6F607 /* ContainerScrollDelegate.m */,
 				46C519282126267B00A6F607 /* ContainerTypes.h */,
@@ -153,6 +172,7 @@
 				4648BFD0210E545F0007D083 /* DemoProtocolsTableView */,
 				4648BFD1210E54650007D083 /* DemoProtocolsCollectionView */,
 				466F9F08211E0CD300A9EB11 /* DemoDownloadImages */,
+				4620C5FE219F8D8C0029326D /* DemoHeaderViews */,
 				4689A7BA20EC081A00BC7C8A /* DemoViewController.h */,
 				4689A7BB20EC081A00BC7C8A /* DemoViewController.m */,
 			);
@@ -252,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4689A7BC20EC081A00BC7C8A /* DemoViewController.m in Sources */,
+				4620C5FD219F8D480029326D /* DemoHeaderViews.m in Sources */,
 				4689A7C720EC081C00BC7C8A /* main.m in Sources */,
 				46521165211CDB3400AD4F31 /* DemoDownloadImages.m in Sources */,
 				4648BFCF210E3FC60007D083 /* DemoCollectionDelegate.m in Sources */,
@@ -261,6 +282,7 @@
 				46C5192A2126267B00A6F607 /* ContainerScrollDelegate.m in Sources */,
 				46C519292126267B00A6F607 /* ContainerView.m in Sources */,
 				4689A7B920EC081A00BC7C8A /* AppDelegate.m in Sources */,
+				4A274ACC219D7BBD008900D9 /* UIView+Frame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,10 +424,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y7546NLJW9;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/DemoContainerView/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREFIX_HEADER = DemoContainerView/PrefixHeader.pch;
 				INFOPLIST_FILE = "$(SRCROOT)/DemoContainerView/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -421,10 +441,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y7546NLJW9;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/DemoContainerView/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREFIX_HEADER = DemoContainerView/PrefixHeader.pch;
 				INFOPLIST_FILE = "$(SRCROOT)/DemoContainerView/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

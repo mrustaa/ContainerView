@@ -5,171 +5,214 @@
 #import "ContainerScrollDelegate.h"
 
 @implementation ContainerScrollDelegate {
-    BOOL bordersRunContainer;
-    BOOL bordersRunContainerFirstAnimate;
-    BOOL onceEnded;
-    BOOL onceScrollingBeginDragging;
-    CGFloat startScrollPosition;
-    CGAffineTransform selfTransform;
+    BOOL bordersRunContainer;                   /// скролл дошел до края - и тянет контейнер вниз 👇
+    
+    BOOL onceEnded;                             /// отпустил скролл - разрешает запуск анимации который вернет в исходную точку
+    BOOL bottomDeceleratingDisable;
+    
+    BOOL onceScrollingBeginDragging;            /// есть 3 варианта когда он (NO) 1) при старте 2) когда отпустил скролл 3) скролл дошел до края
+    
+    BOOL scrollBegin;                           /// скроллинг начался
+    CGFloat startScrollPosition;                /// begin стартовая позиция скролла
+    
+    CGAffineTransform selfTransform;            /// трансформ контейнера
 }
 
 
 
 #pragma mark - Scroll Delegate
 
+
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    [selfWindow endEditing:YES];
-
-    CGFloat velocityInViewY    = [scrollView.panGestureRecognizer velocityInView:   selfWindow].y;
-    CGFloat translationInViewY = [scrollView.panGestureRecognizer translationInView:selfWindow].y;
     
+    if(scrollView.decelerating) bottomDeceleratingDisable = NO;
+    
+    // сила движения
+    CGFloat velocityInViewY    = [scrollView.panGestureRecognizer velocityInView:   WINDOW].y;
+    
+    // расстояние от нажатой точки
+    CGFloat translationInViewY = [scrollView.panGestureRecognizer translationInView:WINDOW].y;
+    
+    
+    
+    // скролл дошел до края - и тянет контейнер вниз 👇
+        // off индикатор
+        // закрепить скролл на 1 месте - на стартовом
     if((scrollView.panGestureRecognizer.state) && (scrollView.contentOffset.y <= 0)) {
         scrollView.showsVerticalScrollIndicator = NO;
-        scrollView.contentOffset = (CGPoint){ scrollView.contentOffset.x, 0 };
+        scrollView.contentOffset = CGPointMake( scrollView.contentOffset.x, 0 );
     } else {
+        // on индикатор
         scrollView.showsVerticalScrollIndicator = YES;
     }
     
     
-    if( (scrollView.contentOffset.y == 0) && (0 < velocityInViewY )) {
-        bordersRunContainer =1;
-    } else{
-        bordersRunContainer =0;
+    // скролл дошел до края - и тянет контейнер вниз 👇
+    bordersRunContainer = ( (scrollView.contentOffset.y == 0) && (0 < velocityInViewY)); // сила движения
+
+    
+    // текущий транформ контейнера
+    // тожи плоха что контейнер здесь
+    selfTransform = self.containerView.transform;
+    
+    
+
+    // если стоит навигатор + 64 к top
+//    if(NAV_ADDED) {
+//        UINavigationController *nvc = (UINavigationController *)ROOT_VC;
+//        if(!nvc.navigationBarHidden) {
+//            top = (top + nvc.navigationBar.height);
+//        }
+//    }
+    
+    CGFloat top     = self.containerView.containerTop;
+    CGFloat bottom  = self.containerView.containerBottom;
+    CGFloat middle  = self.containerView.containerMiddle;
+    
+    top    += (IS_IPHONE_X ? (24) : 0);
+    bottom -= (IS_IPHONE_X ? (34) :0);
+    
+    CGFloat calculation;
+    
+    if((self.containerView.containerPosition == ContainerMoveTypeBottom) ||
+       (self.containerView.containerPosition == ContainerMoveTypeMiddle)) {
+        onceEnded = NO;
+        bottomDeceleratingDisable = YES;
+    }
+    
+    if(self.containerView.containerPosition == ContainerMoveTypeBottom) {
+        calculation = bottom;
+    } else if(self.containerView.containerPosition == ContainerMoveTypeMiddle) {
+        calculation = middle;
+    } else {
+        calculation = top;
     }
     
     
-    self->selfTransform = self.containerView.transform;
+    // если закончил скролл - и отпустил
+    if(scrollView.panGestureRecognizer.state == UIGestureRecognizerStateEnded)
+        onceScrollingBeginDragging = NO; // есть 3 варианта когда он (NO) 1) при старте 2) когда отпустил скролл 3) скролл дошел до края
     
-    NSInteger _containerTop = (self.containerTop == 0) ? 60 : self.containerTop;
-    if(NAV_ADDED) {
-        if(((UINavigationController *)ROOT_VC).navigationBarHidden == NO) _containerTop = (_containerTop + 64);
-    }
-    
-    NSInteger yPosition = ((selfFrame.size.height == iphoneX) ? ( _containerTop +24) : _containerTop );
-    
-    if(scrollView.panGestureRecognizer.state == UIGestureRecognizerStateEnded) onceScrollingBeginDragging = NO;
-    
-    if (bordersRunContainer == 1) {
-        onceEnded = 0;
-        onceScrollingBeginDragging = NO;
+    // скролл дошел до края - и тянет контейнер вниз 👇
+    if(bordersRunContainer) {
         
-        self->selfTransform = self.containerView.transform;
-        self->selfTransform.ty = (yPosition + translationInViewY - startScrollPosition);
+        onceEnded = NO;
+        onceScrollingBeginDragging = NO; // есть 3 варианта когда он (NO) 1) при старте 2) когда отпустил скролл 3) скролл дошел до края
         
-        if (selfTransform.ty < yPosition) self->selfTransform.ty = yPosition;
+        // (топ - стартовая позиция скролла) + расстояние от нажатой точки
+        selfTransform.ty = ((calculation -startScrollPosition) +translationInViewY );
         
-        if(bordersRunContainerFirstAnimate == 1)
+        // если трансформ меньше топа - то трансформ равен топу
+        if(selfTransform.ty < top) selfTransform.ty = top;
+        
+        /*
+         
+        ааа
+        это для того что - если ты разгонишь скролл до края
+        и оставишь след
+        то при повторном нажатии - анимированно возвращался в исходное положение - уничтожая след
+        
+        но эта какая то дичь - не понятно как он работает ващи - потому что неправильно
+         тут
+         scrollBegin - один раз устанвливается каждый раз при начальном скролле
+        и заходит он сюда каждый раз - когда дошел до края - и тяняш контейнер вниз
+         
+         - но это не означает что след существует
+         - вообще не какой проверки на существование следа
+         
+         */
+        if(scrollBegin)
         {
-            animationsSpring(.225,^(void) {
-                self.containerView.transform = self->selfTransform ;
+            ANIMATION_SPRING(.325, ^(void) {
+                self.containerView.transform = self->selfTransform;
             });
             
-            bordersRunContainerFirstAnimate = 0;
+            scrollBegin = NO;
             
         } else {
-            self.containerView.transform = self->selfTransform ;
+            self.containerView.transform = selfTransform;
         }
+        
+        PRINT(@" 👇 %f ",self.containerView.transform.ty);
     }
+    // скроллинг вверх вниз - без прикосновения к краю 👆👇
     else
     {
-        if((yPosition == self->selfTransform.ty) && !onceScrollingBeginDragging) {
+        // это условие признано менять размеры скролл вью
+        // есть 3 варианта когда он (NO) 1) при старте 2) когда отпустил скролл 3) скролл дошел до края - и только на 1 раз
+        if((top == selfTransform.ty) && !onceScrollingBeginDragging) {
             onceScrollingBeginDragging = YES;
             
-            CGFloat height = ((selfFrame.size.height -defaultHeaderHeight)
-                              - ((self.containerTop == 0) ? defaultFrameY : self.containerTop) );
+            CGFloat headerHeight = (self.containerView.headerView) ?self.containerView.headerView.height :0;
+            CGFloat top = (self.containerView.containerTop == 0) ? CUSTOM_TOP : self.containerView.containerTop;
+            CGFloat iphnX = (IS_IPHONE_X ? 24 :0);
             
-            if(scrollView.frame.size.height != height) {
-                CGRect scrollFrame = (CGRect)
-                {
-                    defaultHeaderOrigin,
-                    {
-                        selfFrame.size.width,
-                        height
-                    }
-                };
-                animationsSpring(.45,^(void){
-                    scrollView.frame = scrollFrame;
-                });
+            CGFloat height = (SCREEN_HEIGHT -(top +headerHeight +iphnX ));
+            
+            if(scrollView.height != height) {
                 
+                ANIMATION_SPRING( .45, ^(void) {
+                    scrollView.y = headerHeight;
+                    scrollView.height = height;
+                });
             }
         }
         
-        if(yPosition < self->selfTransform.ty)
+
+        if(top < selfTransform.ty) /// позиция контейнера - выше топа
         {
-            if (velocityInViewY < 0. )
+            if (velocityInViewY < 0. ) /// палиц движется вверх
             {
                 scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0 );
                 
-                self->selfTransform = self.containerView.transform;
-                self->selfTransform.ty = (yPosition + translationInViewY - startScrollPosition);
+                selfTransform = self.containerView.transform;
+                selfTransform.ty = (calculation +translationInViewY ); /// здесь расстояние от нажатой точки  складывается с + топом
                 
-                if( self->selfTransform.ty < yPosition ) self->selfTransform.ty = yPosition;
+                if(selfTransform.ty < top) selfTransform.ty = top;
                 
-                self.containerView.transform = self->selfTransform;
+                self.containerView.transform = selfTransform;
             }
         }
-
+        
+        PRINT(@" 🔥 top %f | self %f ",top,self.containerView.transform.ty);
     }
     
-    if(self.blockTransform) self.blockTransform( self->selfTransform.ty );
+    if(self.blockTransform) self.blockTransform(selfTransform.ty);
 }
 
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
+    PRINT(@" ✅ ");
+    if(bottomDeceleratingDisable) {
+        [scrollView setContentOffset:scrollView.contentOffset animated:YES];
+        bottomDeceleratingDisable = NO;
+    }
+    
+}
 
+/// скроллинг начался
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    bordersRunContainerFirstAnimate = 1;
+    scrollBegin = YES;
     
     startScrollPosition = scrollView.contentOffset.y;
-    if(startScrollPosition < 0) {
-        startScrollPosition = 0;
-    }
+    if(startScrollPosition < 0) startScrollPosition = 0;
 }
 
-
+/// скроллинг закончился
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    CGFloat velocityInViewY = [scrollView.panGestureRecognizer velocityInView:selfWindow].y;
+    CGFloat velocityInViewY = [scrollView.panGestureRecognizer velocityInView:WINDOW].y;
+    
+    PRINT(@" ⚠️ ");
     
     if(!self.containerView) return;
     
     if(!onceEnded)
     {
-        onceEnded = 1;
-        
-        if(self.containerMove3position)
-        {
-            if( self.containerView.transform.ty < ((selfFrame.size.height * 64) / 100) )
-            {
-                if(velocityInViewY < 0) {
-                    [self.containerView containerMove:ContainerMoveTypeTop];
-                } else {
-                    if( 2500 < velocityInViewY) {
-                        [self.containerView containerMove:ContainerMoveTypeBottom];
-                    } else {
-                        [self.containerView containerMove:ContainerMoveTypeMiddle];
-                    }
-                }
-            } else {
-                if(velocityInViewY < 0) {
-                    if( velocityInViewY < -2000 ) {
-                        [self.containerView containerMove:ContainerMoveTypeTop];
-                    } else {
-                        [self.containerView containerMove:ContainerMoveTypeMiddle];
-                    }
-                } else {
-                    [self.containerView containerMove:ContainerMoveTypeBottom];
-                }
-            }
-        }
-        else
-        {
-            if(velocityInViewY < 0) {
-                [self.containerView containerMove:ContainerMoveTypeTop];
-            } else {
-                [self.containerView containerMove:ContainerMoveTypeBottom];
-            }
-        }
+        onceEnded = YES;
+        [self.containerView containerMoveForVelocityInView:velocityInViewY];
     }
 }
 

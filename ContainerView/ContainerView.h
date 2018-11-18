@@ -7,12 +7,33 @@
 
 @interface ContainerView : UIView
 
+@property (strong, nonatomic) UIView *headerView;
+
 /**
- @brief Этот метод для изменения стиля заголовка контейнера
- 
- @param titleType Существует 2 типа заголовка, 1) обычный текст, 2) поиск. 3) Последний атрибут полностью скрывает заголовок
+ @brief Этот параментр указывает, следует ли добавить кнопку, когда контейнер находится внизу, для анимированного раскрытия контейнера вверх.
  */
-- (void)changeTitleType:(ContainerTitleType)titleType;
+@property BOOL containerBottomButtonToMoveTop;
+
+/**
+ @brief Этот параментр устанавливает новое значение позиции, для типа перемещения вверх.
+ */
+@property CGFloat containerTop;
+
+/**
+ @brief Этот параментр устанавливает новое значение позиции, для типа перемещения вниз.
+ */
+@property CGFloat containerBottom;
+
+/**
+ @brief Этот параментр устанавливает новое значение позиции, для типа перемещения в среднее положение.
+ */
+@property CGFloat containerMiddle;
+
+/**
+ @brief Этот параментр указывает, какой из типов перемещения был последним.
+ */
+@property ContainerMoveType containerPosition;
+@property ContainerStyle containerStyle;
 
 /**
  @brief Этот метод для добавления размытия фона для контейнера
@@ -21,19 +42,25 @@
  */
 - (void)changeBlurStyle:(ContainerStyle)styleType;
 
-/**
- @brief Этот метод для анимированного перемещения контейнера
- 
- @param containerMove Существует 4 типа перемещения. Перемещение 1) наверх, 2) середину, 3) вниз, 4) скрытие в самый вниз за пределы видимости
- */
-- (void)containerMove:(ContainerMoveType)containerMove;
+- (void)containerMoveForVelocityInView:(CGFloat)velocityInViewY;
 
 /**
- @brief Этот метод для добавления отступа, для одного из типов перемещения контейнера. При перемещении вверх, отступ сверху вниз. При перемещении вниз, отступ снизу вверх
+ @brief Этот метод для анимированного перемещения контейнера, по фиксированным позициям
  
- @param newValue присвоение нового значения
+ @param moveType Существует 4 типа перемещения. Перемещение 1) наверх, 2) середину, 3) вниз, 4) скрытие в самый вниз за пределы видимости
  */
-- (void)changePositionMoveType:(ContainerMoveType)moveType newValue:(NSInteger)newValue;
+- (void)containerMove:(ContainerMoveType)moveType;
+- (void)containerMove:(ContainerMoveType)moveType animated:(BOOL)animated;
+- (void)containerMove:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion;
+
+/**
+ @brief Этот метод для анимированного перемещения контейнера, по пользовательской позиции
+ 
+ @param position Пользовательская позиция
+ */
+- (void)containerMoveCustomPosition:(NSInteger)position;
+- (void)containerMoveCustomPosition:(NSInteger)position animated:(BOOL)animated;
+- (void)containerMoveCustomPosition:(NSInteger)position animated:(BOOL)animated completion:(void (^)(void))completion;
 
 /**
  @brief Этот метод для изменения радиуса округления границ
@@ -42,11 +69,15 @@
  */
 - (void)changeCornerRadius:(CGFloat)newValue;
 
+- (void)removeScrollView;
+
+@property NSInteger containerCornerRadius;
+
 /**
  @brief При перемещении контейнера, по умолчанию существуют 2 позиции (это перемещение вверх, и вниз). Этот параментр добавляет 3 позицию (перемещение в середину)
  */
-@property BOOL containerMove3position;
+@property BOOL containerAllowMiddlePosition;
 
-@property (strong, nonatomic) void(^blockScalingBackBackgroundView)(ContainerMoveType containerMove, CGFloat scale, BOOL animation);
+@property (strong, nonatomic) void(^blockChangeShadowLevel)(ContainerMoveType containerMove, CGFloat scale, BOOL animation);
 
 @end

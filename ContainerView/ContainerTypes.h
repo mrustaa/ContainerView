@@ -5,16 +5,10 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSUInteger, ContainerStyle) {
-    ContainerStyleLight = 0,
-    ContainerStyleDark,
+    ContainerStyleDefault = 0,
+    ContainerStyleLight,
     ContainerStyleExtraLight,
-    ContainerStyleDefault,
-};
-
-typedef NS_ENUM(NSUInteger, ContainerTitleType) {
-    ContainerTitleTypeLabel = 0,
-    ContainerTitleTypeSearchBar,
-    ContainerTitleTypeDefault,
+    ContainerStyleDark,
 };
 
 typedef NS_ENUM(NSUInteger, ContainerMoveType) {
@@ -22,6 +16,7 @@ typedef NS_ENUM(NSUInteger, ContainerMoveType) {
     ContainerMoveTypeMiddle,
     ContainerMoveTypeBottom,
     ContainerMoveTypeHide,
+    ContainerMoveTypeCustom,
 };
 
 typedef NS_ENUM(NSUInteger, SelectType) {

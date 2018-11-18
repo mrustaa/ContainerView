@@ -7,8 +7,8 @@
 
 @interface DemoDownloadImages : NSObject
 
-@property (strong, nonatomic) void(^blockAddImage)(UIImage *img, UIImage *imgSmall, BOOL animated);
-- (void)startLoadImages;
+- (NSMutableArray *)loadLocalImages;
+- (void)downloadOneImageAtATimeCallback:(void(^)(UIImage *img, UIImage *imgSmall))callback;
 
 @end
 

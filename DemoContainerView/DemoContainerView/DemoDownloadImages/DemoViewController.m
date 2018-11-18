@@ -3,7 +3,6 @@
 //  Copyright © 2018 mrusta. All rights reserved.
 
 #import "ContainerView.h"
-#import "ContainerMacros.h"
 
 #import "DemoViewController.h"
 
@@ -13,38 +12,52 @@
 #import "DemoCollectionDataSource.h"
 
 #import "DemoDownloadImages.h"
+#import "DemoHeaderViews.h"
 
-@interface DemoViewController ()
+@interface UIScrollView (bawabd)
+@end
+@implementation UIScrollView (bawabd)
 
-@property (strong, nonatomic) ContainerView *containerView;
-
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) DemoTableDelegate *tableDelegate;
-@property (strong, nonatomic) DemoTableDataSource *tableDataSource;
-@property (strong, nonatomic) NSMutableArray <UIImage *> *tablePhotos;
-
-@property (strong, nonatomic) UICollectionView *collectionView;
-@property (strong, nonatomic) DemoCollectionDelegate *collectionDelegate;
-@property (strong, nonatomic) DemoCollectionDataSource *collectionDataSource;
-@property (strong, nonatomic) NSMutableArray <UIImage *> *collectionPhotos;
-
-@property (strong, nonatomic) UIImageView *imageView;
-@property (strong, nonatomic) UIView *shadowView;
-
-@property (strong, nonatomic) IBOutlet UIView *settingsView;
-
-@property (strong, nonatomic) IBOutlet MKMapView *mapView;
-@property (strong, nonatomic) IBOutlet UIVisualEffectView *mapViewStatusBarBlur;
-
-@property (strong, nonatomic) IBOutlet UILabel *containerLabelValueTop;
-@property (strong, nonatomic) IBOutlet UILabel *containerLabelValueBottom;
-@property (strong, nonatomic) IBOutlet UILabel *containerLabelValueCornerRadius;
-
-@property NSInteger containerCornerRadius;
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+}
 
 @end
 
-__weak DemoViewController * weakSelf;
+
+
+@interface DemoViewController () <UISearchBarDelegate> {
+    bool isHidden;
+}
+
+@property (strong, nonatomic) ContainerView                 *containerView;
+
+@property (strong, nonatomic) NSMutableArray <NSDictionary *> *photos;
+
+@property (strong, nonatomic) UITableView                   *tableView;
+@property (strong, nonatomic) DemoTableDelegate             *tableDelegate;
+@property (strong, nonatomic) DemoTableDataSource           *tableDataSource;
+
+@property (strong, nonatomic) UICollectionView              *collectionView;
+@property (strong, nonatomic) DemoCollectionDelegate        *collectionDelegate;
+@property (strong, nonatomic) DemoCollectionDataSource      *collectionDataSource;
+
+@property (strong, nonatomic) UIImageView                   *imageView;
+@property (strong, nonatomic) UIView                        *shadowView;
+
+
+@property (strong, nonatomic) IBOutlet UIView               *settingsView;
+
+@property (strong, nonatomic) IBOutlet MKMapView            *mapView;
+@property (strong, nonatomic) IBOutlet UIVisualEffectView   *mapViewStatusBarBlur;
+
+@property (strong, nonatomic) IBOutlet UILabel              *containerLabelValueTop;
+@property (strong, nonatomic) IBOutlet UILabel              *containerLabelValueBottom;
+@property (strong, nonatomic) IBOutlet UILabel              *containerLabelValueCornerRadius;
+
+@end
+
+
 
 
 @implementation DemoViewController
@@ -55,12 +68,13 @@ __weak DemoViewController * weakSelf;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    weakSelf = self;
+    isHidden = false;
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     if(!self.imageView)
     {
-        self.imageView = [[UIImageView alloc]initWithFrame:selfFrame];
+        self.imageView = [[UIImageView alloc]initWithFrame:FRAME];
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         self.imageView.clipsToBounds = YES;
         self.imageView.alpha = 0;
@@ -69,77 +83,84 @@ __weak DemoViewController * weakSelf;
     
     if(!self.shadowView)
     {
-        self.shadowView = [[UIView alloc]initWithFrame:selfFrame];
-        self.shadowView.backgroundColor = [UIColor blackColor];
+        self.shadowView = [[UIView alloc]initWithFrame:FRAME];
+        self.shadowView.backgroundColor = BLACK_COLOR;
         self.shadowView.alpha = 0;
         [self.view addSubview:self.shadowView];
     }
     
     {
-        [self.mapView setRegion:[self.mapView regionThatFits:coordinateMoscow]];
+        [self.mapView setRegion:[self.mapView regionThatFits:COORDINATE_SAN_FRANCISCO]];
         self.mapView.alpha = 0;
         self.mapViewStatusBarBlur.alpha = 0;
+        
+        self.mapViewStatusBarBlur.height = SCREEN_STATUS_HEIGHT;
     }
     
-    if (NAV_ADDED) {
-        UINavigationController * nav = (UINavigationController *)ROOT_VC;
-        if(!nav.navigationBarHidden) {
-            if(nav.navigationBar.translucent) {
-                self.settingsView.frame = (CGRect) {
-                    {self.settingsView.frame.origin.x,self.settingsView.frame.origin.y +((selfFrame.size.height == iphoneX) ? (64 +24) : 64)},
-                    self.settingsView.frame.size
-                };
-                self.mapView.frame = self.settingsView.frame;
-                self.imageView.frame = self.settingsView.frame;
-            }
-        }
-    }
+    
+//    if (NAV_ADDED) {
+//        UINavigationController * nav = (UINavigationController *)ROOT_VC;
+//        if(!nav.navigationBarHidden) {
+//            if(nav.navigationBar.translucent) {
+//                self.settingsView.frame = (CGRect) {
+//                    {self.settingsView.x,self.settingsView.y +(IS_IPHONE_X ? (64 +24) : 64)},
+//                    self.settingsView.frame.size
+//                };
+//                self.  mapView.frame = self.settingsView.frame;
+//                self.imageView.frame = self.settingsView.frame;
+//            }
+//        }
+//    }
+    
     
     [self.containerView addSubview:self.tableView];
-    [self.containerView addSubview:self.collectionView];
+    [self.containerView changeCornerRadius:15];
+    [self.containerView containerMove:ContainerMoveTypeTop animated:NO];
     
-    self.collectionView.alpha = 0;
+    // self.containerView.containerBottomButtonToMoveTop = YES;
     
     [self.view addSubview: self.containerView];
     
     
     
-    {
-        DemoDownloadImages *downloadImages = [[DemoDownloadImages alloc]init];
-        downloadImages.blockAddImage = ^(UIImage *img, UIImage *imgSmall, BOOL animated) {
-            
-            if(animated)
-            {
-                [self.tablePhotos addObject:img];
-                NSArray *tableIndex = @[[NSIndexPath indexPathForRow:(self.tablePhotos.count-1) inSection:0]];
-                [self.tableView insertRowsAtIndexPaths:tableIndex withRowAnimation:UITableViewRowAnimationFade];
-                
-                [self.collectionPhotos addObject:imgSmall];
-                NSArray *collectionIndex = @[[NSIndexPath indexPathForRow:(self.collectionPhotos.count-1) inSection:0]];
-                [self.collectionView performBatchUpdates:^ {
-                    [self.collectionView insertItemsAtIndexPaths:collectionIndex];
-                } completion:nil];
-            }
-            else
-            {
-                [self.tablePhotos addObject:img];
-                [self.tableView reloadData];
-                
-                [self.collectionPhotos addObject:imgSmall];
-                [self.collectionView reloadData];
-                
-                if( (!self.imageView.image) && (self.tablePhotos.count >= 6)) {
-                    self.imageView.image = self.tablePhotos[5];
-                    self.settingsView.alpha = 0;
-                    self.imageView.alpha = 1;
-                }
-            }
-            
-        };
+    DemoDownloadImages *
+    downloadImages = [[DemoDownloadImages alloc]init];
+    
+    NSMutableArray * photos = [downloadImages loadLocalImages];
+    if(photos) {
+        for(NSDictionary *dic in photos) [self.photos addObject:dic];
         
-        [downloadImages startLoadImages];
+        if(_tableView) [self.tableView reloadData];
+        if(_collectionView) [self.collectionView reloadData];
+    } else {
+        __weak typeof(self) weakSelf = self;
+        [downloadImages downloadOneImageAtATimeCallback:^(UIImage *img, UIImage *imgSmall) {
+            
+            GCD_ASYNC_MAIN_BEGIN {
+                
+                [weakSelf.photos addObject:@{ @"big":img, @"small":imgSmall }];
+                
+                if(self->_tableView) {
+                    NSArray *tableIndex = @[[NSIndexPath indexPathForRow:(weakSelf.photos.count-1) inSection:0]];
+                    [weakSelf.tableView insertRowsAtIndexPaths:tableIndex withRowAnimation:UITableViewRowAnimationFade];
+                }
+                
+                if(self->_collectionView) {
+                    NSArray *collectionIndex = @[[NSIndexPath indexPathForRow:(weakSelf.photos.count-1) inSection:0]];
+                    [weakSelf.collectionView performBatchUpdates:^ {
+                        [weakSelf.collectionView insertItemsAtIndexPaths:collectionIndex];
+                    } completion:nil];
+                }
+                
+            });
+        }];
     }
+    
+    
+    
 }
+
+
 
 
 #pragma mark - Create ContainerView elements
@@ -149,166 +170,174 @@ __weak DemoViewController * weakSelf;
     if(!_containerView)
     {
         ContainerView *
-        container = [[ContainerView alloc] initWithFrame: (CGRect){
-            CGPointZero,
-            {
-                selfFrame.size.width,
-                selfFrame.size.height +50
-            }
-        }];
+        container = [[ContainerView alloc] initWithFrame: (CGRect){ CGPointZero, { SCREEN_WIDTH, SCREEN_HEIGHT +50 }}];
         
-        container.blockScalingBackBackgroundView = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
-            
-            BOOL scrollEnabled = (containerMove == ContainerMoveTypeTop) ? YES : NO;
-            weakSelf.tableView.scrollEnabled = scrollEnabled;
-            weakSelf.collectionView.scrollEnabled = scrollEnabled;
+        __weak typeof(self) weakSelf = self;
+        container.blockChangeShadowLevel = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
             
             if(animated) {
-                animationsSpring(.45,^(void){
+                ANIMATION_SPRING(.45,^(void){
                     [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
                 });
-                
             } else {
                 [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
             }
-            
         };
-        
         _containerView = container;
     }
-    
     return _containerView;
 }
 
+
+- (NSMutableArray *)photos {
+    if(!_photos) _photos = [NSMutableArray new];
+    return _photos;
+}
 
 - (UITableView *)tableView {
     
     if(!_tableView)
     {
         UITableView *
-        table = [[UITableView alloc] initWithFrame:frameTableCollection style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:FRAME_SCROLLVIEW style:UITableViewStylePlain];
         table.separatorStyle = UITableViewCellSeparatorStyleNone;
         table.showsVerticalScrollIndicator = NO;
-        table.scrollEnabled = NO;
-        table.backgroundColor = [UIColor clearColor];
-        
-        if(!_tablePhotos)
-            _tablePhotos = [NSMutableArray new];
-        
-        if(!_tableDataSource)
-        {
-            DemoTableDataSource *
-            dataSource = [[DemoTableDataSource alloc] init];
-            dataSource.photos = _tablePhotos;
-            
-            _tableDataSource = dataSource;
-        }
-        
-        if(!_tableDelegate)
-        {
-            
-            DemoTableDelegate *
-            delegate = [[DemoTableDelegate alloc] init];
-            delegate.containerView = self.containerView;
-            
-            delegate.blockSelectIndex = ^(NSInteger index) {
-                [weakSelf selectCellIndex:(SelectType)index animated:YES];
-            };
-            delegate.blockTransform = ^(CGFloat containerFrameY) {
-                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-            };
-            
-            _tableDelegate = delegate;
-        }
-
-        table.dataSource = _tableDataSource;
-        table.delegate = _tableDelegate;
-        
+        table.backgroundColor = CLR_COLOR;
+        table.dataSource = self.tableDataSource;
+        table.delegate   = self.tableDelegate;
         _tableView = table;
     }
     
     return _tableView;
 }
 
+- (void)removeTableView {
+    if(!_tableView) {
+        [_tableView removeFromSuperview];
+        _tableView = nil;
+    }
+}
+
+- (DemoTableDataSource *)tableDataSource {
+    if(!_tableDataSource)
+    {
+        DemoTableDataSource *
+        dataSource = [[DemoTableDataSource alloc] init];
+        dataSource.photos = self.photos;
+        _tableDataSource = dataSource;
+    }
+    return _tableDataSource;
+}
+
+- (DemoTableDelegate *)tableDelegate {
+    if(!_tableDelegate)
+    {
+        DemoTableDelegate *
+        delegate = [[DemoTableDelegate alloc] init];
+        delegate.containerView = self.containerView;
+        
+        __weak typeof(self) weakSelf = self;
+        delegate.blockSelectIndex = ^(NSInteger index) {
+            [weakSelf selectCellIndex:(SelectType)index animated:YES];
+        };
+        delegate.blockTransform = ^(CGFloat containerFrameY) {
+            GCD_ASYNC_MAIN_BEGIN {
+                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
+            });
+        };
+        _tableDelegate = delegate;
+    }
+    return _tableDelegate;
+}
 
 - (UICollectionView *)collectionView {
     
     if(!_collectionView)
     {
         UICollectionView *
-        collection = [[UICollectionView alloc]initWithFrame:frameTableCollection collectionViewLayout:[[UICollectionViewFlowLayout alloc]init]];
+        collection = [[UICollectionView alloc]initWithFrame:FRAME_SCROLLVIEW collectionViewLayout:[[UICollectionViewFlowLayout alloc]init]];
         [collection registerClass:[DemoCollectionCell class] forCellWithReuseIdentifier:@"collectionCell"];
-        collection.backgroundColor = [UIColor clearColor];
-        
-        if(!_collectionPhotos)
-            _collectionPhotos = [NSMutableArray new];
-        
-        if(!_collectionDataSource)
-        { 
-            DemoCollectionDataSource *
-            dataSource = [[DemoCollectionDataSource alloc] init];
-            dataSource.photos = _collectionPhotos;
-            
-            _collectionDataSource = dataSource;
-        }
-        
-        if(!_collectionDelegate)
-        {
-            
-            DemoCollectionDelegate *
-            delegate = [[DemoCollectionDelegate alloc] init];
-            delegate.containerView = self.containerView;
-            
-            delegate.blockSelectIndex = ^(NSInteger index) {
-                [weakSelf selectCellIndex:(SelectType)index animated:YES];
-            };
-            delegate.blockTransform = ^(CGFloat containerFrameY) {
-                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-            };
-            
-            _collectionDelegate = delegate;
-        }
-        
-        collection.delegate = _collectionDelegate;
-        collection.dataSource = _collectionDataSource;
-        
+        collection.backgroundColor = CLR_COLOR;
+        collection.delegate   = self.collectionDelegate;
+        collection.dataSource = self.collectionDataSource;
         _collectionView = collection;
     }
     
     return _collectionView;
 }
 
+- (void)removeCollectionView {
+    if(!_collectionView) {
+        [_collectionView removeFromSuperview];
+        _collectionView = nil;
+    }
+}
+
+- (DemoCollectionDataSource *)collectionDataSource {
+    if(!_collectionDataSource)
+    {
+        DemoCollectionDataSource *
+        dataSource = [[DemoCollectionDataSource alloc] init];
+        dataSource.photos = self.photos;
+        
+        _collectionDataSource = dataSource;
+    }
+    return _collectionDataSource;
+}
+- (DemoCollectionDelegate *)collectionDelegate {
+    if(!_collectionDelegate)
+    {
+        DemoCollectionDelegate *
+        delegate = [[DemoCollectionDelegate alloc] init];
+        delegate.containerView = self.containerView;
+        
+        __weak typeof(self) weakSelf = self;
+        delegate.blockSelectIndex = ^(NSInteger index) {
+            [weakSelf selectCellIndex:(SelectType)index animated:YES];
+        };
+        delegate.blockTransform = ^(CGFloat containerFrameY) {
+            GCD_ASYNC_MAIN_BEGIN {
+                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
+            });
+        };
+        _collectionDelegate = delegate;
+    }
+    return _collectionDelegate;
+}
+
 #pragma mark - Actions Table Collection Delegate
 
 - (void)selectCellIndex:(SelectType)index animated:(BOOL)animated {
     
-    animationsCompletion( (animated) ? 0.25 : 0. , ^(void) {
+    __weak typeof(self) weakSelf = self;
+    ANIMATIONCOMP( (animated) ? 0.25 : 0. , ^(void) {
         
         weakSelf.imageView.alpha = 0;
         
-    } , ^(BOOL fin) {
+    }, ^(BOOL fin) {
         
-        if((index != SelectTypeSettings) && (index != SelectTypeMap))
-        {
-            weakSelf.imageView.image = self.tablePhotos[index];
+        if((index != SelectTypeSettings) &&
+           (index != SelectTypeMap)) {
+            weakSelf.imageView.image = self.photos[index][@"big"];
         }
         
-        animations( (animated) ? 0.25 : 0. , ^(void){
+        ANIMATION( (animated) ? 0.25 : 0. , ^(void){
+            
+            weakSelf.mapViewStatusBarBlur.hidden = YES;
+            weakSelf.mapView.alpha = 0;
+            weakSelf.settingsView.alpha = 0;
             
             switch (index) {
                 case SelectTypeSettings:
                     weakSelf.settingsView.alpha = 1;
-                    weakSelf.mapView.alpha = 0;
-                    weakSelf.mapViewStatusBarBlur.hidden = 1; break;
+                    break;
                 case SelectTypeMap:
-                    weakSelf.settingsView.alpha = 0;
                     weakSelf.mapView.alpha = 1;
-                    weakSelf.mapViewStatusBarBlur.hidden = 0; break;
+                    weakSelf.mapViewStatusBarBlur.hidden = APP.statusBarHidden;
+                    break;
                 default:
-                    weakSelf.settingsView.alpha = 0;
-                    weakSelf.mapView.alpha = 0;
-                    weakSelf.mapViewStatusBarBlur.hidden = 1;
-                    weakSelf.imageView.alpha = 1; break;
+                    weakSelf.imageView.alpha = 1;
+                    break;
             }
         });
         
@@ -317,10 +346,11 @@ __weak DemoViewController * weakSelf;
 }
 
 - (void)changeScalesImageAndShadowLevel:(float)containerFrameY {
+    [self.view endEditing:YES];
     
-    CGFloat selfCenter = (selfFrame.size.height * 0.64);
+    CGFloat selfCenter = self.containerView.containerMiddle;
     
-    if( containerFrameY < selfCenter) {
+    if(containerFrameY < selfCenter) {
         
         CGFloat procent = (((selfCenter -containerFrameY) / selfCenter) / 2);
         
@@ -338,13 +368,7 @@ __weak DemoViewController * weakSelf;
         self.mapViewStatusBarBlur.alpha = (1 -procent *2);
         
         self.shadowView.alpha = procent;
-        self.shadowView.frame = (CGRect) {
-            CGPointZero,
-            {
-                selfFrame.size.width,
-                containerFrameY + ((self.containerCornerRadius == 0) ? 15 : self.containerCornerRadius )
-            }
-        };
+        self.shadowView.height = (containerFrameY +self.containerView.containerCornerRadius);
         
     } else {
         
@@ -360,104 +384,168 @@ __weak DemoViewController * weakSelf;
         self.mapViewStatusBarBlur.alpha = 1;
         
         self.shadowView.alpha = 0.;
-        self.shadowView.frame = selfFrame;
+        self.shadowView.height = SCREEN_HEIGHT;
     }
+    
 }
 
-#pragma mark - Change in characteristics ContainerView
+
+#pragma mark - SearchBar Delegate
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [self.containerView containerMove:ContainerMoveTypeTop];
+}
+
+#pragma mark - Changes in ContainerView
 
 - (IBAction)changeStatusbar:(UISwitch *)sender {
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    
-    if(!sender.on) {
-        statusBarHidden(YES);
-        self.mapViewStatusBarBlur.hidden = 1;
-    } else {
-        statusBarHidden(NO);
-        self.mapViewStatusBarBlur.hidden = 0;
-    }
-    
-#pragma clang diagnostic pop
-    
+    BOOL hidden = (!sender.on);
+    self.mapViewStatusBarBlur.hidden = hidden;
+    APP.statusBarHidden = hidden;
 }
 
 - (IBAction)changeContainerMoveType:(UISwitch *)sender {
-    
-    self.containerView.containerMove3position = sender.on;
-    self.tableDelegate.containerMove3position = sender.on;
-    self.collectionDelegate.containerMove3position = sender.on;
+    self.containerView.containerAllowMiddlePosition = sender.on;
 }
 
 - (IBAction)changeContainerAlpha:(UISlider *)sender {
     self.containerView.alpha = sender.value;
 }
 
-- (IBAction)changeContainerTitleType:(UISegmentedControl *)sender {
-    [self.containerView changeTitleType:sender.selectedSegmentIndex];
+
+- (IBAction)changeContainerMoveTop:(UIButton *)sender {
+    [self.containerView containerMove:ContainerMoveTypeTop];
 }
+- (IBAction)changeContainerMoveMiddle:(UIButton *)sender {
+    [self.containerView containerMove:ContainerMoveTypeMiddle];
+}
+- (IBAction)changeContainerMoveBottom:(UIButton *)sender {
+    [self.containerView containerMove:ContainerMoveTypeBottom];
+}
+- (IBAction)changeContainerMoveHide:(UIButton *)sender {
+    [self.containerView containerMove:ContainerMoveTypeHide];
+}
+
+
+- (IBAction)changeContainerTitleType:(UISegmentedControl *)sender {
+    
+    
+    ContainerStyle style = self.containerView.containerStyle;
+    
+    switch (sender.selectedSegmentIndex) {
+        case 0: self.containerView.headerView = nil; break;
+        case 1: {
+            HeaderGrib *
+            grib = [DemoHeaderViews createHeaderGrip];
+            [DemoHeaderViews changeColorsHeaderView:grib forStyle:style];
+            self.containerView.headerView = grib;
+        } break;
+        case 2: {
+            HeaderLabel *
+            label = [DemoHeaderViews createHeaderLabel];
+            [DemoHeaderViews changeColorsHeaderView:label forStyle:style];
+            self.containerView.headerView = label;
+        } break;
+        case 3: {
+            HeaderSearch *
+            search = [DemoHeaderViews createHeaderSearch];
+            search.searchBar.delegate = self;
+            [DemoHeaderViews changeColorsHeaderView:search forStyle:style];
+            self.containerView.headerView = search;
+        } break;
+        default: break;
+    }
+    
+    
+}
+
+
 
 - (IBAction)changeContainerStyle:(UISegmentedControl *)sender {
     
-    self.tableDataSource.containerStyle = sender.selectedSegmentIndex;
-    self.collectionDataSource.containerStyle = sender.selectedSegmentIndex;
+    ContainerStyle style = sender.selectedSegmentIndex;
     
-    [self.containerView changeBlurStyle:sender.selectedSegmentIndex];
+    self.     tableDataSource.containerStyle = style;
+    self.collectionDataSource.containerStyle = style;
     
-    animations(.25,^(void){
-        
-        if(sender.selectedSegmentIndex == ContainerStyleDark)
-        {
-            self.mapView.mapType = MKMapTypeHybrid;
-            self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-            statusBarStyle(YES);
-            self.view        .backgroundColor = RGB(55, 55, 55);
-            self.settingsView.backgroundColor = RGB(66, 66, 66);
-        }
-        else
-        {
-            self.mapView.mapType = MKMapTypeStandard;
-            self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-            statusBarStyle(NO);
-            self.view        .backgroundColor = RGB(235, 235, 241);
-            self.settingsView.backgroundColor = RGB(225, 225, 231);
-        }
-    });
+    [self.containerView changeBlurStyle:style];
+    
+    UIView *view = self.containerView.headerView;
+    if(view) [DemoHeaderViews changeColorsHeaderView:view forStyle:style];
+    
+    
+    if(style == ContainerStyleDark)
+    {
+        self.mapView.mapType = MKMapTypeHybrid;
+        self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        STATUSBAR_STYLE(UIStatusBarStyleLightContent);
+        // self.mapViewStatusBarBlur.hidden
+        self.view        .backgroundColor = RGB(55, 55, 55);
+        self.settingsView.backgroundColor = RGB(66, 66, 66);
+    }
+    else
+    {
+        self.mapView.mapType = MKMapTypeStandard;
+        self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        STATUSBAR_STYLE(UIStatusBarStyleDefault);
+        self.view        .backgroundColor = RGB(235, 235, 241);
+        self.settingsView.backgroundColor = RGB(225, 225, 231);
+    }
     
     [self.tableView reloadData];
     [self.collectionView reloadData];
 }
 
-- (IBAction)changeContainerSizeTop:(UISlider *)sender {
 
-    [self.containerView changePositionMoveType:ContainerMoveTypeTop newValue:sender.value];
-    self.tableDelegate.containerTop = sender.value;
-    self.collectionDelegate.containerTop = sender.value;
-    self.containerLabelValueTop.text = SFMT(@"%.0f", sender.value);
+
+- (IBAction)changeContainerSizeTop:(UISlider *)sender {
+    CGFloat top = sender.value;
+    
+    [self.containerView containerMoveCustomPosition:top animated:NO];
+    self.containerView.containerPosition = ContainerMoveTypeTop;
+    
+    self.containerView.containerTop = IS_IPHONE_X ? top -24 : top;
+    self.containerLabelValueTop.text = SFMT(@"%.0f y", top);
 }
 
 - (IBAction)changeContainerSizeBottom:(UISlider *)sender {
-    [self.containerView changePositionMoveType:ContainerMoveTypeBottom newValue:sender.value];
-    self.containerLabelValueBottom.text = SFMT(@"%.0f", sender.value);
+    CGFloat bottom = (SCREEN_HEIGHT -((sender.maximumValue +50) -sender.value));
+    
+    [self.containerView containerMoveCustomPosition:bottom animated:NO];
+    self.containerView.containerPosition = ContainerMoveTypeBottom;
+    
+    self.containerView.containerBottom = IS_IPHONE_X ? bottom +34 : bottom;
+    self.containerLabelValueBottom.text = SFMT(@"%.0f y", bottom);
 }
 
+
+
+
 - (IBAction)changeContainerCornerRadius:(UISlider *)sender {
-    self.containerCornerRadius = sender.value;
-    [self.containerView changeCornerRadius: self.containerCornerRadius];
-    self.containerLabelValueCornerRadius.text = SFMT(@"%d", (int)self.containerCornerRadius);
+    [self.containerView changeCornerRadius: sender.value];
+    self.containerLabelValueCornerRadius.text = SFMT(@"%d", (int)sender.value);
 }
 
 - (IBAction)changeContainerScrollViewType:(UISegmentedControl *)sender {
     
-    animations(.25,^(void){
-        switch (sender.selectedSegmentIndex) {
-            case 0: self.tableView.alpha =1; self.collectionView.alpha =0; break;
-            case 1: self.tableView.alpha =0; self.collectionView.alpha =1; break;
-            case 2: self.tableView.alpha =0; self.collectionView.alpha =0; break;
-            default: break;
-        }
-    });
+    [self.containerView removeScrollView];
+    
+    switch (sender.selectedSegmentIndex) {
+        case 0:
+            [self removeCollectionView];
+            [self.containerView addSubview:self.tableView];
+            break;
+        case 1:
+            [self removeTableView];
+            [self.containerView addSubview:self.collectionView];
+            break;
+        case 2:
+            [self removeTableView];
+            [self removeCollectionView];
+            break;
+        default: break;
+    }
+    
 }
 
 

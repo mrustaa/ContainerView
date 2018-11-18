@@ -3,7 +3,6 @@
 //  Copyright © 2018 mrusta. All rights reserved.
 
 #import "DemoDownloadImages.h"
-#import "ContainerMacros.h"
 
 NSString *const kSaveImagesDocuments = @"saveImagesDocuments";
 
@@ -22,17 +21,19 @@ typedef NS_ENUM(NSUInteger, ImageType) {
 @implementation DemoDownloadImages
 
 
-- (void)startLoadImages {
+- (NSMutableArray <NSDictionary *> *)loadLocalImages {
     
     if(!imageURLs) {
         imageURLs = [self loadLocalJSONimageURLs];
     }
     
-    NSArray *saveDocumentsImageURLs = [[NSUserDefaults standardUserDefaults] valueForKey:kSaveImagesDocuments];
+    NSArray *saveDocumentsImageURLs = USER_DEF(kSaveImagesDocuments);
     if(saveDocumentsImageURLs == nil) {
         saveLocalImageURLs = [NSMutableDictionary new];
     } else {
         saveLocalImageURLs = [saveDocumentsImageURLs mutableCopy];
+        
+        NSMutableArray *photos = [NSMutableArray new];
         
         NSInteger i =0;
         while(i < saveLocalImageURLs.count)
@@ -40,21 +41,22 @@ typedef NS_ENUM(NSUInteger, ImageType) {
             UIImage *img      = [self loadLocalImageType:ImageTypeBig   index:i];
             UIImage *imgSmall = [self loadLocalImageType:ImageTypeSmall index:i];
             
-            if(self.blockAddImage && img && imgSmall) self.blockAddImage(img, imgSmall, NO);
-            
+            if(img && imgSmall) {
+                [photos addObject: @{ @"big"    :img,
+                                      @"small"  :imgSmall }];
+            }
             i++;
         }
-        
+        return photos;
     }
-    
-    [self loadImagesOtherQueue];
-    
+    return nil;
 }
 
 
-- (void)loadImagesOtherQueue {
+
+- (void)downloadOneImageAtATimeCallback:(void(^)(UIImage *img, UIImage *imgSmall))callback {
     
-    networkIndicatorOn(YES);
+    NETWORK_INDICATOR_ON(YES);
     
     __weak NSArray *weakImageURLs = imageURLs;
     __weak NSMutableDictionary *weakSaveLocalImageURLs = saveLocalImageURLs;
@@ -83,19 +85,18 @@ typedef NS_ENUM(NSUInteger, ImageType) {
                     [self saveLocalImageType:ImageTypeSmall imgData:imgDataSmall index: weakSaveLocalImageURLs.count];
                     
                     [weakSaveLocalImageURLs setObject:@(weakSaveLocalImageURLs.count) forKey:strImageURL];
-                    [[NSUserDefaults standardUserDefaults] setObject:weakSaveLocalImageURLs forKey:kSaveImagesDocuments];
+                    USER_DEF_SAVE(kSaveImagesDocuments, weakSaveLocalImageURLs);
                     
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if(self.blockAddImage) self.blockAddImage(img, imgSmall, YES);
-                    });
+                    if(callback) callback(img, imgSmall);
+                    
                 }
             }
             
             i++;
             
             if(i >= weakImageURLs.count) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    networkIndicatorOn(NO);
+                GCD_ASYNC_MAIN_BEGIN {
+                    NETWORK_INDICATOR_ON(NO);
                 });
             }
             
@@ -104,7 +105,7 @@ typedef NS_ENUM(NSUInteger, ImageType) {
 }
 
 - (NSData *)donwloadURL:(NSString *)strURL {
-    return [NSData dataWithContentsOfURL:[NSURL URLWithString:strURL]];
+    return [NSData dataWithContentsOfURL: URL(strURL)];
 }
 
 
@@ -112,8 +113,8 @@ typedef NS_ENUM(NSUInteger, ImageType) {
     
     NSString *imagePath;
     switch (imageType) {
-        case ImageTypeBig:   imagePath = [self documentsPathFileName:SFMT(@"IMG_%d@3x.jpg",    (int)index)]; break;
-        case ImageTypeSmall: imagePath = [self documentsPathFileName:SFMT(@"IMG_%d.jpg", (int)index)]; break;
+        case ImageTypeBig:   imagePath = [self documentsPathFileName:SFMT(@"IMG_%d@3x.jpg", (int)index)]; break;
+        case ImageTypeSmall: imagePath = [self documentsPathFileName:SFMT(@"IMG_%d.jpg",    (int)index)]; break;
         default: break;
     }
     return [UIImage imageWithData:[NSData dataWithContentsOfFile:imagePath]];
@@ -139,7 +140,7 @@ typedef NS_ENUM(NSUInteger, ImageType) {
 }
 
 - (NSString *)documentsPathFileName:(NSString *)name {
-    return [documentsPath stringByAppendingPathComponent:name];
+    return [DOCUMENTS_PATH stringByAppendingPathComponent:name];
 }
 
 - (UIImage *)imageWithImage:(UIImage *)image size:(NSInteger)size {

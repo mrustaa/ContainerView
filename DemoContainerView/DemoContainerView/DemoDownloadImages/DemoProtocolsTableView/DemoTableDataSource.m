@@ -3,7 +3,6 @@
 //  Copyright © 2018 mrusta. All rights reserved.
 
 #import "DemoTableDataSource.h"
-#import "ContainerMacros.h"
 
 @interface DemoTableCell : UITableViewCell
 
@@ -29,27 +28,27 @@
     if(!cell)
     {
         cell = [[DemoTableCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: @"TableCell" ];
-        cell.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor = CLR_COLOR;
     }
     
     if(!cell.separatorLine)
     {
-        cell.separatorLine = [[UIView alloc]initWithFrame:(CGRect){ {16 , 87.5}, {selfFrame.size.width -32 , 0.5} }];
+        cell.separatorLine = [[UIView alloc]initWithFrame:(CGRect){ {16 , 87.5}, {SCREEN_WIDTH -32 , 0.5} }];
         cell.separatorLine.backgroundColor = RGB(222, 222, 222);
         [cell addSubview: cell.separatorLine];
     }
     
     if(!cell.labelTitle)
     {
-        cell.labelTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 20}, {selfFrame.size.width -67 , 30} }];
+        cell.labelTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 20}, {SCREEN_WIDTH -67 , 30} }];
         cell.labelTitle.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:22];
-        cell.labelTitle.textColor = [UIColor blackColor];
+        cell.labelTitle.textColor = BLACK_COLOR;
         [cell addSubview:cell.labelTitle];
     }
     
     if(!cell.labelSubTitle)
     {
-        cell.labelSubTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 50}, {selfFrame.size.width -67, 16} }];
+        cell.labelSubTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 50}, {SCREEN_WIDTH -67, 16} }];
         cell.labelSubTitle.font = [UIFont fontWithName:@"ProximaNova-Regular" size:15];
         cell.labelSubTitle.textColor = RGB(124,132,148);
         [cell addSubview:cell.labelSubTitle];
@@ -57,7 +56,7 @@
     
     cell.labelTitle   .text = (indexPath.row) ? (indexPath.row == 1) ? @"mapView" : SFMT(@"photo %d", (int)indexPath.row) : @"settings" ;
     cell.labelSubTitle.text = @"Subtitle";
-    cell.labelTitle.textColor = (self.containerStyle == ContainerStyleDark) ? [UIColor whiteColor] : [UIColor blackColor];
+    cell.labelTitle.textColor = (self.containerStyle == ContainerStyleDark) ? WHITE_COLOR : BLACK_COLOR;
     
     switch (self.containerStyle)
     {

@@ -3,25 +3,21 @@
 //  Copyright © 2018 mrusta. All rights reserved.
 
 #import "ContainerView.h"
-#import "ContainerMacros.h"
 
-@interface ContainerView () <UIGestureRecognizerDelegate, UISearchBarDelegate>
+@interface ContainerView () <UIGestureRecognizerDelegate, UISearchBarDelegate>  {
+    CGFloat _containerTop;
+    CGFloat _containerMiddle;
+    CGFloat _containerBottom;
+    BOOL _containerAllowMiddlePosition;
+    UIView * _headerView;
+}
 
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) UICollectionView *collectionView;
-
-@property (strong, nonatomic) UILabel *titleLabel;
-@property (strong, nonatomic) UISearchBar *titleSearchBar;
-@property (strong, nonatomic) UIView *titleGraber;
-@property (strong, nonatomic) UIView *titleSeparatorLine;
+@property (strong, nonatomic) UIButton *bottomButtonToMoveTop;
 
 @property (strong, nonatomic) UIVisualEffectView *visualEffectViewOrigin;
 @property (strong, nonatomic) UIView *visualEffectView;
 
 @property NSInteger savePositionContainer;
-
-@property NSInteger containerTop;
-@property NSInteger containerBottom;
 
 @end
 
@@ -35,173 +31,233 @@
     return self;
 }
 
-- (void)changeCornerRadius:(CGFloat)newValue
-{
-    self.layer.cornerRadius = newValue;
-    if(self.visualEffectView) self.visualEffectView.layer.cornerRadius = newValue;
-}
-
-- (void)addSubview:(UIView *)subview
-{
-    [super addSubview:subview];
-    
-    if([subview isKindOfClass:[UITableView class]]) {
-        self.tableView = (UITableView *)subview;
-    } else if([subview isKindOfClass:[UICollectionView class]]) {
-        self.collectionView = (UICollectionView *)subview;
-    }
-}
-
-
 - (void)initContainer
 {
-    {
-        self.backgroundColor     = [UIColor clearColor];
-        self.layer.cornerRadius  = 15;
-        self.layer.shadowOffset  = CGSizeMake(0, 5);
-        self.layer.shadowOpacity = 0.5;
-        self.layer.shadowRadius  = 5;
-        self.layer.shadowColor   = RGB(44, 62, 80).CGColor;
+    self.backgroundColor     = CLR_COLOR;
+    self.layer.shadowOffset  = CGSizeMake(0, 5);
+    self.layer.shadowOpacity = 0.5;
+    self.layer.shadowRadius  = 5;
+    self.layer.shadowColor   = RGB(44, 62, 80).CGColor;
+    
+    _containerAllowMiddlePosition = NO;
+    
+    UIPanGestureRecognizer *
+    containerPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognized:)];
+    containerPan.delegate = self;
+    [self addGestureRecognizer: containerPan];
+    
+//    NSInteger containerBottom_ = (SCREEN_HEIGHT -92);
+//
+//    if (NAV_ADDED) {
+//        UINavigationController * nav = (UINavigationController *)ROOT_VC;
+//        if(!nav.navigationBarHidden) {
+//            if(!nav.navigationBar.translucent) {
+//
+//            }
+//            containerBottom_ -= nav.navigationBar.height;
+//        }
+//    }
+//    containerBottom_ -= (IS_IPHONE_X ?34 :0);
+    self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom -(IS_IPHONE_X ?34 :0));
+    
+    
+    if(!self.visualEffectView) {
+        self.visualEffectView = [[UIView alloc] initWithFrame: (CGRect){ {0, 0}, self.frame.size } ];
+        self.visualEffectView.clipsToBounds = YES;
+        [self addSubview: self.visualEffectView];
         
-        UIPanGestureRecognizer * containerPan;
+        if(!self.visualEffectViewOrigin)
         {
-            containerPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognized:)];
-            containerPan.delegate = self;
+            UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+            self.visualEffectViewOrigin = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+            self.visualEffectViewOrigin.frame = (CGRect){ {0, 0}, self.frame.size };
+            [self.visualEffectView addSubview: self.visualEffectViewOrigin];
         }
-        [self addGestureRecognizer: containerPan];
-        
-        NSInteger containerBottom_ = selfFrame.size.height -92;
-        
-        if (NAV_ADDED) {
-            UINavigationController * nav = (UINavigationController *)ROOT_VC;
-            if(!nav.navigationBarHidden) {
-                if(!nav.navigationBar.translucent) {
-                    containerBottom_ = (containerBottom_ -64);
-                }
-            }
-        }
-        
-        self.transform = CGAffineTransformMakeTranslation(0, (selfFrame.size.height == iphoneX) ? (containerBottom_ -34) : containerBottom_ );
-        
-        {
-            if(!self.visualEffectView)
-            {
-                self.visualEffectView = [[UIView alloc] initWithFrame: (CGRect){ {0, 0}, self.frame.size } ];
-                self.visualEffectView.layer.cornerRadius = 15;
-                self.visualEffectView.clipsToBounds = YES;
-                self.visualEffectView.backgroundColor = [UIColor clearColor];
-                [self addSubview: self.visualEffectView];
-                
-                if(!self.visualEffectViewOrigin)
-                {
-                    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-                    self.visualEffectViewOrigin = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-                    self.visualEffectViewOrigin.frame = (CGRect){ {0, 0}, self.frame.size };
-                    [self.visualEffectView addSubview: self.visualEffectViewOrigin];
-                }
-            }
-        }
-        
-        if(!self.titleGraber)
-        {
-            self.titleGraber = [[UIView alloc] initWithFrame: (CGRect) {
-                { ((self.frame.size.width / 2) -18), 8 },
-                { 36, 4 }
-            }];
-            self.titleGraber.layer.cornerRadius = self.titleGraber.frame.size.height / 2;
-            self.titleGraber.backgroundColor = RGB(180, 180, 180);
-            self.titleGraber.alpha = 0.5 ;
-            [self addSubview:self.titleGraber];
-        }
-        
-        if(!self.titleSeparatorLine)
-        {
-            self.titleSeparatorLine = [[UIView alloc]initWithFrame: (CGRect) { {0, 63.5}, { self.frame.size.width, 0.5} }];
-            self.titleSeparatorLine.backgroundColor = RGB(212, 212, 212);
-            [self addSubview:self.titleSeparatorLine];
-        }
-        
-        {
-            if(!self.titleLabel)
-            {
-                self.titleLabel = [[UILabel alloc]initWithFrame: (CGRect) { {18, 16}, {161, 30} }];
-                self.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:24];
-                self.titleLabel.textColor = [UIColor blackColor];
-                self.titleLabel.text = @"Heading";
-                [self addSubview:self.titleLabel];
-            }
-            
-            if(!self.titleSearchBar)
-            {
-                self.titleSearchBar = [[UISearchBar alloc] initWithFrame:(CGRect) { {0, 4}, { self.frame.size.width, 56} }];
-                self.titleSearchBar.barStyle = UIBarStyleDefault;
-                self.titleSearchBar.searchBarStyle = UISearchBarStyleMinimal;
-                self.titleSearchBar.placeholder = @"Search";
-                self.titleSearchBar.alpha = 0;
-                self.titleSearchBar.delegate = self;
-                [self addSubview:self.titleSearchBar];
-            }
-        }
+        self.visualEffectView.backgroundColor = WHITE_COLOR;
+        self.visualEffectViewOrigin.hidden = YES;
+    }
+    
+}
+
+
+
+
+
+
+- (void)changeCornerRadius:(CGFloat)newValue
+{
+    self.containerCornerRadius = newValue;
+    
+    self.layer.cornerRadius = self.containerCornerRadius;
+    if (self.visualEffectView)
+        self.visualEffectView.layer.cornerRadius = self.containerCornerRadius;
+    
+    [self calculationScrollViewHeight];
+}
+
+
+
+
+- (void)setContainerBottomButtonToMoveTop:(BOOL)newValue {
+    if(newValue) {
+        [self addSubview: self.bottomButtonToMoveTop];
+    } else if (!newValue && _bottomButtonToMoveTop) {
+        [_bottomButtonToMoveTop removeFromSuperview];
+        _bottomButtonToMoveTop = nil;
     }
 }
+
+- (BOOL)containerBottomButtonToMoveTop {
+    return _bottomButtonToMoveTop != nil;
+}
+
+- (UIButton *)bottomButtonToMoveTop {
+    
+    if(!_bottomButtonToMoveTop)
+    {
+        UIButton *
+        btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btn addTarget:self action:@selector(containerBottomButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        //[btn addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(containerBottomButtonAction)]];
+        //[btn addGestureRecognizer: [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(containerBottomButtonAction)]];
+        
+        btn.frame = CGRectMake( 0, 0, SCREEN_WIDTH, (SCREEN_HEIGHT -self.containerBottom +(IS_IPHONE_X ?34 :0)) );
+        btn.backgroundColor = RGBA(255, 0, 0, 0.5);
+        btn.hidden = YES;
+        _bottomButtonToMoveTop = btn;
+    }
+    
+    return _bottomButtonToMoveTop;
+}
+- (void)containerBottomButtonAction {
+    if(self.containerPosition == ContainerMoveTypeBottom) {
+        [self containerMove:ContainerMoveTypeTop];
+    }
+}
+
+
+
+
+
+
+- (void)setContainerTop:(CGFloat)containerTop {
+    _containerTop = containerTop;
+}
+
+- (CGFloat)containerTop {
+    if(!_containerTop) _containerTop = CUSTOM_TOP;
+    return _containerTop;
+}
+
+- (void)setContainerMiddle:(CGFloat)containerMiddle {
+    // if(IS_IPHONE_X) containerMiddle -= 34;
+    _containerMiddle = containerMiddle;
+}
+
+- (CGFloat)containerMiddle {
+    if(!_containerMiddle) _containerMiddle = CUSTOM_MIDDLE;
+    return _containerMiddle;
+}
+
+- (void)setContainerBottom:(CGFloat)containerBottom {
+    _containerBottom = containerBottom;
+    if(_bottomButtonToMoveTop) _bottomButtonToMoveTop.height = containerBottom;
+}
+
+- (CGFloat)containerBottom {
+    if(!_containerBottom) _containerBottom = CUSTOM_BOTTOM;
+    return _containerBottom;
+}
+
+
+- (void)setContainerAllowMiddlePosition:(BOOL)containerAllowMiddlePosition {
+    _containerAllowMiddlePosition = containerAllowMiddlePosition;
+    [self containerMove: (containerAllowMiddlePosition) ?ContainerMoveTypeMiddle :ContainerMoveTypeBottom];    
+}
+
+- (BOOL)containerAllowMiddlePosition {
+    return _containerAllowMiddlePosition;
+}
+
+
+
+
+- (UIView *)headerView {
+    return _headerView;
+}
+
+- (void)setHeaderView:(UIView *)hv {
+    
+    if(hv) {
+        if(_headerView) [self removeHeaderView];
+        _headerView = hv;
+        [self addSubview:_headerView];
+    } else {
+        [self removeHeaderView];
+    }
+    [self calculationScrollViewHeight];
+}
+
+- (void)removeHeaderView {
+    if(_headerView) {
+        [_headerView removeFromSuperview];
+    }
+    _headerView = nil;
+}
+
+
+
+
+
+- (void)addSubview:(UIView *)subview {
+    [super addSubview:subview];
+    if([subview isKindOfClass:[UIScrollView class]]) {
+        UIScrollView * scrollView = (UIScrollView *)subview;
+        if (@available(iOS 11.0, *)) {
+            scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        [self calculationScrollViewHeight];
+    }
+}
+
+- (void)removeScrollView {
+    UIScrollView * scrollView = [self searchScrollViewInSubviews];
+    if(scrollView) [scrollView removeFromSuperview];
+}
+
+- (UIScrollView *)searchScrollViewInSubviews {
+    UIScrollView *scrollView = nil;
+    for (UIView * view in self.subviews) {
+        if([view isKindOfClass:[UIScrollView class]]) {
+            scrollView = (UIScrollView *)view;
+        }
+    }
+    return scrollView;
+}
+
+- (void)calculationScrollViewHeight {
+    
+    UIScrollView * scrollView = [self searchScrollViewInSubviews];
+    if(scrollView) {
+        
+        CGFloat headerHeight = (_headerView ?_headerView.height :0);
+        CGFloat top = self.containerTop;
+        CGFloat iphnXpaddingTop     = (IS_IPHONE_X ?24:0);
+        CGFloat iphnXpaddingBottom  = (IS_IPHONE_X ?34:0);
+        CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
+        
+        scrollView.y = headerHeight;
+        scrollView.height = (SCREEN_HEIGHT -(top +headerHeight +iphnXpaddingTop ) );
+        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, iphnXpaddingBottom , 0);
+    }
+}
+
+
 
 
 - (void)panGestureRecognized:(UIPanGestureRecognizer *)recognizer
 {
-    [self endEditing:YES];
-    
-    
-    NSInteger containerPositionTop_ =
-    (self.containerTop == 0) ? defaultFrameY : self.containerTop;
-    
-    
-        if(recognizer.state == UIGestureRecognizerStateChanged)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-            
-            if(self.frame.origin.y < containerPositionTop_)
-            {
-                CGRect scrollFrame = (CGRect)
-                {
-                    defaultHeaderOrigin,
-                    {
-                        selfFrame.size.width,
-                        
-                        (selfFrame.size.height -containerPositionTop_ -defaultHeaderHeight)
-                        +(containerPositionTop_ -self.frame.origin.y)
-                    }
-                };
-     
-                self.tableView.frame = scrollFrame;
-                self.collectionView.frame = scrollFrame;
-            }
-                });
-        }
-        else if (recognizer.state == UIGestureRecognizerStateEnded)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-            
-            CGRect scrollFrame = (CGRect)
-            {
-                defaultHeaderOrigin,
-                {
-                    selfFrame.size.width,
-                    
-                    ((selfFrame.size.height +containerPositionTop_ -defaultHeaderHeight)
-                     -((self.containerTop == 0) ? defaultFrameY : self.containerTop) )
-                }
-            };
-            
-            self.tableView.frame = scrollFrame;
-            self.collectionView.frame = scrollFrame;
-                
-            });
-        }
-    
-
-    
-    
-    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.savePositionContainer = (NSInteger)self.transform.ty;
     }
@@ -210,178 +266,163 @@
         CGAffineTransform
         _transform = self.transform;
         _transform.ty = (self.savePositionContainer + [recognizer translationInView: self].y );
-        if (_transform.ty < 0) _transform.ty = 0;
-        self.transform = _transform ;
+        if (_transform.ty < 0) {
+            _transform.ty = 0;
+        } else if( _transform.ty < self.containerTop) {
+            _transform.ty = ( self.containerTop / 2) + (_transform.ty / 2);
+            self.transform = _transform;
+        } else {
+            self.transform = _transform;
+        }
         
-        if(self.blockScalingBackBackgroundView) self.blockScalingBackBackgroundView(ContainerMoveTypeTop, _transform.ty, NO);
+        
+        if(self.blockChangeShadowLevel) self.blockChangeShadowLevel(ContainerMoveTypeTop, self.transform.ty, NO);
+        
+        self.bottomButtonToMoveTop.hidden = YES;
     }
     
-    if (recognizer.state == UIGestureRecognizerStateEnded)
-    {
-        if(self.containerMove3position)
-        {
-            
-            if( self.transform.ty < ((selfFrame.size.height * 64) /100) ) {
-                if([recognizer velocityInView:self].y < 0)
-                    [self containerMove:ContainerMoveTypeTop];
-                else {
-                    if( 2500 < [recognizer velocityInView:self].y)
-                        [self containerMove:ContainerMoveTypeBottom];
-                    else [self containerMove:ContainerMoveTypeMiddle];
-                }
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        CGFloat velocityInViewY = [recognizer velocityInView:self].y;
+        [self containerMoveForVelocityInView:velocityInViewY];
+    }
+}
+
+
+- (void)containerMoveForVelocityInView:(CGFloat)velocityInViewY {
+    
+    ContainerMoveType moveType;
+    
+    if( self.containerAllowMiddlePosition ) {
+        if( self.transform.ty < self.containerMiddle ) {
+            if(velocityInViewY < 0) {
+                moveType = ContainerMoveTypeTop;
             } else {
-                if([recognizer velocityInView:self].y < 0) {
-                    if(  [recognizer velocityInView:self].y < -2000 )
-                        [self containerMove:ContainerMoveTypeTop];
-                    else [self containerMove:ContainerMoveTypeMiddle];
-                }
-                else [self containerMove:ContainerMoveTypeBottom];
+                moveType = (2500 < velocityInViewY) ?ContainerMoveTypeBottom :ContainerMoveTypeMiddle;
+            }
+        } else {
+            if(velocityInViewY < 0) {
+                moveType = (velocityInViewY < (-2000)) ?ContainerMoveTypeTop :ContainerMoveTypeMiddle;
+            } else {
+                moveType = ContainerMoveTypeBottom;
             }
         }
-        else
-        {
-            if([recognizer velocityInView:self].y < 0) {
-                [self containerMove:ContainerMoveTypeTop];
-            } else {
-                [self containerMove:ContainerMoveTypeBottom];
-            }
-            
+    } else {
+        if( self.transform.ty < self.containerTop ) {
+            moveType = (750 < velocityInViewY) ?ContainerMoveTypeBottom :ContainerMoveTypeTop;
+        } else {
+            moveType = (velocityInViewY < 0) ?ContainerMoveTypeTop :ContainerMoveTypeBottom;
         }
     }
+    [self containerMove:moveType];
     
 }
 
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
-shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
+shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return 0;
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [self endEditing:YES];
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
-{
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
     [self containerMove:ContainerMoveTypeTop];
 }
 
-- (void)changeTitleType:(ContainerTitleType)titleType {
-    
-    animations(.25,^(void) {
-        switch (titleType) {
-            case ContainerTitleTypeSearchBar:   [self changeTitleAlphaLabel:0 search:1 graber:0]; break;
-            case ContainerTitleTypeLabel:       [self changeTitleAlphaLabel:1 search:0 graber:1]; break;
-            case ContainerTitleTypeDefault:     [self changeTitleAlphaLabel:0 search:0 graber:1]; break;
-        }
-    });
-}
-
-- (void)changeTitleAlphaLabel:(CGFloat)label search:(CGFloat)search graber:(CGFloat)graber {
-    self.titleLabel    .alpha = label;
-    self.titleSearchBar.alpha = search;
-    self.titleGraber   .alpha = graber;
-}
-
 - (void)changeBlurStyle:(ContainerStyle)styleType {
+    self.containerStyle = styleType;
     
-    animations(.25,^(void) {
+    CGFloat alpha = 0.5;
+    UIColor *graberColor = GRAYLEVEL(180);
+    UIColor *separatorColor = [graberColor copy];
+    
+    if((styleType == ContainerStyleDark) ||
+       (styleType == ContainerStyleDefault)) {
+        graberColor     = RGB(235, 239, 245);
+        separatorColor  = GRAYLEVEL(222);
+    }
+    
+    if      (styleType == ContainerStyleDark)    alpha = 0.2;
+    else if (styleType == ContainerStyleDefault) alpha = 1.0;
+    
+    if(styleType != ContainerStyleDefault) {
+        self.visualEffectView.backgroundColor = CLR_COLOR;
+        self.visualEffectViewOrigin.hidden = NO;
         
-        CGFloat alpha = 0.5;
-        UIColor *graberColor = RGB(180, 180, 180);
-        UIColor *separatorColor = graberColor;
+        UIBlurEffectStyle effect;
+        if      (styleType == ContainerStyleLight)      effect = UIBlurEffectStyleLight;
+        else if (styleType == ContainerStyleExtraLight) effect = UIBlurEffectStyleExtraLight;
+        else                                            effect = UIBlurEffectStyleDark;
         
-        if((styleType == ContainerStyleDark) || (styleType == ContainerStyleDefault)) {
-            graberColor     = RGB(235, 239, 245);
-            separatorColor  = RGB(222, 222, 222);
-        }
-        
-        if      (styleType == ContainerStyleDark)    alpha = 0.2;
-        else if (styleType == ContainerStyleDefault) alpha = 1.0;
-        
-        self.titleSearchBar.keyboardAppearance = (styleType == ContainerStyleDark) ? UIKeyboardAppearanceDark : UIKeyboardAppearanceDefault;
-        if(self.titleSearchBar.alpha == 0)
-        {
-            self.titleGraber.backgroundColor = graberColor;
-            self.titleGraber.alpha = alpha;
-        }
-        self.titleLabel.textColor = (styleType == ContainerStyleDark) ? [UIColor whiteColor] : [UIColor blackColor];
-        
-        self.titleSeparatorLine.backgroundColor = separatorColor;
-        self.titleSeparatorLine.alpha = alpha;
-        
-        if(styleType != ContainerStyleDefault) {
-            self.visualEffectView.backgroundColor = [UIColor clearColor];
-            self.visualEffectViewOrigin.alpha = 1;
-            
-            UIBlurEffectStyle effect;
-            if      (styleType == ContainerStyleLight)      effect = UIBlurEffectStyleLight;
-            else if (styleType == ContainerStyleExtraLight) effect = UIBlurEffectStyleExtraLight;
-            else effect = UIBlurEffectStyleDark;
-            
-            self.visualEffectViewOrigin.effect = [UIBlurEffect effectWithStyle:effect];
-        } else {
-            self.visualEffectView.backgroundColor = [UIColor whiteColor];
-            self.visualEffectViewOrigin.alpha = 0;
-        }
-    });
+        self.visualEffectViewOrigin.effect = [UIBlurEffect effectWithStyle:effect];
+    } else {
+        self.visualEffectView.backgroundColor = WHITE_COLOR;
+        self.visualEffectViewOrigin.hidden = YES;
+    }
 }
 
 
-- (void)containerMove:(ContainerMoveType)containerMove
-{
+#pragma mark - ContainerMove
+
+- (void)containerMove:(ContainerMoveType)moveType {
+    [self containerMove:moveType animated:YES completion:nil];
+}
+
+- (void)containerMove:(ContainerMoveType)moveType animated:(BOOL)animated {
+    [self containerMove:moveType animated:animated completion:nil];
+}
+
+- (void)containerMove:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
+    
+    self.containerPosition = moveType;
     
     NSInteger position = 0;
-    NSInteger containerTop_ = self.containerTop;
-    NSInteger containerBottom_ = (selfFrame.size.height -(self.containerBottom));
     
-    if (self.containerTop == 0) {
-        containerTop_ = 60;
+    switch (moveType) {
+        case ContainerMoveTypeTop:      position = self.containerTop +(IS_IPHONE_X ?24 :0); break;
+        case ContainerMoveTypeMiddle:   position = self.containerMiddle; break;
+        case ContainerMoveTypeBottom:   position = self.containerBottom -(IS_IPHONE_X ?34 :0); break;
+        case ContainerMoveTypeCustom:
+        case ContainerMoveTypeHide:     position = SCREEN_HEIGHT; break;
     }
     
-    if (self.containerBottom == 0) {
-        containerBottom_ = (selfFrame.size.height -92);
-    }
+    [self containerMovePosition:position moveType:moveType animated:animated completion:completion];
+}
+
+- (void)containerMoveCustomPosition:(NSInteger)position {
+    [self containerMoveCustomPosition:position animated:YES completion:nil];
+}
+
+- (void)containerMoveCustomPosition:(NSInteger)position animated:(BOOL)animated {
+    [self containerMoveCustomPosition:position animated:animated completion:nil];
+}
+
+- (void)containerMoveCustomPosition:(NSInteger)position animated:(BOOL)animated completion:(void (^)(void))completion {
+    [self calculationScrollViewHeight];
     
-    if (NAV_ADDED) {
-        UINavigationController * nav = (UINavigationController *)ROOT_VC;
-        if(!nav.navigationBarHidden) {
-            if(nav.navigationBar.translucent) {
-                containerTop_ = (containerTop_ +64);
-            } else {
-                containerBottom_ = (containerBottom_ -64);
-            }
-        }
-    }
-    
-    switch (containerMove) {
-        case ContainerMoveTypeTop:      position = ((selfFrame.size.height == iphoneX) ? (containerTop_ +24) : containerTop_); break;
-        case ContainerMoveTypeMiddle:   position = ((selfFrame.size.height * 64) / 100); break;
-        case ContainerMoveTypeBottom:   position = ((selfFrame.size.height == iphoneX) ? (containerBottom_ -34) : containerBottom_ ); break;
-        case ContainerMoveTypeHide:     position =   selfFrame.size.height; break;
-    }
+    self.containerPosition = ContainerMoveTypeCustom;
+    [self containerMovePosition:position moveType:ContainerMoveTypeCustom animated:animated completion:completion];
+}
+
+- (void)containerMovePosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
+    if(_bottomButtonToMoveTop) self.bottomButtonToMoveTop.hidden = (moveType == ContainerMoveTypeTop) ? YES : NO;
     
     CGAffineTransform _transform = CGAffineTransformMakeTranslation( 0, position);
     
-    if(self.blockScalingBackBackgroundView) self.blockScalingBackBackgroundView(containerMove, _transform.ty, YES);
-
-
-    animationsSpring(.45, ^(void){
+    if(self.blockChangeShadowLevel) self.blockChangeShadowLevel(moveType, _transform.ty, animated);
+    
+    if(animated) {
+        ANIMATION_SPRINGCOMP(.45, ^(void) {
+            self.transform = _transform;
+        }, ^(BOOL fin) {
+            if(completion) completion();
+        });
+    } else {
         self.transform = _transform;
-    });
-
-    
-}
-
-- (void)changePositionMoveType:(ContainerMoveType)moveType newValue:(NSInteger)newValue {
-    
-    switch (moveType) {
-        case ContainerMoveTypeTop:    self.containerTop    = newValue; break;
-        case ContainerMoveTypeBottom: self.containerBottom = newValue; break;
-        default: break;
+        if(completion) completion();
     }
-    
 }
 
 
