@@ -2,7 +2,7 @@
 //  DemoHeaders.m
 //  DemoContainerView
 //
-//  Created by Рустам Мотыгуллин on 17/11/2018.
+//  Created by Rustam Motygullin on 17/11/2018.
 //  Copyright © 2018 mrusta. All rights reserved.
 //
 

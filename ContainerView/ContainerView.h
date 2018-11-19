@@ -10,62 +10,62 @@
 @property (strong, nonatomic) UIView *headerView;
 
 /**
- @brief Этот параментр указывает, следует ли добавить кнопку, когда контейнер находится внизу, для анимированного раскрытия контейнера вверх.
+ @brief This option indicates whether to add a button when the container is at the bottom to animate the container upwards.
  */
 @property BOOL containerBottomButtonToMoveTop;
 
 /**
- @brief Этот параментр устанавливает новое значение позиции, для типа перемещения вверх.
+ @brief This parameter sets the new position value for the up move type.
  */
 @property CGFloat containerTop;
 
 /**
- @brief Этот параментр устанавливает новое значение позиции, для типа перемещения вниз.
+ @brief This parameter sets the new position value for the type of movement to the middle position.
  */
 @property CGFloat containerBottom;
 
 /**
- @brief Этот параментр устанавливает новое значение позиции, для типа перемещения в среднее положение.
+ @brief This parameter sets the new position value for the type of movement to the middle position.
  */
 @property CGFloat containerMiddle;
 
 /**
- @brief Этот параментр указывает, какой из типов перемещения был последним.
+ @brief This parameter indicates which type of move was last.
  */
 @property ContainerMoveType containerPosition;
 @property ContainerStyle containerStyle;
 
 /**
- @brief Этот метод для добавления размытия фона для контейнера
- 
- @param styleType Существует 3 типа размытия. Размытие с оттенками 1) черного, 2) белого, 3) белого со слабой концентраций размытия. 4) Последний атрибут отключает размытие, для обычного изменения цвета фона
+ @brief This method to add a blur to the background of the container.
+  
+ @param styleType There are 3 types of blur. Blur with hues of 1) black, 2) white, 3) white with low blur concentrations. 4) The last attribute turns off the blur, for a normal change of the background color.
  */
 - (void)changeBlurStyle:(ContainerStyle)styleType;
 
 - (void)containerMoveForVelocityInView:(CGFloat)velocityInViewY;
 
 /**
- @brief Этот метод для анимированного перемещения контейнера, по фиксированным позициям
- 
- @param moveType Существует 4 типа перемещения. Перемещение 1) наверх, 2) середину, 3) вниз, 4) скрытие в самый вниз за пределы видимости
+ @brief This method for animated container movement, at fixed positions
+  
+ @param moveType There are 4 types of movement. Moving 1) up, 2) middle, 3) down, 4) hiding in the most down beyond the limits of visibility
  */
 - (void)containerMove:(ContainerMoveType)moveType;
 - (void)containerMove:(ContainerMoveType)moveType animated:(BOOL)animated;
 - (void)containerMove:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion;
 
 /**
- @brief Этот метод для анимированного перемещения контейнера, по пользовательской позиции
+ @brief This method for animated container movement, by user position.
  
- @param position Пользовательская позиция
+ @param position Custom position
  */
 - (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType;
 - (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated;
 - (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion;
 
 /**
- @brief Этот метод для изменения радиуса округления границ
- 
- @param newValue присвоение нового значения
+ @brief This method for changing the rounding radius
+  
+ @param newValue assignment of a new value
  */
 - (void)changeCornerRadius:(CGFloat)newValue;
 
@@ -74,7 +74,7 @@
 @property NSInteger containerCornerRadius;
 
 /**
- @brief При перемещении контейнера, по умолчанию существуют 2 позиции (это перемещение вверх, и вниз). Этот параментр добавляет 3 позицию (перемещение в середину)
+ @brief When moving the container, by default there are 2 positions (this is moving up and down). This parameter adds 3 position (move to the middle)
  */
 @property BOOL containerAllowMiddlePosition;
 

@@ -6,10 +6,7 @@
 #import "ContainerTypes.h"
 #import "ContainerView.h"
 
-@interface ContainerScrollDelegate : NSObject <UIGestureRecognizerDelegate, UIScrollViewDelegate> {
-    NSInteger _containerTop;
-}
-
+@interface ContainerScrollDelegate : NSObject <UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
 @property (strong, nonatomic) ContainerView *containerView;
 @property (strong, nonatomic) void(^blockTransform)(CGFloat);
