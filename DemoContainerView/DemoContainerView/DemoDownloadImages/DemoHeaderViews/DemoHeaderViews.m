@@ -94,7 +94,6 @@
     searchBar.barStyle = UIBarStyleDefault;
     searchBar.searchBarStyle = UISearchBarStyleMinimal;
     searchBar.placeholder = @"Search";
-//    searchBar.delegate = self;
     view.searchBar = searchBar;
     [view addSubview:searchBar];
     
@@ -105,7 +104,6 @@
 
 + (HeaderGrib *)createHeaderGrip {
     HeaderGrib *view = [[HeaderGrib alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 20)];
-    view.clipsToBounds = YES;
     
     view.grip = [self createGrip];
     [view addSubview:view.grip];

@@ -47,6 +47,8 @@
 @property (strong, nonatomic) UIImageView                   *imageView;
 @property (strong, nonatomic) UIView                        *shadowView;
 
+@property (strong, nonatomic) IBOutlet UISegmentedControl   *segmentedContainerMove;
+@property (strong, nonatomic) IBOutlet UISwitch             *switchEnableMiddle;
 
 @property (strong, nonatomic) IBOutlet UIView               *settingsView;
 
@@ -71,7 +73,7 @@
     [super viewDidLoad];
     
     isHidden = NO;
-    isZoom = YES;
+    isZoom   = YES;
     isShadow = YES;
     
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -164,7 +166,9 @@
     
 }
 
-
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+}
 
 
 #pragma mark - Create ContainerView elements
@@ -180,7 +184,9 @@
         container.blockChangeShadowLevel = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
             
             if(animated) {
+                
                 ANIMATION_SPRING(.45,^(void){
+                    self.segmentedContainerMove.selectedSegmentIndex = containerMove;
                     [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
                 });
             } else {
@@ -354,41 +360,61 @@
     
     CGFloat selfCenter = self.containerView.containerMiddle;
     
-    CGFloat viewsCornerRadius = 0.;
-    CGFloat mapAlpha = 1.;
-    CGFloat shadowAlpha = 0.;
-    CGFloat shadowHeight = SCREEN_HEIGHT;
-    CGAffineTransform transform = CGAffineTransformIdentity;
+    
     
     
     if(containerFrameY < selfCenter) {
-        CGFloat percent     = (((selfCenter -containerFrameY) / selfCenter) / 2);
+        
+        CGFloat procent = (((selfCenter -containerFrameY) / selfCenter) / 2);
+        
+        CGAffineTransform transform = CGAffineTransformMakeScale( 1. -(procent / 5), 1. -(procent / 5));
         
         if(isZoom) {
-            viewsCornerRadius   = (percent * 24);
-            transform           = CGAffineTransformMakeScale( 1. -(percent / 5), 1. -(percent / 5));
+            self.imageView.transform = transform;
+            self.imageView.layer.cornerRadius = (procent * 24);
             
-            mapAlpha            = (1 -percent *2);
-        }
-        if(isShadow) {
-            shadowAlpha         = percent;
-            shadowHeight        = (containerFrameY +self.containerView.containerCornerRadius);
-        }
-    }
+            self.settingsView.transform = transform;
+            self.settingsView.layer.cornerRadius = (procent * 24);
+            
+            self.mapView.transform = transform;
+            self.mapView.layer.cornerRadius = (procent * 24);
         
-    self.imageView.transform = transform;
-    self.imageView.layer.cornerRadius = viewsCornerRadius;
-    
-    self.settingsView.transform = transform;
-    self.settingsView.layer.cornerRadius = viewsCornerRadius;
-    
-    self.mapView.transform = transform;
-    self.mapView.layer.cornerRadius = viewsCornerRadius;
-    
-    self.mapViewStatusBarBlur.alpha = mapAlpha;
-    
-    self.shadowView.alpha = shadowAlpha;
-    self.shadowView.height = shadowHeight;
+            self.mapViewStatusBarBlur.alpha = (1 -procent *2);
+        } else {
+            self.imageView.transform = CGAffineTransformIdentity;
+            self.imageView.layer.cornerRadius = 0;
+            
+            self.settingsView.transform = CGAffineTransformIdentity;
+            self.settingsView.layer.cornerRadius = 0;
+            
+            self.mapView.transform = CGAffineTransformIdentity;
+            self.mapView.layer.cornerRadius = 0;
+        }
+        
+        if(isShadow) {
+            self.shadowView.alpha = procent;
+            self.shadowView.height = (containerFrameY +self.containerView.containerCornerRadius);
+        } else {
+            self.shadowView.alpha = 0.;
+            self.shadowView.height = SCREEN_HEIGHT;
+        }
+        
+    } else {
+        
+        self.imageView.transform = CGAffineTransformIdentity;
+        self.imageView.layer.cornerRadius = 0;
+        
+        self.settingsView.transform = CGAffineTransformIdentity;
+        self.settingsView.layer.cornerRadius = 0;
+        
+        self.mapView.transform = CGAffineTransformIdentity;
+        self.mapView.layer.cornerRadius = 0;
+        
+        self.mapViewStatusBarBlur.alpha = 1;
+        
+        self.shadowView.alpha = 0.;
+        self.shadowView.height = SCREEN_HEIGHT;
+    }
 }
 
 
@@ -411,7 +437,7 @@
     APP.statusBarHidden = hidden;
 }
 
-- (IBAction)changeContainerMoveType:(UISwitch *)sender {
+- (IBAction)changeContainerEnabledMiddle:(UISwitch *)sender {
     self.containerView.containerAllowMiddlePosition = sender.on;
 }
 
@@ -431,51 +457,39 @@
     self.containerView.alpha = sender.value;
 }
 
-
-- (IBAction)changeContainerMoveTop:(UIButton *)sender {
-    [self.containerView containerMove:ContainerMoveTypeTop];
-}
-- (IBAction)changeContainerMoveMiddle:(UIButton *)sender {
-    [self.containerView containerMove:ContainerMoveTypeMiddle];
-}
-- (IBAction)changeContainerMoveBottom:(UIButton *)sender {
-    [self.containerView containerMove:ContainerMoveTypeBottom];
-}
-- (IBAction)changeContainerMoveHide:(UIButton *)sender {
-    [self.containerView containerMove:ContainerMoveTypeHide];
+- (IBAction)changeContainerMove:(UISegmentedControl *)sender {
+    if((ContainerMoveType)sender.selectedSegmentIndex == ContainerMoveTypeMiddle) {
+        self.containerView.containerAllowMiddlePosition = YES;
+        [self.switchEnableMiddle setOn:YES animated: YES];
+    }
+    [self.containerView containerMove:(ContainerMoveType)sender.selectedSegmentIndex];
 }
 
 
 - (IBAction)changeContainerTitleType:(UISegmentedControl *)sender {
-    
     
     ContainerStyle style = self.containerView.containerStyle;
     
     switch (sender.selectedSegmentIndex) {
         case 0: self.containerView.headerView = nil; break;
         case 1: {
-            HeaderGrib *
-            grib = [DemoHeaderViews createHeaderGrip];
+            HeaderGrib *grib = [DemoHeaderViews createHeaderGrip];
             [DemoHeaderViews changeColorsHeaderView:grib forStyle:style];
             self.containerView.headerView = grib;
         } break;
         case 2: {
-            HeaderLabel *
-            label = [DemoHeaderViews createHeaderLabel];
+            HeaderLabel *label = [DemoHeaderViews createHeaderLabel];
             [DemoHeaderViews changeColorsHeaderView:label forStyle:style];
             self.containerView.headerView = label;
         } break;
         case 3: {
-            HeaderSearch *
-            search = [DemoHeaderViews createHeaderSearch];
+            HeaderSearch *search = [DemoHeaderViews createHeaderSearch];
             search.searchBar.delegate = self;
             [DemoHeaderViews changeColorsHeaderView:search forStyle:style];
             self.containerView.headerView = search;
         } break;
         default: break;
     }
-    
-    
 }
 
 
@@ -491,7 +505,6 @@
     
     UIView *view = self.containerView.headerView;
     if(view) [DemoHeaderViews changeColorsHeaderView:view forStyle:style];
-    
     
     if(style == ContainerStyleDark)
     {
@@ -536,15 +549,12 @@
 }
 
 
-
-
 - (IBAction)changeContainerCornerRadius:(UISlider *)sender {
     [self.containerView changeCornerRadius: sender.value];
     self.containerLabelValueCornerRadius.text = SFMT(@"%d", (int)sender.value);
 }
 
 - (IBAction)changeContainerScrollViewType:(UISegmentedControl *)sender {
-    
     [self.containerView removeScrollView];
     
     switch (sender.selectedSegmentIndex) {

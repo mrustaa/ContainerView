@@ -22,21 +22,6 @@
 
 #pragma mark - Scroll Delegate
 
-//CGFloat _savePositionContainer;
-//
-//- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-//    CGFloat velocityInViewY = [scrollView.panGestureRecognizer velocityInView:WINDOW].y;
-//
-//    PRINT(@" ✅ %d ",((self.containerView.containerPosition == ContainerMoveTypeBottom) ||
-//                     (self.containerView.containerPosition == ContainerMoveTypeMiddle)));
-//    if((self.containerView.containerPosition == ContainerMoveTypeBottom) ||
-//       (self.containerView.containerPosition == ContainerMoveTypeMiddle)) {
-//        [scrollView setContentOffset:scrollView.contentOffset animated:NO];
-//        bottomDeceleratingDisable = NO;
-//        [self.containerView containerMoveForVelocityInView:velocityInViewY];
-//    }
-//}
-
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -205,7 +190,6 @@
         } else {
             self.containerView.transform = selfTransform;
         }
-        
         PRINT(@" 👇 %f ",self.containerView.transform.ty);
     }
     // скроллинг вверх вниз - без прикосновения к краю 👆👇
@@ -245,7 +229,7 @@
                 }
                 
                 selfTransform = self.containerView.transform;
-                selfTransform.ty = (top +translationInViewY ); /// здесь расстояние от нажатой точки  складывается с + топом
+                selfTransform.ty = ((top -startScrollPosition) +translationInViewY ); /// здесь расстояние от нажатой точки  складывается с + топом
                 
                 if(selfTransform.ty < top) selfTransform.ty = top;
                 
@@ -308,6 +292,5 @@
         [self.containerView containerMoveForVelocityInView:velocityInViewY];
     }
 }
-
 
 @end

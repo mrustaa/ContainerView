@@ -12,7 +12,6 @@
     BOOL _containerShadow;
     UIView * _headerView;
     CGFloat _savePositionContainer;
-
 }
 
 @property (strong, nonatomic) UIButton *bottomButtonToMoveTop;
@@ -36,17 +35,20 @@
 - (void)initContainer
 {
     self.backgroundColor     = CLR_COLOR;
+    self.clipsToBounds = NO;
+    
     self.layer.shadowOffset  = CGSizeMake(0, 5);
-    self.layer.shadowOpacity = 0.5;
+    self.layer.shadowOpacity = 0.75;
     self.layer.shadowRadius  = 5;
     self.layer.shadowColor   = RGB(44, 62, 80).CGColor;
     
     _containerAllowMiddlePosition = NO;
+    _containerShadow = YES;
     
     UIPanGestureRecognizer *
     containerPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognized:)];
     containerPan.delegate = self;
-    [self addGestureRecognizer: containerPan];
+    [self addGestureRecognizer:containerPan];
     
 //    NSInteger containerBottom_ = (SCREEN_HEIGHT -92);
 //
@@ -60,6 +62,8 @@
 //        }
 //    }
 //    containerBottom_ -= (IS_IPHONE_X ?34 :0);
+    
+    
     self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom -(IS_IPHONE_X ?34 :0));
     self.containerPosition = ContainerMoveTypeBottom;
     
@@ -78,19 +82,35 @@
         self.visualEffectView.backgroundColor = WHITE_COLOR;
         self.visualEffectViewOrigin.hidden = YES;
     }
+}
+
+/// Add Subview - Search ScrollView
+- (void)addSubview:(UIView *)subview {
+    [super addSubview:subview];
     
+    if([subview isKindOfClass:[UIScrollView class]]) {
+        UIScrollView * scrollView = (UIScrollView *)subview;
+        if (@available(iOS 11.0, *)) {
+            scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        scrollView.scrollEnabled = (self.containerPosition == ContainerMoveTypeTop);
+        [self changeCornerRadius:_containerCornerRadius];
+    }
+}
+
+- (void)removeScrollView {
+    UIScrollView * scrollView = [self searchScrollViewInSubviews];
+    if(scrollView) [scrollView removeFromSuperview];
 }
 
 
-
-
-
-
-- (void)changeCornerRadius:(CGFloat)newValue
-{
+- (void)changeCornerRadius:(CGFloat)newValue {
     self.containerCornerRadius = newValue;
     
     self.layer.cornerRadius = self.containerCornerRadius;
+    //UIScrollView * scrollView = [self searchScrollViewInSubviews];
+    //if(scrollView) scrollView.layer.cornerRadius = self.containerCornerRadius;
+        
     if (self.visualEffectView)
         self.visualEffectView.layer.cornerRadius = self.containerCornerRadius;
     
@@ -99,7 +119,7 @@
 
 
 
-
+/// Add
 - (void)setContainerBottomButtonToMoveTop:(BOOL)newValue {
     if(newValue) {
         [self addSubview: self.bottomButtonToMoveTop];
@@ -142,7 +162,7 @@
 
 
 
-
+/// Top
 - (void)setContainerTop:(CGFloat)containerTop {
     _containerTop = containerTop;
 }
@@ -152,6 +172,7 @@
     return _containerTop;
 }
 
+/// Middle
 - (void)setContainerMiddle:(CGFloat)containerMiddle {
     // if(IS_IPHONE_X) containerMiddle -= 34;
     _containerMiddle = containerMiddle;
@@ -162,6 +183,7 @@
     return _containerMiddle;
 }
 
+/// Bottom
 - (void)setContainerBottom:(CGFloat)containerBottom {
     _containerBottom = containerBottom;
     if(_bottomButtonToMoveTop) _bottomButtonToMoveTop.height = containerBottom;
@@ -173,6 +195,7 @@
 }
 
 
+/// Enabled Move Middle
 - (void)setContainerAllowMiddlePosition:(BOOL)containerAllowMiddlePosition {
     _containerAllowMiddlePosition = containerAllowMiddlePosition;
     [self containerMove: (containerAllowMiddlePosition) ?ContainerMoveTypeMiddle :ContainerMoveTypeBottom];    
@@ -182,12 +205,14 @@
     return _containerAllowMiddlePosition;
 }
 
+
+/// Shadow
 - (void)setContainerShadow:(BOOL)containerShadow {
     _containerShadow = containerShadow;
     
     if(containerShadow) {
         self.layer.shadowOffset  = CGSizeMake(0, 5);
-        self.layer.shadowOpacity = 0.5;
+        self.layer.shadowOpacity = 0.75;
         self.layer.shadowRadius  = 5;
     } else {
         self.layer.shadowOffset  = CGSizeMake(0, 0);
@@ -201,10 +226,7 @@
 }
 
 
-- (UIView *)headerView {
-    return _headerView;
-}
-
+/// Header
 - (void)setHeaderView:(UIView *)hv {
     
     if(hv) {
@@ -217,6 +239,10 @@
     [self calculationScrollViewHeight];
 }
 
+- (UIView *)headerView {
+    return _headerView;
+}
+
 - (void)removeHeaderView {
     if(_headerView) {
         [_headerView removeFromSuperview];
@@ -225,25 +251,7 @@
 }
 
 
-
-
-
-- (void)addSubview:(UIView *)subview {
-    [super addSubview:subview];
-    if([subview isKindOfClass:[UIScrollView class]]) {
-        UIScrollView * scrollView = (UIScrollView *)subview;
-        if (@available(iOS 11.0, *)) {
-            scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        }
-        [self calculationScrollViewHeight];
-    }
-}
-
-- (void)removeScrollView {
-    UIScrollView * scrollView = [self searchScrollViewInSubviews];
-    if(scrollView) [scrollView removeFromSuperview];
-}
-
+/// Search ScrollView
 - (UIScrollView *)searchScrollViewInSubviews {
     UIScrollView *scrollView = nil;
     for (UIView * view in self.subviews) {
@@ -254,6 +262,8 @@
     return scrollView;
 }
 
+
+/// Calculation ScrollView
 - (void)calculationScrollViewHeight {
     
     UIScrollView * scrollView = [self searchScrollViewInSubviews];
@@ -272,10 +282,9 @@
 }
 
 
-
-
-- (void)panGestureRecognized:(UIPanGestureRecognizer *)recognizer
-{
+/// Gesture
+- (void)panGestureRecognized:(UIPanGestureRecognizer *)recognizer {
+    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         _savePositionContainer = self.transform.ty;
     }
@@ -305,7 +314,7 @@
     }
 }
 
-
+/// Container Move
 - (void)containerMoveForVelocityInView:(CGFloat)velocityInViewY {
     
     ContainerMoveType moveType;
@@ -338,12 +347,10 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return 0;
+    return NO;
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self endEditing:YES];
-}
+
 
 
 - (void)changeBlurStyle:(ContainerStyle)styleType {
@@ -425,11 +432,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     
     UIScrollView * scrollView = [self searchScrollViewInSubviews];
     if(scrollView) {
-        scrollView.scrollEnabled = !((moveType == ContainerMoveTypeBottom) ||
-                                    (moveType == ContainerMoveTypeMiddle));
-            
-        
-        
+        scrollView.scrollEnabled = (moveType == ContainerMoveTypeTop);
     }
     
     
@@ -448,6 +451,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         if(completion) completion();
     }
 }
+
 
 
 @end
