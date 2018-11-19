@@ -393,7 +393,7 @@
         
         if(isShadow) {
             self.shadowView.alpha = procent;
-            self.shadowView.height = (containerFrameY +self.containerView.containerCornerRadius);
+            self.shadowView.height = (containerFrameY +self.containerView.containerCornerRadius +5);
         } else {
             self.shadowView.alpha = 0.;
             self.shadowView.height = SCREEN_HEIGHT;

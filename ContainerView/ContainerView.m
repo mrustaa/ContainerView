@@ -114,7 +114,7 @@
     if (self.visualEffectView)
         self.visualEffectView.layer.cornerRadius = self.containerCornerRadius;
     
-    [self calculationScrollViewHeight];
+    [self calculationScrollViewHeight:0];
 }
 
 
@@ -236,7 +236,7 @@
     } else {
         [self removeHeaderView];
     }
-    [self calculationScrollViewHeight];
+    [self calculationScrollViewHeight:0];
 }
 
 - (UIView *)headerView {
@@ -264,7 +264,7 @@
 
 
 /// Calculation ScrollView
-- (void)calculationScrollViewHeight {
+- (void)calculationScrollViewHeight:(CGFloat)containerPositionBottom {
     
     UIScrollView * scrollView = [self searchScrollViewInSubviews];
     if(scrollView) {
@@ -276,7 +276,7 @@
         CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
         
         scrollView.y = headerHeight;
-        scrollView.height = (SCREEN_HEIGHT -(top +headerHeight +iphnXpaddingTop ) );
+        scrollView.height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
         scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, iphnXpaddingBottom , 0);
     }
 }
@@ -297,6 +297,8 @@
             _transform.ty = 0;
         } else if( _transform.ty < self.containerTop) {
             _transform.ty = ( self.containerTop / 2) + (_transform.ty / 2);
+            [self calculationScrollViewHeight:_transform.ty +5];
+            
             self.transform = _transform;
         } else {
             self.transform = _transform;
@@ -421,7 +423,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 }
 
 - (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
-    [self calculationScrollViewHeight];
+    [self calculationScrollViewHeight:0];
     
     self.containerPosition = moveType;
     [self containerMovePosition:position moveType:moveType animated:animated completion:completion];
@@ -444,6 +446,10 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         ANIMATION_SPRINGCOMP(.45, ^(void) {
             self.transform = _transform;
         }, ^(BOOL fin) {
+            CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop +5) :0;
+            ANIMATION(.25, ^(void) {
+                [self calculationScrollViewHeight:containerPositionBottom];
+            });
             if(completion) completion();
         });
     } else {
