@@ -82,4 +82,6 @@
 
 @property (strong, nonatomic) void(^blockChangeShadowLevel)(ContainerMoveType containerMove, CGFloat scale, BOOL animation);
 
+- (void)panGestureRecognized:(UIPanGestureRecognizer *)recognizer;
+
 @end

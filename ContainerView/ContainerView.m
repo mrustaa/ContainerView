@@ -11,6 +11,8 @@
     BOOL _containerAllowMiddlePosition;
     BOOL _containerShadow;
     UIView * _headerView;
+    CGFloat _savePositionContainer;
+
 }
 
 @property (strong, nonatomic) UIButton *bottomButtonToMoveTop;
@@ -18,7 +20,6 @@
 @property (strong, nonatomic) UIVisualEffectView *visualEffectViewOrigin;
 @property (strong, nonatomic) UIView *visualEffectView;
 
-@property NSInteger savePositionContainer;
 
 @end
 
@@ -276,13 +277,13 @@
 - (void)panGestureRecognized:(UIPanGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        self.savePositionContainer = (NSInteger)self.transform.ty;
+        _savePositionContainer = self.transform.ty;
     }
     
     if (recognizer.state == UIGestureRecognizerStateChanged) {
         CGAffineTransform
         _transform = self.transform;
-        _transform.ty = (self.savePositionContainer + [recognizer translationInView: self].y );
+        _transform.ty = (_savePositionContainer + [recognizer translationInView: self].y );
         if (_transform.ty < 0) {
             _transform.ty = 0;
         } else if( _transform.ty < self.containerTop) {
@@ -421,6 +422,16 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (void)containerMovePosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
     if(_bottomButtonToMoveTop) self.bottomButtonToMoveTop.hidden = (moveType == ContainerMoveTypeTop) ? YES : NO;
+    
+    UIScrollView * scrollView = [self searchScrollViewInSubviews];
+    if(scrollView) {
+        scrollView.scrollEnabled = !((moveType == ContainerMoveTypeBottom) ||
+                                    (moveType == ContainerMoveTypeMiddle));
+            
+        
+        
+    }
+    
     
     CGAffineTransform _transform = CGAffineTransformMakeTranslation( 0, position);
     

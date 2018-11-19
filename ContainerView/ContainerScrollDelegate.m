@@ -22,18 +22,73 @@
 
 #pragma mark - Scroll Delegate
 
+//CGFloat _savePositionContainer;
+//
+//- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+//    CGFloat velocityInViewY = [scrollView.panGestureRecognizer velocityInView:WINDOW].y;
+//
+//    PRINT(@" ✅ %d ",((self.containerView.containerPosition == ContainerMoveTypeBottom) ||
+//                     (self.containerView.containerPosition == ContainerMoveTypeMiddle)));
+//    if((self.containerView.containerPosition == ContainerMoveTypeBottom) ||
+//       (self.containerView.containerPosition == ContainerMoveTypeMiddle)) {
+//        [scrollView setContentOffset:scrollView.contentOffset animated:NO];
+//        bottomDeceleratingDisable = NO;
+//        [self.containerView containerMoveForVelocityInView:velocityInViewY];
+//    }
+//}
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     
-    if(scrollView.decelerating) bottomDeceleratingDisable = NO;
     
     // сила движения
     CGFloat velocityInViewY    = [scrollView.panGestureRecognizer velocityInView:   WINDOW].y;
     
     // расстояние от нажатой точки
     CGFloat translationInViewY = [scrollView.panGestureRecognizer translationInView:WINDOW].y;
+    
+    
+//    bottomDeceleratingDisable =
+//    (//(!scrollView.decelerating) &&
+//     ((self.containerView.containerPosition == ContainerMoveTypeBottom) ||
+//      (self.containerView.containerPosition == ContainerMoveTypeMiddle))
+//     );
+//
+//    if(bottomDeceleratingDisable) {
+//        scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, startScrollPosition);
+//
+//        UIPanGestureRecognizer *recognizer = scrollView.panGestureRecognizer;
+//
+//            if (recognizer.state == UIGestureRecognizerStateBegan) {
+//                _savePositionContainer = self.containerView.transform.ty;
+//            }
+//
+//            if (recognizer.state == UIGestureRecognizerStateChanged) {
+//                CGAffineTransform
+//                _transform = self.containerView.transform;
+//                _transform.ty = (_savePositionContainer + [recognizer translationInView: WINDOW].y );
+//                if (_transform.ty < 0) {
+//                    _transform.ty = 0;
+//                } else if( _transform.ty < self.containerView.containerTop) {
+//                    _transform.ty = ( self.containerView.containerTop / 2) + (_transform.ty / 2);
+//                    self.containerView.transform = _transform;
+//                } else {
+//                    self.containerView.transform = _transform;
+//                }
+//
+//            }
+//        
+//        if(recognizer.state == UIGestureRecognizerStateEnded) {
+//            onceEnded = YES;
+//            [self.containerView containerMoveForVelocityInView:velocityInViewY];
+//        }
+//
+//        return;
+//    }
+    // if(scrollView.decelerating) bottomDeceleratingDisable = NO;
+    
+
     
     
     
@@ -67,28 +122,44 @@
 //        }
 //    }
     
+    
+    
+    
+    
+//    /// здесь - речь - о перемещении - когда закончил скроллить
+//
+//    /// следа нет - разрешить
+//    /// (зачем это нужно - только когда скролл остановится - тогда разрешить анимированное перемещение
+//    /// иначе скролл оставляет след - и мы подталкиваем след - и он перемещается снова)
+//    if(!scrollView.decelerating)
+//        /// средней и нижней
+//        if((self.containerView.containerPosition == ContainerMoveTypeBottom) ||
+//           (self.containerView.containerPosition == ContainerMoveTypeMiddle)) {
+//            /// разрешить анимированно переместить
+//            onceEnded = NO;
+//            PRINT(@" ⚠️⚠️⚠️ %d", !onceEnded);
+//        }
+    
+    
+    
+    
     CGFloat top     = self.containerView.containerTop;
-    CGFloat bottom  = self.containerView.containerBottom;
-    CGFloat middle  = self.containerView.containerMiddle;
+//    CGFloat bottom  = self.containerView.containerBottom;
+//    CGFloat middle  = self.containerView.containerMiddle;
+//
+//    top    += (IS_IPHONE_X ? (24) : 0);
+//    bottom -= (IS_IPHONE_X ? (34) :0);
     
-    top    += (IS_IPHONE_X ? (24) : 0);
-    bottom -= (IS_IPHONE_X ? (34) :0);
     
-    CGFloat calculation;
-    
-    if((self.containerView.containerPosition == ContainerMoveTypeBottom) ||
-       (self.containerView.containerPosition == ContainerMoveTypeMiddle)) {
-        onceEnded = NO;
-        bottomDeceleratingDisable = YES;
-    }
-    
-    if(self.containerView.containerPosition == ContainerMoveTypeBottom) {
-        calculation = bottom;
-    } else if(self.containerView.containerPosition == ContainerMoveTypeMiddle) {
-        calculation = middle;
-    } else {
-        calculation = top;
-    }
+//    CGFloat calculation;
+//
+//    if(self.containerView.containerPosition == ContainerMoveTypeBottom) {
+//        calculation = bottom;
+//    } else if(self.containerView.containerPosition == ContainerMoveTypeMiddle) {
+//        calculation = middle;
+//    } else {
+//        calculation = top;
+//    }
     
     
     // если закончил скролл - и отпустил
@@ -98,11 +169,11 @@
     // скролл дошел до края - и тянет контейнер вниз 👇
     if(bordersRunContainer) {
         
-        onceEnded = NO;
+        onceEnded = NO; PRINT(@" ⚠️⚠️ %d", !onceEnded);
         onceScrollingBeginDragging = NO; // есть 3 варианта когда он (NO) 1) при старте 2) когда отпустил скролл 3) скролл дошел до края
         
         // (топ - стартовая позиция скролла) + расстояние от нажатой точки
-        selfTransform.ty = ((calculation -startScrollPosition) +translationInViewY );
+        selfTransform.ty = ((top -startScrollPosition) +translationInViewY );
         
         // если трансформ меньше топа - то трансформ равен топу
         if(selfTransform.ty < top) selfTransform.ty = top;
@@ -161,18 +232,44 @@
         }
         
 
-        if(top < selfTransform.ty) /// позиция контейнера - выше топа
+        if(top < selfTransform.ty) /// позиция Y контейнера - выше топа Y -  что означает контейнер ниже чем топ
         {
             if (velocityInViewY < 0. ) /// палиц движется вверх
             {
-                scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0 );
+                
+                if(self.containerView.containerPosition == ContainerMoveTypeTop) {
+                    scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0 );
+                } else {
+//                    scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, startScrollPosition);
+                    
+                }
                 
                 selfTransform = self.containerView.transform;
-                selfTransform.ty = (calculation +translationInViewY ); /// здесь расстояние от нажатой точки  складывается с + топом
+                selfTransform.ty = (top +translationInViewY ); /// здесь расстояние от нажатой точки  складывается с + топом
                 
                 if(selfTransform.ty < top) selfTransform.ty = top;
                 
                 self.containerView.transform = selfTransform;
+            } else {
+                
+//                if(scrollView.contentOffset.y != 0) {
+//                    
+//                    if(self.containerView.containerPosition == ContainerMoveTypeTop) {
+//                        
+//                    } else {
+//                        
+//                        if(!scrollView.decelerating) {
+//                            
+//                            scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, startScrollPosition);
+//                            selfTransform = self.containerView.transform;
+//                            selfTransform.ty = (calculation +translationInViewY ); /// здесь расстояние от нажатой точки  складывается с + топом
+//                            
+//                            if(selfTransform.ty < top) selfTransform.ty = top;
+//                            
+//                            self.containerView.transform = selfTransform;
+//                        }
+//                    }
+//                }
             }
         }
         
@@ -182,30 +279,26 @@
     if(self.blockTransform) self.blockTransform(selfTransform.ty);
 }
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
-    PRINT(@" ✅ ");
-    if(bottomDeceleratingDisable) {
-        [scrollView setContentOffset:scrollView.contentOffset animated:YES];
-        bottomDeceleratingDisable = NO;
-    }
-    
-}
 
 /// скроллинг начался
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    scrollBegin = YES;
-    
     startScrollPosition = scrollView.contentOffset.y;
+    
+    if(bottomDeceleratingDisable) return;
+    
+    scrollBegin = YES;
     if(startScrollPosition < 0) startScrollPosition = 0;
 }
 
 /// скроллинг закончился
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
+    if(bottomDeceleratingDisable) return;
+    
     CGFloat velocityInViewY = [scrollView.panGestureRecognizer velocityInView:WINDOW].y;
     
-    PRINT(@" ⚠️ ");
+    PRINT(@" ⚠️ %d", !onceEnded);
     
     if(!self.containerView) return;
     
