@@ -447,9 +447,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             self.transform = _transform;
         }, ^(BOOL fin) {
             CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
-            ANIMATION(.25, ^(void) {
+            //ANIMATION(.25, ^(void) {
                 [self calculationScrollViewHeight:containerPositionBottom];
-            });
+            //});
             if(completion) completion();
         });
     } else {

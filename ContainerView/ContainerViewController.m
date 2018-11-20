@@ -109,8 +109,9 @@
 - (void)setContainerShadowView:(BOOL)value {
     
     if(value == NO) {
-        [_shadowButton removeFromSuperview];
-        _shadowButton = nil;
+        _shadowButton.hidden = YES;
+        //[_shadowButton removeFromSuperview];
+        //_shadowButton = nil;
     } else {
         
         if(!_shadowButton) {
@@ -122,8 +123,9 @@
             shadow.alpha = 0;
             _shadowButton = shadow;
 //            [self.view insertSubview:_shadowButton aboveSubview:self.bottomView];
-            [self.bottomView addSubview:_shadowButton];
+            [self.view addSubview:_shadowButton];
         }
+        _shadowButton.hidden = NO;
     }
     _containerShadowView = value;
 }

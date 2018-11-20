@@ -206,7 +206,7 @@
                                         <rect key="frame" x="109" y="315" width="130" height="30"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <connections>
-                                            <action selector="changeContainerSizeTop:" destination="acE-aC-1gp" eventType="valueChanged" id="nWs-P3-dDH"/>
+                                            <action selector="changeContainerSizeTop:" destination="acE-aC-1gp" eventType="touchUpInside" id="QqI-g7-9Gs"/>
                                         </connections>
                                     </slider>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="  y" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vp3-m8-OdK">

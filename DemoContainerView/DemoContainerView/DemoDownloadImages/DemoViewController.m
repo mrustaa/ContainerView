@@ -91,13 +91,13 @@
 //        [self.view addSubview:self.shadowView];
 //    }
     
-    {
+    
         [self.mapView setRegion:[self.mapView regionThatFits:COORDINATE_SAN_FRANCISCO]];
         self.mapView.alpha = 0;
         self.mapViewStatusBarBlur.alpha = 0;
         
         self.mapViewStatusBarBlur.height = SCREEN_STATUS_HEIGHT;
-    }
+    
     
     
 //    if (NAV_ADDED) {
@@ -118,6 +118,15 @@
     [self.containerView addSubview:self.tableView];
     [self.containerView changeCornerRadius:15];
     
+//    __weak typeof(self) weakSelf = self;
+//    self.containerView.blockChangeShadowLevel = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
+//        if(animated) {
+//            ANIMATION_SPRING(.45,^(void){
+//                weakSelf.segmentedContainerMove.selectedSegmentIndex = containerMove;
+//            });
+//        }
+//    };
+
     // [self.containerView containerMove:ContainerMoveTypeTop animated:NO];
     // self.containerView.containerBottomButtonToMoveTop = YES;
     
@@ -506,7 +515,7 @@
 - (IBAction)changeContainerSizeTop:(UISlider *)sender {
     CGFloat top = sender.value;
     
-    [self.containerView containerMoveCustomPosition:top moveType:ContainerMoveTypeTop animated:NO];
+    [self.containerView containerMoveCustomPosition:top moveType:ContainerMoveTypeTop animated:YES];
     
     self.containerView.containerTop = IS_IPHONE_X ? top -24 : top;
     self.containerLabelValueTop.text = SFMT(@"%.0f y", top);
