@@ -5,16 +5,12 @@
 #import "ContainerScrollDelegate.h"
 
 @implementation ContainerScrollDelegate {
-    BOOL bordersRunContainer;                   
-    
+    BOOL bordersRunContainer;
     BOOL onceEnded;
     BOOL bottomDeceleratingDisable;
-    
     BOOL onceScrollingBeginDragging;
-    
     BOOL scrollBegin;
     CGFloat startScrollPosition;
-    CGFloat _containerTop;
     CGAffineTransform selfTransform;
 }
 
@@ -57,7 +53,7 @@
         onceEnded = NO;
         onceScrollingBeginDragging = NO;
         
-        selfTransform.ty = ((top -startScrollPosition) +translationInViewY );
+        selfTransform.ty = ((top - startScrollPosition) + translationInViewY );
         if(selfTransform.ty < top) selfTransform.ty = top;
         
         if(scrollBegin)
@@ -81,7 +77,7 @@
             CGFloat top = (self.containerView.containerTop == 0) ? CUSTOM_TOP : self.containerView.containerTop;
             CGFloat iphnX = (IS_IPHONE_X ? 24 :0);
             
-            CGFloat height = (SCREEN_HEIGHT -(top +headerHeight +iphnX ));
+            CGFloat height = (SCREEN_HEIGHT - (top + headerHeight + iphnX ));
             
             if(scrollView.height != height) {
                 
@@ -91,7 +87,6 @@
                 });
             }
         }
-        
 
         if(top < selfTransform.ty)
         {
@@ -102,7 +97,7 @@
                 }
                 
                 selfTransform = self.containerView.transform;
-                selfTransform.ty = ((top -startScrollPosition) +translationInViewY );
+                selfTransform.ty = ((top - startScrollPosition) + translationInViewY );
                 
                 if(selfTransform.ty < top) selfTransform.ty = top;
                 

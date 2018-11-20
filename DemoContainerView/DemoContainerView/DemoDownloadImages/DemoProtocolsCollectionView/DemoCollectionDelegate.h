@@ -4,6 +4,6 @@
 
 #import "ContainerScrollDelegate.h"
 
-@interface DemoCollectionDelegate : ContainerScrollDelegate <UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
-
+@interface DemoCollectionDelegate : NSObject <UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@property (strong, nonatomic) void(^blockSelectIndex)(NSInteger);
 @end

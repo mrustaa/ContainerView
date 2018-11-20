@@ -4,8 +4,9 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "ContainerViewController.h"
 
-@interface DemoViewController : UIViewController
+@interface DemoViewController : ContainerViewController // UIViewController
 
 @end
 

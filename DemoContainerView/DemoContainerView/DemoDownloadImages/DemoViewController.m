@@ -26,26 +26,24 @@
 
 
 
-@interface DemoViewController () <UISearchBarDelegate> {
+@interface DemoViewController () <UISearchBarDelegate, UITableViewDelegate, UICollectionViewDelegate> {
     BOOL isHidden;
-    BOOL isZoom;
-    BOOL isShadow;
 }
 
-@property (strong, nonatomic) ContainerView                 *containerView;
+//@property (strong, nonatomic) ContainerView                 *containerView;
 
 @property (strong, nonatomic) NSMutableArray <NSDictionary *> *photos;
 
 @property (strong, nonatomic) UITableView                   *tableView;
-@property (strong, nonatomic) DemoTableDelegate             *tableDelegate;
+//@property (strong, nonatomic) DemoTableDelegate             *tableDelegate;
 @property (strong, nonatomic) DemoTableDataSource           *tableDataSource;
 
 @property (strong, nonatomic) UICollectionView              *collectionView;
-@property (strong, nonatomic) DemoCollectionDelegate        *collectionDelegate;
+//@property (strong, nonatomic) DemoCollectionDelegate        *collectionDelegate;
 @property (strong, nonatomic) DemoCollectionDataSource      *collectionDataSource;
 
 @property (strong, nonatomic) UIImageView                   *imageView;
-@property (strong, nonatomic) UIView                        *shadowView;
+//@property (strong, nonatomic) UIView                        *shadowView;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl   *segmentedContainerMove;
 @property (strong, nonatomic) IBOutlet UISwitch             *switchEnableMiddle;
@@ -73,8 +71,6 @@
     [super viewDidLoad];
     
     isHidden = NO;
-    isZoom   = YES;
-    isShadow = YES;
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -84,16 +80,16 @@
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         self.imageView.clipsToBounds = YES;
         self.imageView.alpha = 0;
-        [self.view addSubview:self.imageView];
+        [self.bottomView addSubview:self.imageView];
     }
     
-    if(!self.shadowView)
-    {
-        self.shadowView = [[UIView alloc]initWithFrame:FRAME];
-        self.shadowView.backgroundColor = BLACK_COLOR;
-        self.shadowView.alpha = 0;
-        [self.view addSubview:self.shadowView];
-    }
+//    if(!self.shadowView)
+//    {
+//        self.shadowView = [[UIView alloc]initWithFrame:FRAME];
+//        self.shadowView.backgroundColor = BLACK_COLOR;
+//        self.shadowView.alpha = 0;
+//        [self.view addSubview:self.shadowView];
+//    }
     
     {
         [self.mapView setRegion:[self.mapView regionThatFits:COORDINATE_SAN_FRANCISCO]];
@@ -170,33 +166,33 @@
     [self.view endEditing:YES];
 }
 
-
-#pragma mark - Create ContainerView elements
-
-- (ContainerView *)containerView {
-    
-    if(!_containerView)
-    {
-        ContainerView *
-        container = [[ContainerView alloc] initWithFrame: (CGRect){ CGPointZero, { SCREEN_WIDTH, SCREEN_HEIGHT +50 }}];
-        
-        __weak typeof(self) weakSelf = self;
-        container.blockChangeShadowLevel = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
-            
-            if(animated) {
-                
-                ANIMATION_SPRING(.45,^(void){
-                    self.segmentedContainerMove.selectedSegmentIndex = containerMove;
-                    [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-                });
-            } else {
-                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-            }
-        };
-        _containerView = container;
-    }
-    return _containerView;
-}
+//
+//#pragma mark - Create ContainerView elements
+//
+//- (ContainerView *)containerView {
+//
+//    if(!_containerView)
+//    {
+//        ContainerView *
+//        container = [[ContainerView alloc] initWithFrame: (CGRect){ CGPointZero, { SCREEN_WIDTH, SCREEN_HEIGHT +50 }}];
+//
+//        __weak typeof(self) weakSelf = self;
+//        container.blockChangeShadowLevel = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
+//
+//            if(animated) {
+//
+//                ANIMATION_SPRING(.45,^(void){
+//                    self.segmentedContainerMove.selectedSegmentIndex = containerMove;
+//                    [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
+//                });
+//            } else {
+//                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
+//            }
+//        };
+//        _containerView = container;
+//    }
+//    return _containerView;
+//}
 
 
 - (NSMutableArray *)photos {
@@ -214,7 +210,7 @@
         table.showsVerticalScrollIndicator = NO;
         table.backgroundColor = CLR_COLOR;
         table.dataSource = self.tableDataSource;
-        table.delegate   = self.tableDelegate;
+        table.delegate   = self; // self.tableDelegate;
         _tableView = table;
     }
     
@@ -239,26 +235,33 @@
     return _tableDataSource;
 }
 
-- (DemoTableDelegate *)tableDelegate {
-    if(!_tableDelegate)
-    {
-        DemoTableDelegate *
-        delegate = [[DemoTableDelegate alloc] init];
-        delegate.containerView = self.containerView;
-        
-        __weak typeof(self) weakSelf = self;
-        delegate.blockSelectIndex = ^(NSInteger index) {
-            [weakSelf selectCellIndex:(SelectType)index animated:YES];
-        };
-        delegate.blockTransform = ^(CGFloat containerFrameY) {
-            GCD_ASYNC_MAIN_BEGIN {
-                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-            });
-        };
-        _tableDelegate = delegate;
-    }
-    return _tableDelegate;
+//- (DemoTableDelegate *)tableDelegate {
+//    if(!_tableDelegate)
+//    {
+//        DemoTableDelegate *
+//        delegate = [[DemoTableDelegate alloc] init];
+//
+//        __weak typeof(self) weakSelf = self;
+//        delegate.blockSelectIndex = ^(NSInteger index) {
+//            [weakSelf selectCellIndex:(SelectType)index animated:YES];
+//        };
+//        _tableDelegate = delegate;
+//    }
+//    return _tableDelegate;
+//}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self selectCellIndex:(SelectType)indexPath.row animated:YES];
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 88;
+}
+
+
 
 - (UICollectionView *)collectionView {
     
@@ -268,7 +271,7 @@
         collection = [[UICollectionView alloc]initWithFrame:FRAME_SCROLLVIEW collectionViewLayout:[[UICollectionViewFlowLayout alloc]init]];
         [collection registerClass:[DemoCollectionCell class] forCellWithReuseIdentifier:@"collectionCell"];
         collection.backgroundColor = CLR_COLOR;
-        collection.delegate   = self.collectionDelegate;
+        collection.delegate   = self; // self.collectionDelegate;
         collection.dataSource = self.collectionDataSource;
         _collectionView = collection;
     }
@@ -294,25 +297,54 @@
     }
     return _collectionDataSource;
 }
-- (DemoCollectionDelegate *)collectionDelegate {
-    if(!_collectionDelegate)
-    {
-        DemoCollectionDelegate *
-        delegate = [[DemoCollectionDelegate alloc] init];
-        delegate.containerView = self.containerView;
-        
-        __weak typeof(self) weakSelf = self;
-        delegate.blockSelectIndex = ^(NSInteger index) {
-            [weakSelf selectCellIndex:(SelectType)index animated:YES];
-        };
-        delegate.blockTransform = ^(CGFloat containerFrameY) {
-            GCD_ASYNC_MAIN_BEGIN {
-                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-            });
-        };
-        _collectionDelegate = delegate;
-    }
-    return _collectionDelegate;
+//- (DemoCollectionDelegate *)collectionDelegate {
+//    if(!_collectionDelegate)
+//    {
+//        DemoCollectionDelegate *
+//        delegate = [[DemoCollectionDelegate alloc] init];
+//
+//        __weak typeof(self) weakSelf = self;
+//        delegate.blockSelectIndex = ^(NSInteger index) {
+//            [weakSelf selectCellIndex:(SelectType)index animated:YES];
+//        };
+//
+//        _collectionDelegate = delegate;
+//    }
+//    return _collectionDelegate;
+//}
+
+#pragma mark - CollectionView Delegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+//    if(self.blockSelectIndex) self.blockSelectIndex(indexPath.row);
+    [self selectCellIndex:(SelectType)indexPath.row animated:YES];
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    CGFloat indent =  (((SCREEN_WIDTH - ((SCREEN_WIDTH * .437333) * 2)) / 3) / 2);
+    CGFloat imageSize = (SCREEN_WIDTH * .437333);
+    
+    CGSize size = (CGSize) {
+        ((imageSize + (indent * 2)) -1),
+        (imageSize +  indent + 36)
+    };
+    
+    return size;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    
+    CGFloat indent = (((SCREEN_WIDTH - ((SCREEN_WIDTH * .437333) * 2)) / 3) / 2);
+    return UIEdgeInsetsMake(indent,indent,0,indent);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    return .0;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return .0;
 }
 
 #pragma mark - Actions Table Collection Delegate
@@ -355,67 +387,7 @@
     
 }
 
-- (void)changeScalesImageAndShadowLevel:(float)containerFrameY {
-    [self.view endEditing:YES];
-    
-    CGFloat selfCenter = self.containerView.containerMiddle;
-    
-    
-    
-    
-    if(containerFrameY < selfCenter) {
-        
-        CGFloat procent = (((selfCenter -containerFrameY) / selfCenter) / 2);
-        
-        CGAffineTransform transform = CGAffineTransformMakeScale( 1. -(procent / 5), 1. -(procent / 5));
-        
-        if(isZoom) {
-            self.imageView.transform = transform;
-            self.imageView.layer.cornerRadius = (procent * 24);
-            
-            self.settingsView.transform = transform;
-            self.settingsView.layer.cornerRadius = (procent * 24);
-            
-            self.mapView.transform = transform;
-            self.mapView.layer.cornerRadius = (procent * 24);
-        
-            self.mapViewStatusBarBlur.alpha = (1 -procent *2);
-        } else {
-            self.imageView.transform = CGAffineTransformIdentity;
-            self.imageView.layer.cornerRadius = 0;
-            
-            self.settingsView.transform = CGAffineTransformIdentity;
-            self.settingsView.layer.cornerRadius = 0;
-            
-            self.mapView.transform = CGAffineTransformIdentity;
-            self.mapView.layer.cornerRadius = 0;
-        }
-        
-        if(isShadow) {
-            self.shadowView.alpha = procent;
-            self.shadowView.height = (containerFrameY +self.containerView.containerCornerRadius +5);
-        } else {
-            self.shadowView.alpha = 0.;
-            self.shadowView.height = SCREEN_HEIGHT;
-        }
-        
-    } else {
-        
-        self.imageView.transform = CGAffineTransformIdentity;
-        self.imageView.layer.cornerRadius = 0;
-        
-        self.settingsView.transform = CGAffineTransformIdentity;
-        self.settingsView.layer.cornerRadius = 0;
-        
-        self.mapView.transform = CGAffineTransformIdentity;
-        self.mapView.layer.cornerRadius = 0;
-        
-        self.mapViewStatusBarBlur.alpha = 1;
-        
-        self.shadowView.alpha = 0.;
-        self.shadowView.height = SCREEN_HEIGHT;
-    }
-}
+
 
 
 #pragma mark - SearchBar Delegate
@@ -442,12 +414,13 @@
 }
 
 - (IBAction)changeContainerZoom:(UISwitch *)sender {
-    isZoom = sender.on;
+    self.containerZoom = sender.on;
 }
 
 - (IBAction)changeShadow:(UISwitch *)sender {
-    isShadow = sender.on;
+    self.containerShadowView = sender.on;
 }
+
 - (IBAction)changeContainerShadow:(UISwitch *)sender {
     self.containerView.containerShadow = sender.on;
 }

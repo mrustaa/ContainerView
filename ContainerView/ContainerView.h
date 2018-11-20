@@ -12,33 +12,54 @@
 /**
  @brief This option indicates whether to add a button when the container is at the bottom to animate the container upwards.
  */
-@property BOOL containerBottomButtonToMoveTop;
+@property (nonatomic) BOOL containerBottomButtonToMoveTop;
+
+/**
+ @brief When moving the container, by default there are 2 positions (this is moving up and down). This parameter adds 3 position (move to the middle)
+ */
+@property (nonatomic) BOOL containerAllowMiddlePosition;
+
+@property (nonatomic) BOOL containerShadow;
+
 
 /**
  @brief This parameter sets the new position value for the up move type.
  */
-@property CGFloat containerTop;
+@property (nonatomic) CGFloat containerTop;
 
 /**
  @brief This parameter sets the new position value for the type of movement to the middle position.
  */
-@property CGFloat containerBottom;
+@property (nonatomic) CGFloat containerMiddle;
 
 /**
  @brief This parameter sets the new position value for the type of movement to the middle position.
  */
-@property CGFloat containerMiddle;
+@property (nonatomic) CGFloat containerBottom;
+
+@property (nonatomic) CGFloat containerCornerRadius;
+
+
 
 /**
  @brief This parameter indicates which type of move was last.
  */
-@property ContainerMoveType containerPosition;
-@property ContainerStyle containerStyle;
+@property (nonatomic) ContainerMoveType containerPosition;
+
+/**
+ @brief This parameter indicates which container style
+ */
+@property (nonatomic) ContainerStyle containerStyle;
+
 
 /**
  @brief This method to add a blur to the background of the container.
   
- @param styleType There are 3 types of blur. Blur with hues of 1) black, 2) white, 3) white with low blur concentrations. 4) The last attribute turns off the blur, for a normal change of the background color.
+ @param styleType There are 3 types of blur. Blur with hues of
+    1) black,
+    2) white,
+    3) white with low blur concentrations.
+    4) The last attribute turns off the blur, for a normal change of the background color.
  */
 - (void)changeBlurStyle:(ContainerStyle)styleType;
 
@@ -58,9 +79,9 @@
  
  @param position Custom position
  */
-- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType;
-- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated;
-- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion;
+- (void)containerMoveCustomPosition:(CGFloat)position moveType:(ContainerMoveType)moveType;
+- (void)containerMoveCustomPosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated;
+- (void)containerMoveCustomPosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion;
 
 /**
  @brief This method for changing the rounding radius
@@ -71,14 +92,7 @@
 
 - (void)removeScrollView;
 
-@property NSInteger containerCornerRadius;
 
-/**
- @brief When moving the container, by default there are 2 positions (this is moving up and down). This parameter adds 3 position (move to the middle)
- */
-@property BOOL containerAllowMiddlePosition;
-
-@property BOOL containerShadow;
 
 @property (strong, nonatomic) void(^blockChangeShadowLevel)(ContainerMoveType containerMove, CGFloat scale, BOOL animation);
 

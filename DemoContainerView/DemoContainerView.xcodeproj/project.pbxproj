@@ -24,6 +24,7 @@
 		46C519292126267B00A6F607 /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519262126267B00A6F607 /* ContainerView.m */; };
 		46C5192A2126267B00A6F607 /* ContainerScrollDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519272126267B00A6F607 /* ContainerScrollDelegate.m */; };
 		4A274ACC219D7BBD008900D9 /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A274ACB219D7BBD008900D9 /* UIView+Frame.m */; };
+		4A94AE7A21A3F6C90045A212 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A94AE7821A3F6C90045A212 /* ContainerViewController.m */; };
 		4A9527E520F8EB4D000DFDFB /* DemoCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A9527E320F8EB4D000DFDFB /* DemoCollectionDataSource.m */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,8 @@
 		4A274AC9219D7B61008900D9 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		4A274ACA219D7BBD008900D9 /* UIView+Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Frame.h"; sourceTree = "<group>"; };
 		4A274ACB219D7BBD008900D9 /* UIView+Frame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Frame.m"; sourceTree = "<group>"; };
+		4A94AE7821A3F6C90045A212 /* ContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
+		4A94AE7921A3F6C90045A212 /* ContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
 		4A9527E320F8EB4D000DFDFB /* DemoCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoCollectionDataSource.m; sourceTree = "<group>"; };
 		4A9527E420F8EB4D000DFDFB /* DemoCollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoCollectionDataSource.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -159,6 +162,8 @@
 				46C519282126267B00A6F607 /* ContainerTypes.h */,
 				46C519252126267B00A6F607 /* ContainerScrollDelegate.h */,
 				46C519272126267B00A6F607 /* ContainerScrollDelegate.m */,
+				4A94AE7921A3F6C90045A212 /* ContainerViewController.h */,
+				4A94AE7821A3F6C90045A212 /* ContainerViewController.m */,
 				46C519232126267A00A6F607 /* ContainerView.h */,
 				46C519262126267B00A6F607 /* ContainerView.m */,
 			);
@@ -280,6 +285,7 @@
 				4648BFCC210E3FA60007D083 /* DemoTableDelegate.m in Sources */,
 				4689A7DC20EC08DE00BC7C8A /* DemoTableDataSource.m in Sources */,
 				46C5192A2126267B00A6F607 /* ContainerScrollDelegate.m in Sources */,
+				4A94AE7A21A3F6C90045A212 /* ContainerViewController.m in Sources */,
 				46C519292126267B00A6F607 /* ContainerView.m in Sources */,
 				4689A7B920EC081A00BC7C8A /* AppDelegate.m in Sources */,
 				4A274ACC219D7BBD008900D9 /* UIView+Frame.m in Sources */,

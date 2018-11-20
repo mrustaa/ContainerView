@@ -4,6 +4,6 @@
 
 #import "ContainerScrollDelegate.h"
 
-@interface DemoTableDelegate : ContainerScrollDelegate <UITableViewDelegate>
-
+@interface DemoTableDelegate : NSObject <UITableViewDelegate>
+@property (strong, nonatomic) void(^blockSelectIndex)(NSInteger);
 @end

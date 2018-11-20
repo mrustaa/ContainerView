@@ -50,7 +50,7 @@
     containerPan.delegate = self;
     [self addGestureRecognizer:containerPan];
     
-//    NSInteger containerBottom_ = (SCREEN_HEIGHT -92);
+//    NSInteger containerBottom_ = (SCREEN_HEIGHT - 92);
 //
 //    if (NAV_ADDED) {
 //        UINavigationController * nav = (UINavigationController *)ROOT_VC;
@@ -64,7 +64,7 @@
 //    containerBottom_ -= (IS_IPHONE_X ?34 :0);
     
     
-    self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom -(IS_IPHONE_X ?34 :0));
+    self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom - (IS_IPHONE_X ?34 :0));
     self.containerPosition = ContainerMoveTypeBottom;
     
     if(!self.visualEffectView) {
@@ -144,7 +144,7 @@
         //[btn addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(containerBottomButtonAction)]];
         //[btn addGestureRecognizer: [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(containerBottomButtonAction)]];
         
-        btn.frame = CGRectMake( 0, 0, SCREEN_WIDTH, (SCREEN_HEIGHT -self.containerBottom +(IS_IPHONE_X ?34 :0)) );
+        btn.frame = CGRectMake( 0, 0, SCREEN_WIDTH, (SCREEN_HEIGHT - self.containerBottom + (IS_IPHONE_X ?34 :0)) );
         btn.backgroundColor = RGBA(255, 0, 0, 0.5);
         btn.hidden = YES;
         _bottomButtonToMoveTop = btn;
@@ -297,7 +297,7 @@
             _transform.ty = 0;
         } else if( _transform.ty < self.containerTop) {
             _transform.ty = ( self.containerTop / 2) + (_transform.ty / 2);
-            [self calculationScrollViewHeight:_transform.ty +5];
+            [self calculationScrollViewHeight:_transform.ty + 5];
             
             self.transform = _transform;
         } else {
@@ -402,34 +402,34 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     
     self.containerPosition = moveType;
     
-    NSInteger position = 0;
+    CGFloat position = 0;
     
     switch (moveType) {
-        case ContainerMoveTypeTop:      position = self.containerTop +(IS_IPHONE_X ?24 :0); break;
+        case ContainerMoveTypeTop:      position = self.containerTop + (IS_IPHONE_X ?24 :0); break;
         case ContainerMoveTypeMiddle:   position = self.containerMiddle; break;
-        case ContainerMoveTypeBottom:   position = self.containerBottom -(IS_IPHONE_X ?34 :0); break;
+        case ContainerMoveTypeBottom:   position = self.containerBottom - (IS_IPHONE_X ?34 :0); break;
         case ContainerMoveTypeHide:     position = SCREEN_HEIGHT; break;
     }
     
     [self containerMovePosition:position moveType:moveType animated:animated completion:completion];
 }
 
-- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType {
+- (void)containerMoveCustomPosition:(CGFloat)position moveType:(ContainerMoveType)moveType {
     [self containerMoveCustomPosition:position moveType:moveType animated:YES completion:nil];
 }
 
-- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated {
+- (void)containerMoveCustomPosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated {
     [self containerMoveCustomPosition:position moveType:moveType animated:animated completion:nil];
 }
 
-- (void)containerMoveCustomPosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
+- (void)containerMoveCustomPosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
     [self calculationScrollViewHeight:0];
     
     self.containerPosition = moveType;
     [self containerMovePosition:position moveType:moveType animated:animated completion:completion];
 }
 
-- (void)containerMovePosition:(NSInteger)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
+- (void)containerMovePosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
     if(_bottomButtonToMoveTop) self.bottomButtonToMoveTop.hidden = (moveType == ContainerMoveTypeTop) ? YES : NO;
     
     UIScrollView * scrollView = [self searchScrollViewInSubviews];
@@ -446,7 +446,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         ANIMATION_SPRINGCOMP(.45, ^(void) {
             self.transform = _transform;
         }, ^(BOOL fin) {
-            CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop +5) :0;
+            CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
             ANIMATION(.25, ^(void) {
                 [self calculationScrollViewHeight:containerPositionBottom];
             });
