@@ -459,6 +459,10 @@
     self.containerShadow = sender.on;
 }
 
+- (IBAction)changeContainerShowBottomButtonToMoveTop:(UISwitch *)sender {
+    self.containerBottomButtonToMoveTop = sender.on;
+}
+
 
 - (IBAction)changeContainerAlpha:(UISlider *)sender {
     self.containerView.alpha = sender.value;

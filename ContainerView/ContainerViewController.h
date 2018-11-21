@@ -16,6 +16,10 @@
 
 @property (nonatomic, weak) id<ContainerViewDelegate> delegate;
 
+
+/**
+ @brief This view sets a custom header for the container.
+ */
 @property (strong, nonatomic) UIView *headerView;
 
 

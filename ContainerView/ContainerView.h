@@ -20,7 +20,7 @@
 
 
 /**
- @brief This parameter sets a custom header for the container.
+ @brief This view sets a custom header for the container.
  */
 @property (strong, nonatomic) UIView *headerView;
 
