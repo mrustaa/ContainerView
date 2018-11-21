@@ -8,36 +8,28 @@
 
 @interface ContainerViewController () {
     BOOL bordersRunContainer;
-    
     BOOL onceEnded;
     BOOL bottomDeceleratingDisable;
-    
     BOOL onceScrollingBeginDragging;
-    
     BOOL scrollBegin;
     CGFloat startScrollPosition;
     CGAffineTransform selfTransform;
-
     BOOL _containerShadowView;
     BOOL _containerZoom;
 }
-
-@property (nonatomic) ContainerScrollDelegate * protocol;
 
 @end
 
 @implementation ContainerViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
-//    [self.view insertSubview:self.shadowButton aboveSubview:self.bottomView];
     [self.view insertSubview:self.bottomView atIndex:0];
-//    [self.view addSubview:self.bottomView];
     
-    
-    /// тень кнопка нужна
     self.containerShadowView = YES;
     self.containerZoom = YES;
     
@@ -46,32 +38,27 @@
 
 #pragma mark - Create
 
-/// инициализация контейнера здесь обязательно
+
 - (ContainerView *)containerView {
     
-    if(!_containerView)
-    {
+    if(!_containerView) {
         ContainerView *
         container = [[ContainerView alloc] initWithFrame: (CGRect){ CGPointZero, { SCREEN_WIDTH, SCREEN_HEIGHT +50 }}];
-        
-        __weak typeof(self) weakSelf = self;
-        container.blockChangeShadowLevel = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
-            
-            if(animated) {
-                
-                ANIMATION_SPRING(.45,^(void){
-                    [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-                    //self.segmentedContainerMove.selectedSegmentIndex = containerMove;
-                    //[weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-                });
-            } else {
-                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-                //[weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-            }
-        };
+        container.delegate = self;
         _containerView = container;
     }
     return _containerView;
+}
+
+- (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
+    
+    if(animated) {
+        ANIMATION_SPRING(.45,^(void){
+            [self changeScalesImageAndShadowLevel:containerY];
+        });
+    } else {
+        [self changeScalesImageAndShadowLevel:containerY];
+    }
 }
 
 - (UIView *)bottomView {
@@ -167,7 +154,7 @@
 
 
 
-
+#pragma mark - Container Set/Get Top/Middle/Bottom position
 
 - (void)setContainerTop:(CGFloat)containerTop {
     self.containerView.containerTop = containerTop;
@@ -196,7 +183,7 @@
 
 
 
-
+#pragma mark - Container Move
 
 - (ContainerMoveType)containerPosition {
     return self.containerView.containerPosition;
@@ -240,37 +227,7 @@
 
 
 
-
-
-#pragma mark - ChangeShadowLevel
-
-//- (void)changeShadowLevel:(CGFloat)containerFrameY {
-//
-//    if (containerFrameY <= self.containerTop) {
-//        self.shadowButton.alpha = 0.8;
-//    } else {
-//        NSInteger minPos = self.containerTop;
-//        NSInteger maxPos = self.view.height;
-//
-//        if (self.containerAllowMiddlePosition) {
-//            maxPos = self.containerMiddle;
-//        }
-//
-//        maxPos -= minPos;
-//
-//        NSInteger pos = maxPos - (containerFrameY - minPos);
-//
-//        if (IS_IPHONE_X) {
-//            pos -= 34;
-//        }
-//
-//        CGFloat perc = pos * 0.8;
-//        perc /= maxPos;
-//
-//        self.shadowButton.alpha = perc;
-//    }
-//}
-
+#pragma mark - Change ShadowLevel
 
 - (void)changeScalesImageAndShadowLevel:(CGFloat)containerFrameY {
     [self.view endEditing:YES];
@@ -284,25 +241,10 @@
         
         CGAffineTransform transform = CGAffineTransformMakeScale( 1. -(procent / 5), 1. -(procent / 5));
         
-        
-        
         if(self.containerZoom) {
-//            for(UIView *v in self.view.subviews) {
-//                if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
-//                    v.transform = transform;
-//                    v.layer.cornerRadius = (procent * 24);
-//
-//                }
-//            }
             self.bottomView.transform = transform;
             self.bottomView.layer.cornerRadius = (procent * 24);
         } else {
-//            for(UIView *v in self.view.subviews) {
-//                if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
-//                    v.transform = CGAffineTransformIdentity;
-//                    v.layer.cornerRadius = 0;
-//                }
-//            }
             self.bottomView.transform = CGAffineTransformIdentity;
             self.bottomView.layer.cornerRadius = 0;
         }
@@ -311,19 +253,9 @@
         self.shadowButton.height = (containerFrameY +self.containerView.containerCornerRadius +5);
         
     } else {
-        
-//        for(UIView *v in self.view.subviews) {
-//            if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
-//                v.transform = CGAffineTransformIdentity;
-//                v.layer.cornerRadius = 0;
-//            }
-//        }
         self.bottomView.transform = CGAffineTransformIdentity;
         self.bottomView.layer.cornerRadius = 0;
         
-//        self.bottomView.userInteractionEnabled = NO;
-        
-//        self.shadowButton.userInteractionEnabled = NO;
 //        self.shadowButton.hidden = YES;
         
         self.shadowButton.alpha = 0.; 
@@ -334,7 +266,7 @@
 
 
 
-
+#pragma mark - Scroll Delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {

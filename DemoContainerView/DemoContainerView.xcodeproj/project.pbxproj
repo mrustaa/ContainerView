@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		46196CA0211BA06B00BA919B /* imageURLs.json in Resources */ = {isa = PBXBuildFile; fileRef = 46196C9F211BA06B00BA919B /* imageURLs.json */; };
 		4620C5FD219F8D480029326D /* DemoHeaderViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 4620C5FC219F8D480029326D /* DemoHeaderViews.m */; };
 		46343B8020F28E4B00EF63F7 /* ProximaNova-Extrabld.otf in Resources */ = {isa = PBXBuildFile; fileRef = 46343B7E20F28E4B00EF63F7 /* ProximaNova-Extrabld.otf */; };
 		46343B8120F28E4B00EF63F7 /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 46343B7F20F28E4B00EF63F7 /* ProximaNova-Regular.otf */; };
 		4648BFCC210E3FA60007D083 /* DemoTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4648BFCB210E3FA60007D083 /* DemoTableDelegate.m */; };
 		4648BFCF210E3FC60007D083 /* DemoCollectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4648BFCE210E3FC60007D083 /* DemoCollectionDelegate.m */; };
-		46521165211CDB3400AD4F31 /* DemoDownloadImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 46521164211CDB3400AD4F31 /* DemoDownloadImages.m */; };
 		4689A7B920EC081A00BC7C8A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4689A7B820EC081A00BC7C8A /* AppDelegate.m */; };
 		4689A7BC20EC081A00BC7C8A /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4689A7BB20EC081A00BC7C8A /* DemoViewController.m */; };
 		4689A7BF20EC081A00BC7C8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4689A7BD20EC081A00BC7C8A /* Main.storyboard */; };
@@ -29,7 +27,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		46196C9F211BA06B00BA919B /* imageURLs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = imageURLs.json; sourceTree = "<group>"; };
 		4620C5FB219F8D480029326D /* DemoHeaderViews.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoHeaderViews.h; sourceTree = "<group>"; };
 		4620C5FC219F8D480029326D /* DemoHeaderViews.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoHeaderViews.m; sourceTree = "<group>"; };
 		46343B7E20F28E4B00EF63F7 /* ProximaNova-Extrabld.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Extrabld.otf"; sourceTree = "<group>"; };
@@ -38,8 +35,6 @@
 		4648BFCB210E3FA60007D083 /* DemoTableDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoTableDelegate.m; sourceTree = "<group>"; };
 		4648BFCD210E3FC60007D083 /* DemoCollectionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoCollectionDelegate.h; sourceTree = "<group>"; };
 		4648BFCE210E3FC60007D083 /* DemoCollectionDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoCollectionDelegate.m; sourceTree = "<group>"; };
-		46521163211CDB3400AD4F31 /* DemoDownloadImages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoDownloadImages.h; sourceTree = "<group>"; };
-		46521164211CDB3400AD4F31 /* DemoDownloadImages.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoDownloadImages.m; sourceTree = "<group>"; };
 		4689A7B420EC081A00BC7C8A /* DemoContainerView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoContainerView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4689A7B720EC081A00BC7C8A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4689A7B820EC081A00BC7C8A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -109,16 +104,6 @@
 			path = DemoProtocolsCollectionView;
 			sourceTree = "<group>";
 		};
-		466F9F08211E0CD300A9EB11 /* DemoDownloadImages */ = {
-			isa = PBXGroup;
-			children = (
-				46196C9F211BA06B00BA919B /* imageURLs.json */,
-				46521163211CDB3400AD4F31 /* DemoDownloadImages.h */,
-				46521164211CDB3400AD4F31 /* DemoDownloadImages.m */,
-			);
-			name = DemoDownloadImages;
-			sourceTree = "<group>";
-		};
 		4689A7AB20EC081A00BC7C8A = {
 			isa = PBXGroup;
 			children = (
@@ -176,7 +161,6 @@
 			children = (
 				4648BFD0210E545F0007D083 /* DemoProtocolsTableView */,
 				4648BFD1210E54650007D083 /* DemoProtocolsCollectionView */,
-				466F9F08211E0CD300A9EB11 /* DemoDownloadImages */,
 				4620C5FE219F8D8C0029326D /* DemoHeaderViews */,
 				4689A7BA20EC081A00BC7C8A /* DemoViewController.h */,
 				4689A7BB20EC081A00BC7C8A /* DemoViewController.m */,
@@ -262,7 +246,6 @@
 			files = (
 				4689A7C420EC081C00BC7C8A /* LaunchScreen.storyboard in Resources */,
 				46343B8120F28E4B00EF63F7 /* ProximaNova-Regular.otf in Resources */,
-				46196CA0211BA06B00BA919B /* imageURLs.json in Resources */,
 				4689A7C120EC081C00BC7C8A /* Assets.xcassets in Resources */,
 				46343B8020F28E4B00EF63F7 /* ProximaNova-Extrabld.otf in Resources */,
 				4689A7BF20EC081A00BC7C8A /* Main.storyboard in Resources */,
@@ -279,7 +262,6 @@
 				4689A7BC20EC081A00BC7C8A /* DemoViewController.m in Sources */,
 				4620C5FD219F8D480029326D /* DemoHeaderViews.m in Sources */,
 				4689A7C720EC081C00BC7C8A /* main.m in Sources */,
-				46521165211CDB3400AD4F31 /* DemoDownloadImages.m in Sources */,
 				4648BFCF210E3FC60007D083 /* DemoCollectionDelegate.m in Sources */,
 				4A9527E520F8EB4D000DFDFB /* DemoCollectionDataSource.m in Sources */,
 				4648BFCC210E3FA60007D083 /* DemoTableDelegate.m in Sources */,

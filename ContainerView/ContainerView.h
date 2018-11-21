@@ -5,7 +5,17 @@
 #import <UIKit/UIKit.h>
 #import "ContainerTypes.h"
 
+@protocol ContainerViewDelegate <NSObject>
+
+@optional
+- (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated;
+@end
+
+
+
 @interface ContainerView : UIView
+
+@property (nonatomic, weak) id<ContainerViewDelegate> delegate;
 
 @property (strong, nonatomic) UIView *headerView;
 
@@ -91,10 +101,6 @@
 - (void)changeCornerRadius:(CGFloat)newValue;
 
 - (void)removeScrollView;
-
-
-
-@property (strong, nonatomic) void(^blockChangeShadowLevel)(ContainerMoveType containerMove, CGFloat scale, BOOL animation);
 
 - (void)panGestureRecognized:(UIPanGestureRecognizer *)recognizer;
 

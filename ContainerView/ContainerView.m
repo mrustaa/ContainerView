@@ -16,9 +16,10 @@
 
 @property (strong, nonatomic) UIButton *bottomButtonToMoveTop;
 
+@property (strong, nonatomic) UIScrollView *scrollView;
+
 @property (strong, nonatomic) UIVisualEffectView *visualEffectViewOrigin;
 @property (strong, nonatomic) UIView *visualEffectView;
-
 
 @end
 
@@ -76,7 +77,7 @@
         {
             UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
             self.visualEffectViewOrigin = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-            self.visualEffectViewOrigin.frame = (CGRect){ {0, 0}, self.frame.size };
+            self.visualEffectViewOrigin.frame = (CGRect){ { 0, 0 }, self.frame.size };
             [self.visualEffectView addSubview: self.visualEffectViewOrigin];
         }
         self.visualEffectView.backgroundColor = WHITE_COLOR;
@@ -89,18 +90,17 @@
     [super addSubview:subview];
     
     if([subview isKindOfClass:[UIScrollView class]]) {
-        UIScrollView * scrollView = (UIScrollView *)subview;
+        self.scrollView = (UIScrollView *)subview;
         if (@available(iOS 11.0, *)) {
-            scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+            self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        scrollView.scrollEnabled = (self.containerPosition == ContainerMoveTypeTop);
+        self.scrollView.scrollEnabled = (self.containerPosition == ContainerMoveTypeTop);
         [self changeCornerRadius:_containerCornerRadius];
     }
 }
 
 - (void)removeScrollView {
-    UIScrollView * scrollView = [self searchScrollViewInSubviews];
-    if(scrollView) [scrollView removeFromSuperview];
+    if(self.scrollView) [self.scrollView removeFromSuperview];
 }
 
 
@@ -108,9 +108,7 @@
     self.containerCornerRadius = newValue;
     
     self.layer.cornerRadius = self.containerCornerRadius;
-    //UIScrollView * scrollView = [self searchScrollViewInSubviews];
-    //if(scrollView) scrollView.layer.cornerRadius = self.containerCornerRadius;
-        
+    
     if (self.visualEffectView)
         self.visualEffectView.layer.cornerRadius = self.containerCornerRadius;
     
@@ -251,33 +249,18 @@
 }
 
 
-/// Search ScrollView
-- (UIScrollView *)searchScrollViewInSubviews {
-    UIScrollView *scrollView = nil;
-    for (UIView * view in self.subviews) {
-        if([view isKindOfClass:[UIScrollView class]]) {
-            scrollView = (UIScrollView *)view;
-        }
-    }
-    return scrollView;
-}
-
-
 /// Calculation ScrollView
 - (void)calculationScrollViewHeight:(CGFloat)containerPositionBottom {
-    
-    UIScrollView * scrollView = [self searchScrollViewInSubviews];
-    if(scrollView) {
-        
+    if(self.scrollView) {
         CGFloat headerHeight = (_headerView ?_headerView.height :0);
         CGFloat top = self.containerTop;
         CGFloat iphnXpaddingTop     = (IS_IPHONE_X ?24:0);
         CGFloat iphnXpaddingBottom  = (IS_IPHONE_X ?34:0);
         CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
         
-        scrollView.y = headerHeight;
-        scrollView.height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
-        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, iphnXpaddingBottom , 0);
+        self.scrollView.y = headerHeight;
+        self.scrollView.height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
+        self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, iphnXpaddingBottom , 0);
     }
 }
 
@@ -288,8 +271,7 @@
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         _savePositionContainer = self.transform.ty;
     }
-    
-    if (recognizer.state == UIGestureRecognizerStateChanged) {
+    else if (recognizer.state == UIGestureRecognizerStateChanged) {
         CGAffineTransform
         _transform = self.transform;
         _transform.ty = (_savePositionContainer + [recognizer translationInView: self].y );
@@ -297,20 +279,20 @@
             _transform.ty = 0;
         } else if( _transform.ty < self.containerTop) {
             _transform.ty = ( self.containerTop / 2) + (_transform.ty / 2);
-            [self calculationScrollViewHeight:_transform.ty + 5];
+            [self calculationScrollViewHeight:(_transform.ty + 5)];
             
             self.transform = _transform;
         } else {
             self.transform = _transform;
         }
         
-        
-        if(self.blockChangeShadowLevel) self.blockChangeShadowLevel(ContainerMoveTypeTop, self.transform.ty, NO);
+        if ([self.delegate respondsToSelector:@selector(changeContainerMove:containerY:animated:)]) {
+            [self.delegate changeContainerMove:ContainerMoveTypeTop containerY:self.transform.ty animated:NO];
+        }
         
         self.bottomButtonToMoveTop.hidden = YES;
     }
-    
-    if (recognizer.state == UIGestureRecognizerStateEnded) {
+    else if (recognizer.state == UIGestureRecognizerStateEnded) {
         CGFloat velocityInViewY = [recognizer velocityInView:self].y;
         [self containerMoveForVelocityInView:velocityInViewY];
     }
@@ -351,8 +333,6 @@
 shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return NO;
 }
-
-
 
 
 - (void)changeBlurStyle:(ContainerStyle)styleType {
@@ -432,24 +412,28 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 - (void)containerMovePosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
     if(_bottomButtonToMoveTop) self.bottomButtonToMoveTop.hidden = (moveType == ContainerMoveTypeTop) ? YES : NO;
     
-    UIScrollView * scrollView = [self searchScrollViewInSubviews];
-    if(scrollView) {
-        scrollView.scrollEnabled = (moveType == ContainerMoveTypeTop);
+    if(self.scrollView) {
+        self.scrollView.scrollEnabled = (moveType == ContainerMoveTypeTop);
     }
     
+    CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
     
     CGAffineTransform _transform = CGAffineTransformMakeTranslation( 0, position);
     
-    if(self.blockChangeShadowLevel) self.blockChangeShadowLevel(moveType, _transform.ty, animated);
+    if ([self.delegate respondsToSelector:@selector(changeContainerMove:containerY:animated:)]) {
+        [self.delegate changeContainerMove:moveType containerY:_transform.ty animated:animated];
+    }
     
     if(animated) {
         ANIMATION_SPRINGCOMP(.45, ^(void) {
             self.transform = _transform;
         }, ^(BOOL fin) {
-            CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
-            //ANIMATION(.25, ^(void) {
-                [self calculationScrollViewHeight:containerPositionBottom];
-            //});
+            
+            if(self.scrollView) {
+                if( (self.scrollView.contentOffset.y + self.scrollView.height + containerPositionBottom) < self.scrollView.contentSize.height) {
+                    [self calculationScrollViewHeight:containerPositionBottom];
+                }
+            }
             if(completion) completion();
         });
     } else {

@@ -11,39 +11,24 @@
 #import "DemoCollectionDelegate.h"
 #import "DemoCollectionDataSource.h"
 
-#import "DemoDownloadImages.h"
 #import "DemoHeaderViews.h"
 
-@interface UIScrollView (bawabd)
-@end
-@implementation UIScrollView (bawabd)
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
-}
-
-@end
-
-
-
-@interface DemoViewController () <UISearchBarDelegate, UITableViewDelegate, UICollectionViewDelegate> {
-    BOOL isHidden;
-}
-
-//@property (strong, nonatomic) ContainerView                 *containerView;
+@interface DemoViewController () <ContainerViewDelegate, UISearchBarDelegate, UITableViewDelegate, UICollectionViewDelegate, UITextViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray <NSDictionary *> *photos;
 
+@property (strong, nonatomic) UITextView                    *textView;
+
 @property (strong, nonatomic) UITableView                   *tableView;
-//@property (strong, nonatomic) DemoTableDelegate             *tableDelegate;
 @property (strong, nonatomic) DemoTableDataSource           *tableDataSource;
 
 @property (strong, nonatomic) UICollectionView              *collectionView;
-//@property (strong, nonatomic) DemoCollectionDelegate        *collectionDelegate;
 @property (strong, nonatomic) DemoCollectionDataSource      *collectionDataSource;
 
-@property (strong, nonatomic) UIImageView                   *imageView;
-//@property (strong, nonatomic) UIView                        *shadowView;
+
+
+@property (strong, nonatomic)          UIImageView          *imageView;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl   *segmentedContainerMove;
 @property (strong, nonatomic) IBOutlet UISwitch             *switchEnableMiddle;
@@ -70,138 +55,66 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    isHidden = NO;
     
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    if(!self.imageView)
-    {
-        self.imageView = [[UIImageView alloc]initWithFrame:FRAME];
-        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        self.imageView.clipsToBounds = YES;
-        self.imageView.alpha = 0;
-        [self.bottomView addSubview:self.imageView];
+    if(!_imageView) {
+        _imageView = [[UIImageView alloc]initWithFrame:FRAME];
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.clipsToBounds = YES;
+        _imageView.alpha = 0;
     }
+    [self.bottomView addSubview:_imageView];
     
-//    if(!self.shadowView)
-//    {
-//        self.shadowView = [[UIView alloc]initWithFrame:FRAME];
-//        self.shadowView.backgroundColor = BLACK_COLOR;
-//        self.shadowView.alpha = 0;
-//        [self.view addSubview:self.shadowView];
-//    }
+    [self.mapView setRegion:[self.mapView regionThatFits:COORDINATE_SAN_FRANCISCO]];
+    self.mapView.alpha = 0;
+    self.mapViewStatusBarBlur.alpha = 1;
     
-    
-        [self.mapView setRegion:[self.mapView regionThatFits:COORDINATE_SAN_FRANCISCO]];
-        self.mapView.alpha = 0;
-        self.mapViewStatusBarBlur.alpha = 0;
-        
-        self.mapViewStatusBarBlur.height = SCREEN_STATUS_HEIGHT;
+    self.mapViewStatusBarBlur.height = SCREEN_STATUS_HEIGHT;
     
     
     
-//    if (NAV_ADDED) {
-//        UINavigationController * nav = (UINavigationController *)ROOT_VC;
-//        if(!nav.navigationBarHidden) {
-//            if(nav.navigationBar.translucent) {
-//                self.settingsView.frame = (CGRect) {
-//                    {self.settingsView.x,self.settingsView.y +(IS_IPHONE_X ? (64 +24) : 64)},
-//                    self.settingsView.frame.size
-//                };
-//                self.  mapView.frame = self.settingsView.frame;
-//                self.imageView.frame = self.settingsView.frame;
-//            }
-//        }
-//    }
-    
-    
-    [self.containerView addSubview:self.tableView];
+    [self.containerView addSubview:[self createTableView]];
     [self.containerView changeCornerRadius:15];
+    /// [self.containerView containerMove:ContainerMoveTypeTop animated:NO];
+    /// self.containerView.containerBottomButtonToMoveTop = YES;
     
-//    __weak typeof(self) weakSelf = self;
-//    self.containerView.blockChangeShadowLevel = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
-//        if(animated) {
-//            ANIMATION_SPRING(.45,^(void){
-//                weakSelf.segmentedContainerMove.selectedSegmentIndex = containerMove;
-//            });
-//        }
-//    };
+    self.containerView.delegate = self;
+    
 
-    // [self.containerView containerMove:ContainerMoveTypeTop animated:NO];
-    // self.containerView.containerBottomButtonToMoveTop = YES;
-    
     [self.view addSubview: self.containerView];
     
-    
-    
-    DemoDownloadImages *
-    downloadImages = [[DemoDownloadImages alloc]init];
-    
-    NSMutableArray * photos = [downloadImages loadLocalImages];
-    if(photos) {
-        for(NSDictionary *dic in photos) [self.photos addObject:dic];
+    for (int count =0; count < 46; count++) {
+        UIImage *img = IMG( SFMT(@"IMG_%d",count) );
+        UIImage *imgSmall = [self imageWithImage:img size:200];
         
-        if(_tableView) [self.tableView reloadData];
-        if(_collectionView) [self.collectionView reloadData];
-    } else {
-        __weak typeof(self) weakSelf = self;
-        [downloadImages downloadOneImageAtATimeCallback:^(UIImage *img, UIImage *imgSmall) {
-            
-            GCD_ASYNC_MAIN_BEGIN {
-                
-                [weakSelf.photos addObject:@{ @"big":img, @"small":imgSmall }];
-                
-                if(self->_tableView) {
-                    NSArray *tableIndex = @[[NSIndexPath indexPathForRow:(weakSelf.photos.count-1) inSection:0]];
-                    [weakSelf.tableView insertRowsAtIndexPaths:tableIndex withRowAnimation:UITableViewRowAnimationFade];
-                }
-                
-                if(self->_collectionView) {
-                    NSArray *collectionIndex = @[[NSIndexPath indexPathForRow:(weakSelf.photos.count-1) inSection:0]];
-                    [weakSelf.collectionView performBatchUpdates:^ {
-                        [weakSelf.collectionView insertItemsAtIndexPaths:collectionIndex];
-                    } completion:nil];
-                }
-                
-            });
-        }];
+        [self.photos addObject:@{ @"big"   : img,
+                                  @"small" : imgSmall }];
     }
+    if(self.tableView)      [self.tableView      reloadData];
+    if(self.collectionView) [self.collectionView reloadData];
+}
+
+- (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
+    [super changeContainerMove:containerMove containerY:containerY animated:animated];
+    if(animated) {
+        self.segmentedContainerMove.selectedSegmentIndex = containerMove;
+    }
+
+}
+
+- (UIImage *)imageWithImage:(UIImage *)image size:(NSInteger)size {
     
-    
-    
+    CGSize cgSize = (CGSize) {          size, (image.size.height / (image.size.width / size) )};
+    CGRect cgRect = (CGRect) { {0, 0}, {size, (image.size.height / (image.size.width / size) )}};
+    UIGraphicsBeginImageContextWithOptions( cgSize, NO, 0.0);
+    [image drawInRect: cgRect ];
+    UIImage * newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
 }
-
-//
-//#pragma mark - Create ContainerView elements
-//
-//- (ContainerView *)containerView {
-//
-//    if(!_containerView)
-//    {
-//        ContainerView *
-//        container = [[ContainerView alloc] initWithFrame: (CGRect){ CGPointZero, { SCREEN_WIDTH, SCREEN_HEIGHT +50 }}];
-//
-//        __weak typeof(self) weakSelf = self;
-//        container.blockChangeShadowLevel = ^(ContainerMoveType containerMove, CGFloat containerFrameY, BOOL animated) {
-//
-//            if(animated) {
-//
-//                ANIMATION_SPRING(.45,^(void){
-//                    self.segmentedContainerMove.selectedSegmentIndex = containerMove;
-//                    [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-//                });
-//            } else {
-//                [weakSelf changeScalesImageAndShadowLevel:containerFrameY];
-//            }
-//        };
-//        _containerView = container;
-//    }
-//    return _containerView;
-//}
 
 
 - (NSMutableArray *)photos {
@@ -209,7 +122,11 @@
     return _photos;
 }
 
-- (UITableView *)tableView {
+
+
+#pragma mark - Create ScrollViews
+
+- (UITableView *)createTableView {
     
     if(!_tableView)
     {
@@ -218,61 +135,17 @@
         table.separatorStyle = UITableViewCellSeparatorStyleNone;
         table.showsVerticalScrollIndicator = NO;
         table.backgroundColor = CLR_COLOR;
+        table.delegate   = self;
         table.dataSource = self.tableDataSource;
-        table.delegate   = self; // self.tableDelegate;
+
         _tableView = table;
     }
     
     return _tableView;
 }
 
-- (void)removeTableView {
-    if(!_tableView) {
-        [_tableView removeFromSuperview];
-        _tableView = nil;
-    }
-}
 
-- (DemoTableDataSource *)tableDataSource {
-    if(!_tableDataSource)
-    {
-        DemoTableDataSource *
-        dataSource = [[DemoTableDataSource alloc] init];
-        dataSource.photos = self.photos;
-        _tableDataSource = dataSource;
-    }
-    return _tableDataSource;
-}
-
-//- (DemoTableDelegate *)tableDelegate {
-//    if(!_tableDelegate)
-//    {
-//        DemoTableDelegate *
-//        delegate = [[DemoTableDelegate alloc] init];
-//
-//        __weak typeof(self) weakSelf = self;
-//        delegate.blockSelectIndex = ^(NSInteger index) {
-//            [weakSelf selectCellIndex:(SelectType)index animated:YES];
-//        };
-//        _tableDelegate = delegate;
-//    }
-//    return _tableDelegate;
-//}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self selectCellIndex:(SelectType)indexPath.row animated:YES];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 88;
-}
-
-
-
-- (UICollectionView *)collectionView {
+- (UICollectionView *)createCollectionView {
     
     if(!_collectionView)
     {
@@ -280,7 +153,7 @@
         collection = [[UICollectionView alloc]initWithFrame:FRAME_SCROLLVIEW collectionViewLayout:[[UICollectionViewFlowLayout alloc]init]];
         [collection registerClass:[DemoCollectionCell class] forCellWithReuseIdentifier:@"collectionCell"];
         collection.backgroundColor = CLR_COLOR;
-        collection.delegate   = self; // self.collectionDelegate;
+        collection.delegate   = self;
         collection.dataSource = self.collectionDataSource;
         _collectionView = collection;
     }
@@ -288,11 +161,94 @@
     return _collectionView;
 }
 
-- (void)removeCollectionView {
+- (UITextView *)createTextView {
+    
+    if(!_textView) {
+        UITextView * textView = [[UITextView alloc]initWithFrame:FRAME_SCROLLVIEW];
+        textView.delegate = self;
+        textView.returnKeyType = UIReturnKeyDone;
+        textView.backgroundColor = CLR_COLOR;
+        textView.font = [UIFont systemFontOfSize:15];
+        textView.text = @"This example demonstrates a block quote. Because some introductory phrases will lead\
+        naturally into the block quote,\
+        you might choose to begin the block quote with a lowercase letter. In this and the later\
+        examples we use “Lorem ipsum” text to ensure that each block quotation contains 40 words or\
+        more. Lorem ipsum dolor sit amet, consectetur adipiscing elit. (Organa, 2013, p. 234)\
+        Example 2\
+        This example also demonstrates a block quote. Some introductory sentences end abruptly in a\
+        colon or a period:\
+        In those cases, you are more likely to capitalize the beginning word of the block quotation.\
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nisi mi, pharetra sit amet mi vitae,\
+        commodo accumsan dui. Donec non scelerisque quam. Pellentesque ut est sed neque.\
+        (Calrissian, 2013, para. 3)\
+        Example 3\
+        This is another example of a block quotation. Sometimes, the author(s) being cited will be\
+        included in the introduction. In that case, according to Skywalker and Solo,\
+        because the author names are in the introduction of this quote, the parentheses that follow it\
+        will include only the year and the page number. Lorem ipsum dolor sit amet, consectetur\
+        adipiscing elit. Sed nisi mi, pharetra sit amet mi vitae, commodo accumsan dui. Donec non\
+        scelerisque quam. Pellentesque ut est sed neque. (2013, p. 103)\
+        Copyright © 2013 by the American Psychological Association. This content may be reproduced for classroom or teaching purposes\
+            provided that credit is given to the American Psychological Association. For any other use, please contact the APA Permissions Office.\
+            Example 4\
+            In this example, we have added our own emphasis. This needs to be indicated parenthetically,\
+            so the reader knows that the italics were not in the original text. Amidala (2009) dabbled in hyperbole,\
+            saying,\
+            Random Explosions 2: Revenge of the Dialogue is the worst movie in the history of time\
+        [emphasis added]. . . . it’s [sic] promise of dialogue is a misnomer of explosive proportions. Lorem ipsum\
+            dolor sit amet, consectetur adipiscing elit. Sed nisi mi, pharetra sit amet mi vitae. (p. 13)\
+            This paragraph appears flush left because it is a continuation of the paragraph we began above the block\
+            quote. Note that we also added “[sic]” within the block quotation to indicate that a misspelling was in\
+            the original text, and we’ve included ellipses (with four periods) because we have omitted a sentence\
+            from the quotation (see pp. 172–173 of the Publication Manual of the American Psychological\
+                                Association).\
+            Example 5\
+            This example is similar to the previous one, except that we have continued the quotation to\
+            include text from a second paragraph. Amidala (2009) dabbled in hyperbole, saying,\
+            Random Explosions 2: Revenge of the Dialogue is the worst movie in the history of time\
+            [emphasis added]. . . . it’s [sic] promise of dialogue is a misnomer of explosive proportions.\
+            On the other hand, Delightful Banter on Windswept Mountainside is a film to be\
+            cherished for all time. Filmmakers hoping to top this film should abandon hope. (p. 13)\
+                This paragraph begins with an indent because we do not intend it to continue the paragraph\
+                    that we started above the block quote. Note that we also added “[sic]” within the block quotation to\
+                    indicate that a misspelling was in the original text, and we’ve included ellipses (with four periods)\
+                    because we have omitted a sentence from this quotation (see pp. 172–173 of the Manual).";
+        
+
+        _textView = textView;
+    }
+    return _textView;
+}
+
+#pragma mark - Remove ScrollViews
+
+
+- (void)removeScrollView {
+    if(!_tableView) {
+        [_tableView removeFromSuperview];
+        _tableView = nil;
+    }
     if(!_collectionView) {
         [_collectionView removeFromSuperview];
         _collectionView = nil;
     }
+    if(!_textView) {
+        [_textView removeFromSuperview];
+        _textView = nil;
+    }
+    [self.containerView removeScrollView];
+}
+
+#pragma mark - Create ScrollViews DataSource
+
+- (DemoTableDataSource *)tableDataSource {
+    if(!_tableDataSource) {
+        DemoTableDataSource *
+        dataSource = [[DemoTableDataSource alloc] init];
+        dataSource.photos = self.photos;
+        _tableDataSource = dataSource;
+    }
+    return _tableDataSource;
 }
 
 - (DemoCollectionDataSource *)collectionDataSource {
@@ -306,26 +262,21 @@
     }
     return _collectionDataSource;
 }
-//- (DemoCollectionDelegate *)collectionDelegate {
-//    if(!_collectionDelegate)
-//    {
-//        DemoCollectionDelegate *
-//        delegate = [[DemoCollectionDelegate alloc] init];
-//
-//        __weak typeof(self) weakSelf = self;
-//        delegate.blockSelectIndex = ^(NSInteger index) {
-//            [weakSelf selectCellIndex:(SelectType)index animated:YES];
-//        };
-//
-//        _collectionDelegate = delegate;
-//    }
-//    return _collectionDelegate;
-//}
 
-#pragma mark - CollectionView Delegate
+
+#pragma mark - ScrollView Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self selectCellIndex:(SelectType)indexPath.row animated:YES];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 88;
+}
+
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-//    if(self.blockSelectIndex) self.blockSelectIndex(indexPath.row);
     [self selectCellIndex:(SelectType)indexPath.row animated:YES];
 }
 
@@ -356,7 +307,7 @@
     return .0;
 }
 
-#pragma mark - Actions Table Collection Delegate
+#pragma mark - ScrollView Actions Delegate
 
 - (void)selectCellIndex:(SelectType)index animated:(BOOL)animated {
     
@@ -391,12 +342,8 @@
                     break;
             }
         });
-        
     });
-    
 }
-
-
 
 
 #pragma mark - SearchBar Delegate
@@ -474,8 +421,6 @@
     }
 }
 
-
-
 - (IBAction)changeContainerStyle:(UISegmentedControl *)sender {
     
     ContainerStyle style = sender.selectedSegmentIndex;
@@ -488,17 +433,16 @@
     UIView *view = self.containerView.headerView;
     if(view) [DemoHeaderViews changeColorsHeaderView:view forStyle:style];
     
-    if(style == ContainerStyleDark)
-    {
+    if(style == ContainerStyleDark) {
+        if(self.textView) self.textView.textColor = WHITE_COLOR;
         self.mapView.mapType = MKMapTypeHybrid;
         self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
         STATUSBAR_STYLE(UIStatusBarStyleLightContent);
         // self.mapViewStatusBarBlur.hidden
         self.view        .backgroundColor = RGB(55, 55, 55);
         self.settingsView.backgroundColor = RGB(66, 66, 66);
-    }
-    else
-    {
+    } else {
+        if(self.textView) self.textView.textColor = BLACK_COLOR;
         self.mapView.mapType = MKMapTypeStandard;
         self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         STATUSBAR_STYLE(UIStatusBarStyleDefault);
@@ -506,11 +450,9 @@
         self.settingsView.backgroundColor = RGB(225, 225, 231);
     }
     
-    [self.tableView reloadData];
-    [self.collectionView reloadData];
+    if(self.tableView)      [self.tableView      reloadData];
+    if(self.collectionView) [self.collectionView reloadData];
 }
-
-
 
 - (IBAction)changeContainerSizeTop:(UISlider *)sender {
     CGFloat top = sender.value;
@@ -537,21 +479,13 @@
 }
 
 - (IBAction)changeContainerScrollViewType:(UISegmentedControl *)sender {
-    [self.containerView removeScrollView];
+    
+    [self removeScrollView];
     
     switch (sender.selectedSegmentIndex) {
-        case 0:
-            [self removeCollectionView];
-            [self.containerView addSubview:self.tableView];
-            break;
-        case 1:
-            [self removeTableView];
-            [self.containerView addSubview:self.collectionView];
-            break;
-        case 2:
-            [self removeTableView];
-            [self removeCollectionView];
-            break;
+        case 0: [self.containerView addSubview:[self createTableView]];      break;
+        case 1: [self.containerView addSubview:[self createCollectionView]]; break;
+        case 2: [self.containerView addSubview:[self createTextView]];       break;
         default: break;
     }
     

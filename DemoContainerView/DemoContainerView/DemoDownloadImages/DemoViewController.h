@@ -6,7 +6,7 @@
 #import <MapKit/MapKit.h>
 #import "ContainerViewController.h"
 
-@interface DemoViewController : ContainerViewController // UIViewController
+@interface DemoViewController : ContainerViewController
 
 @end
 

@@ -7,7 +7,11 @@
 
 @class ContainerScrollDelegate;
 
-@interface ContainerViewController : UIViewController <UIScrollViewDelegate>
+
+
+
+@interface ContainerViewController : UIViewController <UIScrollViewDelegate, ContainerViewDelegate>
+
 
 @property (strong, nonatomic) ContainerView *containerView;
 @property (strong, nonatomic) UIView *bottomView;
@@ -53,9 +57,6 @@
 @property (nonatomic) CGFloat containerBottom;
 
 
-
-
-@property (strong, nonatomic) void(^blockChangeContainerMove)(ContainerMoveType containerMove);
 
 
 - (void)changeScalesImageAndShadowLevel:(CGFloat)containerFrameY;

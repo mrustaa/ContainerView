@@ -25,29 +25,25 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     DemoTableCell * cell = [tableView dequeueReusableCellWithIdentifier:@"TableCell"];
-    if(!cell)
-    {
+    if(!cell) {
         cell = [[DemoTableCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: @"TableCell" ];
         cell.backgroundColor = CLR_COLOR;
     }
     
-    if(!cell.separatorLine)
-    {
+    if(!cell.separatorLine) {
         cell.separatorLine = [[UIView alloc]initWithFrame:(CGRect){ {16 , 87.5}, {SCREEN_WIDTH -32 , 0.5} }];
         cell.separatorLine.backgroundColor = RGB(222, 222, 222);
         [cell addSubview: cell.separatorLine];
     }
     
-    if(!cell.labelTitle)
-    {
+    if(!cell.labelTitle) {
         cell.labelTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 20}, {SCREEN_WIDTH -67 , 30} }];
         cell.labelTitle.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:22];
         cell.labelTitle.textColor = BLACK_COLOR;
         [cell addSubview:cell.labelTitle];
     }
     
-    if(!cell.labelSubTitle)
-    {
+    if(!cell.labelSubTitle) {
         cell.labelSubTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 50}, {SCREEN_WIDTH -67, 16} }];
         cell.labelSubTitle.font = [UIFont fontWithName:@"ProximaNova-Regular" size:15];
         cell.labelSubTitle.textColor = RGB(124,132,148);
@@ -58,22 +54,21 @@
     cell.labelSubTitle.text = @"Subtitle";
     cell.labelTitle.textColor = (self.containerStyle == ContainerStyleDark) ? WHITE_COLOR : BLACK_COLOR;
     
-    switch (self.containerStyle)
-    {
+    switch (self.containerStyle) {
         case ContainerStyleDefault: {
-            cell.separatorLine.backgroundColor = RGB(222, 222, 222);
+            cell.separatorLine.backgroundColor = GRAYLEVEL(222);
             cell.separatorLine.alpha = 1;
         }    break;
         case ContainerStyleLight:{
-            cell.separatorLine.backgroundColor = RGB(180, 180, 180);
+            cell.separatorLine.backgroundColor = GRAYLEVEL(180);
             cell.separatorLine.alpha = 0.5;
         }    break;
         case ContainerStyleDark:{
-            cell.separatorLine.backgroundColor = RGB(222, 222, 222);
+            cell.separatorLine.backgroundColor = GRAYLEVEL(222);
             cell.separatorLine.alpha = 0.2;
         }    break;
         case ContainerStyleExtraLight:{
-            cell.separatorLine.backgroundColor = RGB(180, 180, 180);
+            cell.separatorLine.backgroundColor = GRAYLEVEL(180);
             cell.separatorLine.alpha = 0.5;
         }    break;
         default:

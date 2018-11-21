@@ -43,7 +43,7 @@
 //    }
     
 
-    CGFloat top     = self.containerView.containerTop;
+    CGFloat top = self.containerView.containerTop;
     
     if(scrollView.panGestureRecognizer.state == UIGestureRecognizerStateEnded)
         onceScrollingBeginDragging = NO;

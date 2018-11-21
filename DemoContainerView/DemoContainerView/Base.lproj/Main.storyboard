@@ -19,7 +19,7 @@
         <scene sceneID="RXA-zk-RNt">
             <objects>
                 <viewController id="acE-aC-1gp" customClass="DemoViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="wlZ-CK-CXe">
+                    <view key="view" contentMode="scaleToFill" id="wlZ-CK-CXe" customClass="MyView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -264,6 +264,7 @@
                                         <segments>
                                             <segment title="Table"/>
                                             <segment title="Collection"/>
+                                            <segment title="Text"/>
                                             <segment title="Non"/>
                                         </segments>
                                         <connections>
