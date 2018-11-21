@@ -19,6 +19,8 @@
 		4689A7C420EC081C00BC7C8A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4689A7C220EC081C00BC7C8A /* LaunchScreen.storyboard */; };
 		4689A7C720EC081C00BC7C8A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4689A7C620EC081C00BC7C8A /* main.m */; };
 		4689A7DC20EC08DE00BC7C8A /* DemoTableDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4689A7D720EC08DE00BC7C8A /* DemoTableDataSource.m */; };
+		46A1F41C21A5ED1500541435 /* DemoTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 46A1F41B21A5ED1500541435 /* DemoTableCell.m */; };
+		46A1F41F21A5ED8F00541435 /* DemoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 46A1F41E21A5ED8F00541435 /* DemoCollectionCell.m */; };
 		46C519292126267B00A6F607 /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519262126267B00A6F607 /* ContainerView.m */; };
 		46C5192A2126267B00A6F607 /* ContainerScrollDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519272126267B00A6F607 /* ContainerScrollDelegate.m */; };
 		4A274ACC219D7BBD008900D9 /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A274ACB219D7BBD008900D9 /* UIView+Frame.m */; };
@@ -47,6 +49,10 @@
 		4689A7C620EC081C00BC7C8A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4689A7D620EC08DE00BC7C8A /* DemoTableDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoTableDataSource.h; sourceTree = "<group>"; };
 		4689A7D720EC08DE00BC7C8A /* DemoTableDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoTableDataSource.m; sourceTree = "<group>"; };
+		46A1F41A21A5ED1500541435 /* DemoTableCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoTableCell.h; sourceTree = "<group>"; };
+		46A1F41B21A5ED1500541435 /* DemoTableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoTableCell.m; sourceTree = "<group>"; };
+		46A1F41D21A5ED8F00541435 /* DemoCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoCollectionCell.h; sourceTree = "<group>"; };
+		46A1F41E21A5ED8F00541435 /* DemoCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoCollectionCell.m; sourceTree = "<group>"; };
 		46C519232126267A00A6F607 /* ContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerView.h; sourceTree = "<group>"; };
 		46C519242126267B00A6F607 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		46C519252126267B00A6F607 /* ContainerScrollDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerScrollDelegate.h; sourceTree = "<group>"; };
@@ -85,6 +91,8 @@
 		4648BFD0210E545F0007D083 /* DemoProtocolsTableView */ = {
 			isa = PBXGroup;
 			children = (
+				46A1F41A21A5ED1500541435 /* DemoTableCell.h */,
+				46A1F41B21A5ED1500541435 /* DemoTableCell.m */,
 				4648BFCA210E3FA60007D083 /* DemoTableDelegate.h */,
 				4648BFCB210E3FA60007D083 /* DemoTableDelegate.m */,
 				4689A7D620EC08DE00BC7C8A /* DemoTableDataSource.h */,
@@ -96,6 +104,8 @@
 		4648BFD1210E54650007D083 /* DemoProtocolsCollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				46A1F41D21A5ED8F00541435 /* DemoCollectionCell.h */,
+				46A1F41E21A5ED8F00541435 /* DemoCollectionCell.m */,
 				4648BFCD210E3FC60007D083 /* DemoCollectionDelegate.h */,
 				4648BFCE210E3FC60007D083 /* DemoCollectionDelegate.m */,
 				4A9527E420F8EB4D000DFDFB /* DemoCollectionDataSource.h */,
@@ -125,10 +135,8 @@
 			children = (
 				4689A7B720EC081A00BC7C8A /* AppDelegate.h */,
 				4689A7B820EC081A00BC7C8A /* AppDelegate.m */,
-				4A274ACA219D7BBD008900D9 /* UIView+Frame.h */,
-				4A274ACB219D7BBD008900D9 /* UIView+Frame.m */,
 				4A274AC9219D7B61008900D9 /* PrefixHeader.pch */,
-				46C519242126267B00A6F607 /* Defines.h */,
+				46A1F41821A5E96100541435 /* Utils */,
 				46C519222126264600A6F607 /* ContainerView */,
 				46E356C121261C2400850BD8 /* Demo */,
 				46EA455920FD258F00C0FAE0 /* Resources */,
@@ -141,12 +149,30 @@
 			path = DemoContainerView;
 			sourceTree = "<group>";
 		};
+		46A1F41821A5E96100541435 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				4A274ACA219D7BBD008900D9 /* UIView+Frame.h */,
+				4A274ACB219D7BBD008900D9 /* UIView+Frame.m */,
+				46C519242126267B00A6F607 /* Defines.h */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		46A1F41921A5EBCD00541435 /* ScrollDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				46C519252126267B00A6F607 /* ContainerScrollDelegate.h */,
+				46C519272126267B00A6F607 /* ContainerScrollDelegate.m */,
+			);
+			path = ScrollDelegate;
+			sourceTree = "<group>";
+		};
 		46C519222126264600A6F607 /* ContainerView */ = {
 			isa = PBXGroup;
 			children = (
+				46A1F41921A5EBCD00541435 /* ScrollDelegate */,
 				46C519282126267B00A6F607 /* ContainerTypes.h */,
-				46C519252126267B00A6F607 /* ContainerScrollDelegate.h */,
-				46C519272126267B00A6F607 /* ContainerScrollDelegate.m */,
 				4A94AE7921A3F6C90045A212 /* ContainerViewController.h */,
 				4A94AE7821A3F6C90045A212 /* ContainerViewController.m */,
 				46C519232126267A00A6F607 /* ContainerView.h */,
@@ -261,10 +287,12 @@
 			files = (
 				4689A7BC20EC081A00BC7C8A /* DemoViewController.m in Sources */,
 				4620C5FD219F8D480029326D /* DemoHeaderViews.m in Sources */,
+				46A1F41F21A5ED8F00541435 /* DemoCollectionCell.m in Sources */,
 				4689A7C720EC081C00BC7C8A /* main.m in Sources */,
 				4648BFCF210E3FC60007D083 /* DemoCollectionDelegate.m in Sources */,
 				4A9527E520F8EB4D000DFDFB /* DemoCollectionDataSource.m in Sources */,
 				4648BFCC210E3FA60007D083 /* DemoTableDelegate.m in Sources */,
+				46A1F41C21A5ED1500541435 /* DemoTableCell.m in Sources */,
 				4689A7DC20EC08DE00BC7C8A /* DemoTableDataSource.m in Sources */,
 				46C5192A2126267B00A6F607 /* ContainerScrollDelegate.m in Sources */,
 				4A94AE7A21A3F6C90045A212 /* ContainerViewController.m in Sources */,

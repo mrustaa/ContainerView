@@ -3,9 +3,8 @@
 //  Copyright © 2018 mrusta. All rights reserved.
 
 #import "DemoCollectionDataSource.h"
+#import "DemoCollectionCell.h"
 
-@implementation DemoCollectionCell
-@end
 
 @implementation DemoCollectionDataSource
 

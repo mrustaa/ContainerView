@@ -12,6 +12,7 @@
     BOOL _containerShadow;
     UIView * _headerView;
     CGFloat _savePositionContainer;
+    CGFloat _containerCornerRadius;
 }
 
 @property (strong, nonatomic) UIButton *bottomButtonToMoveTop;
@@ -90,6 +91,12 @@
     [super addSubview:subview];
     
     if([subview isKindOfClass:[UIScrollView class]]) {
+        if(self.containerBottomButtonToMoveTop) {
+            self.containerBottomButtonToMoveTop = NO;
+        }
+        
+        [super addSubview:self.bottomButtonToMoveTop];
+        
         self.scrollView = (UIScrollView *)subview;
         if (@available(iOS 11.0, *)) {
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -99,25 +106,6 @@
     }
 }
 
-- (void)removeScrollView {
-    if(self.scrollView) [self.scrollView removeFromSuperview];
-}
-
-
-- (void)changeCornerRadius:(CGFloat)newValue {
-    self.containerCornerRadius = newValue;
-    
-    self.layer.cornerRadius = self.containerCornerRadius;
-    
-    if (self.visualEffectView)
-        self.visualEffectView.layer.cornerRadius = self.containerCornerRadius;
-    
-    [self calculationScrollViewHeight:0];
-}
-
-
-
-/// Add
 - (void)setContainerBottomButtonToMoveTop:(BOOL)newValue {
     if(newValue) {
         [self addSubview: self.bottomButtonToMoveTop];
@@ -131,6 +119,29 @@
     return _bottomButtonToMoveTop != nil;
 }
 
+- (void)setContainerCornerRadius:(CGFloat)containerCornerRadius {
+    [self changeCornerRadius:containerCornerRadius];
+}
+
+- (CGFloat)containerCornerRadius {
+    return _containerCornerRadius;
+}
+
+- (void)changeCornerRadius:(CGFloat)newValue {
+    _containerCornerRadius = newValue;
+    
+    self.layer.cornerRadius = _containerCornerRadius;
+    
+    if (self.visualEffectView)
+        self.visualEffectView.layer.cornerRadius = _containerCornerRadius;
+    
+    [self calculationScrollViewHeight:0];
+}
+
+
+
+
+
 - (UIButton *)bottomButtonToMoveTop {
     
     if(!_bottomButtonToMoveTop)
@@ -143,8 +154,7 @@
         //[btn addGestureRecognizer: [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(containerBottomButtonAction)]];
         
         btn.frame = CGRectMake( 0, 0, SCREEN_WIDTH, (SCREEN_HEIGHT - self.containerBottom + (IS_IPHONE_X ?34 :0)) );
-        btn.backgroundColor = RGBA(255, 0, 0, 0.5);
-        btn.hidden = YES;
+        btn.backgroundColor = CLR_COLOR;
         _bottomButtonToMoveTop = btn;
     }
     
@@ -279,7 +289,12 @@
             _transform.ty = 0;
         } else if( _transform.ty < self.containerTop) {
             _transform.ty = ( self.containerTop / 2) + (_transform.ty / 2);
-            [self calculationScrollViewHeight:(_transform.ty + 5)];
+            
+            CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
+            
+            if( (self.scrollView.contentOffset.y + self.scrollView.height + containerPositionBottom) < self.scrollView.contentSize.height) {
+                [self calculationScrollViewHeight:(_transform.ty + 5)];
+            }
             
             self.transform = _transform;
         } else {

@@ -5,8 +5,9 @@
 #import <UIKit/UIKit.h>
 #import "ContainerTypes.h"
 
-@protocol ContainerViewDelegate <NSObject>
 
+
+@protocol ContainerViewDelegate <NSObject>
 @optional
 - (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated;
 @end
@@ -17,6 +18,10 @@
 
 @property (nonatomic, weak) id<ContainerViewDelegate> delegate;
 
+
+/**
+ @brief This parameter sets a custom header for the container.
+ */
 @property (strong, nonatomic) UIView *headerView;
 
 /**
@@ -29,6 +34,9 @@
  */
 @property (nonatomic) BOOL containerAllowMiddlePosition;
 
+/**
+ @brief This parameter sets the shadow for the container.
+ */
 @property (nonatomic) BOOL containerShadow;
 
 
@@ -47,6 +55,9 @@
  */
 @property (nonatomic) CGFloat containerBottom;
 
+/**
+@brief This method for changing the rounding radius
+*/
 @property (nonatomic) CGFloat containerCornerRadius;
 
 
@@ -73,6 +84,8 @@
  */
 - (void)changeBlurStyle:(ContainerStyle)styleType;
 
+
+
 - (void)containerMoveForVelocityInView:(CGFloat)velocityInViewY;
 
 /**
@@ -93,15 +106,5 @@
 - (void)containerMoveCustomPosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated;
 - (void)containerMoveCustomPosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion;
 
-/**
- @brief This method for changing the rounding radius
-  
- @param newValue assignment of a new value
- */
-- (void)changeCornerRadius:(CGFloat)newValue;
-
-- (void)removeScrollView;
-
-- (void)panGestureRecognized:(UIPanGestureRecognizer *)recognizer;
 
 @end

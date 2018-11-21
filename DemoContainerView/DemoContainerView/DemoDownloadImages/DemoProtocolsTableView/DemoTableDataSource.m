@@ -3,18 +3,8 @@
 //  Copyright © 2018 mrusta. All rights reserved.
 
 #import "DemoTableDataSource.h"
+#import "DemoTableCell.h"
 
-@interface DemoTableCell : UITableViewCell
-
-@property (strong, nonatomic) UILabel *labelTitle;
-@property (strong, nonatomic) UILabel *labelSubTitle;
-@property (strong, nonatomic) UIView *separatorLine;
-@property (strong, nonatomic) UIImageView *imageAvatar;
-
-@end
-
-@implementation DemoTableCell
-@end
 
 @implementation DemoTableDataSource
 

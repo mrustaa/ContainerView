@@ -2,41 +2,33 @@
 //  Created by Rustam Motygullin on 03.07.2018.
 //  Copyright © 2018 mrusta. All rights reserved.
 
-#import "ContainerView.h"
 
 #import "DemoViewController.h"
 
-#import "DemoTableDelegate.h"
-#import "DemoTableDataSource.h"
-#import "DemoCollectionDelegate.h"
-#import "DemoCollectionDataSource.h"
-
 #import "DemoHeaderViews.h"
+#import "DemoTableCell.h"
+#import "DemoCollectionCell.h"
 
 
-@interface DemoViewController () <ContainerViewDelegate, UISearchBarDelegate, UITableViewDelegate, UICollectionViewDelegate, UITextViewDelegate>
+
+
+@interface DemoViewController () <ContainerViewDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UITextViewDelegate>
+
 
 @property (strong, nonatomic) NSMutableArray <NSDictionary *> *photos;
 
-@property (strong, nonatomic) UITextView                    *textView;
-
-@property (strong, nonatomic) UITableView                   *tableView;
-@property (strong, nonatomic) DemoTableDataSource           *tableDataSource;
-
-@property (strong, nonatomic) UICollectionView              *collectionView;
-@property (strong, nonatomic) DemoCollectionDataSource      *collectionDataSource;
-
+@property (strong, nonatomic)          UITableView          *tableView;
+@property (strong, nonatomic)          UICollectionView     *collectionView;
+@property (strong, nonatomic)          UITextView           *textView;
 
 
 @property (strong, nonatomic)          UIImageView          *imageView;
+@property (strong, nonatomic) IBOutlet UIView               *settingsView;
+@property (strong, nonatomic) IBOutlet MKMapView            *mapView;
+@property (strong, nonatomic) IBOutlet UIVisualEffectView   *mapViewStatusBarBlur;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl   *segmentedContainerMove;
 @property (strong, nonatomic) IBOutlet UISwitch             *switchEnableMiddle;
-
-@property (strong, nonatomic) IBOutlet UIView               *settingsView;
-
-@property (strong, nonatomic) IBOutlet MKMapView            *mapView;
-@property (strong, nonatomic) IBOutlet UIVisualEffectView   *mapViewStatusBarBlur;
 
 @property (strong, nonatomic) IBOutlet UILabel              *containerLabelValueTop;
 @property (strong, nonatomic) IBOutlet UILabel              *containerLabelValueBottom;
@@ -64,23 +56,43 @@
     }
     [self.bottomView addSubview:_imageView];
     
+    
     [self.mapView setRegion:[self.mapView regionThatFits:COORDINATE_SAN_FRANCISCO]];
     self.mapView.alpha = 0;
-    self.mapViewStatusBarBlur.alpha = 1;
     
+    self.mapViewStatusBarBlur.alpha = 1;
     self.mapViewStatusBarBlur.height = SCREEN_STATUS_HEIGHT;
     
     
-    
     [self.containerView addSubview:[self createTableView]];
-    [self.containerView changeCornerRadius:15];
-    /// [self.containerView containerMove:ContainerMoveTypeTop animated:NO];
-    /// self.containerView.containerBottomButtonToMoveTop = YES;
     
-    self.containerView.delegate = self;
+    self.changeCornerRadius = 15;
+    
+    /// [self containerMove:ContainerMoveTypeTop animated:NO];
+    /// self.containerBottomButtonToMoveTop = YES;
+    
+    self.delegate = self;
     
 
     [self.view addSubview: self.containerView];
+    
+    [self initPhotos];
+
+}
+
+#pragma mark - ContainerView Delegate
+
+- (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
+    [super changeContainerMove:containerMove containerY:containerY animated:animated];
+    if(animated) {
+        self.segmentedContainerMove.selectedSegmentIndex = containerMove;
+    }
+}
+
+
+#pragma mark - Init Photos Items For TableView & CollecionView
+
+- (void)initPhotos {
     
     for (int count =0; count < 46; count++) {
         UIImage *img = IMG( SFMT(@"IMG_%d",count) );
@@ -93,13 +105,12 @@
     if(self.collectionView) [self.collectionView reloadData];
 }
 
-- (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
-    [super changeContainerMove:containerMove containerY:containerY animated:animated];
-    if(animated) {
-        self.segmentedContainerMove.selectedSegmentIndex = containerMove;
-    }
 
+- (NSMutableArray *)photos {
+    if(!_photos) _photos = [NSMutableArray new];
+    return _photos;
 }
+
 
 - (UIImage *)imageWithImage:(UIImage *)image size:(NSInteger)size {
     
@@ -117,13 +128,6 @@
 }
 
 
-- (NSMutableArray *)photos {
-    if(!_photos) _photos = [NSMutableArray new];
-    return _photos;
-}
-
-
-
 #pragma mark - Create ScrollViews
 
 - (UITableView *)createTableView {
@@ -136,7 +140,7 @@
         table.showsVerticalScrollIndicator = NO;
         table.backgroundColor = CLR_COLOR;
         table.delegate   = self;
-        table.dataSource = self.tableDataSource;
+        table.dataSource = self;
 
         _tableView = table;
     }
@@ -154,7 +158,7 @@
         [collection registerClass:[DemoCollectionCell class] forCellWithReuseIdentifier:@"collectionCell"];
         collection.backgroundColor = CLR_COLOR;
         collection.delegate   = self;
-        collection.dataSource = self.collectionDataSource;
+        collection.dataSource = self;
         _collectionView = collection;
     }
     
@@ -168,7 +172,7 @@
         textView.delegate = self;
         textView.returnKeyType = UIReturnKeyDone;
         textView.backgroundColor = CLR_COLOR;
-        textView.font = [UIFont systemFontOfSize:15];
+        textView.font = FONT_S(15);
         textView.text = @"This example demonstrates a block quote. Because some introductory phrases will lead\
         naturally into the block quote,\
         you might choose to begin the block quote with a lowercase letter. In this and the later\
@@ -223,48 +227,7 @@
 #pragma mark - Remove ScrollViews
 
 
-- (void)removeScrollView {
-    if(!_tableView) {
-        [_tableView removeFromSuperview];
-        _tableView = nil;
-    }
-    if(!_collectionView) {
-        [_collectionView removeFromSuperview];
-        _collectionView = nil;
-    }
-    if(!_textView) {
-        [_textView removeFromSuperview];
-        _textView = nil;
-    }
-    [self.containerView removeScrollView];
-}
-
-#pragma mark - Create ScrollViews DataSource
-
-- (DemoTableDataSource *)tableDataSource {
-    if(!_tableDataSource) {
-        DemoTableDataSource *
-        dataSource = [[DemoTableDataSource alloc] init];
-        dataSource.photos = self.photos;
-        _tableDataSource = dataSource;
-    }
-    return _tableDataSource;
-}
-
-- (DemoCollectionDataSource *)collectionDataSource {
-    if(!_collectionDataSource)
-    {
-        DemoCollectionDataSource *
-        dataSource = [[DemoCollectionDataSource alloc] init];
-        dataSource.photos = self.photos;
-        
-        _collectionDataSource = dataSource;
-    }
-    return _collectionDataSource;
-}
-
-
-#pragma mark - ScrollView Delegate
+#pragma mark - TableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -275,6 +238,71 @@
     return 88;
 }
 
+#pragma mark - TableView DataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
+    return self.photos.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    DemoTableCell * cell = [tableView dequeueReusableCellWithIdentifier:@"TableCell"];
+    if(!cell) {
+        cell = [[DemoTableCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: @"TableCell" ];
+        cell.backgroundColor = CLR_COLOR;
+    }
+    
+    if(!cell.separatorLine) {
+        cell.separatorLine = [[UIView alloc]initWithFrame:(CGRect){ {16 , 87.5}, {SCREEN_WIDTH -32 , 0.5} }];
+        cell.separatorLine.backgroundColor = RGB(222, 222, 222);
+        [cell addSubview: cell.separatorLine];
+    }
+    
+    if(!cell.labelTitle) {
+        cell.labelTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 20}, {SCREEN_WIDTH -67 , 30} }];
+        cell.labelTitle.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:22];
+        cell.labelTitle.textColor = BLACK_COLOR;
+        [cell addSubview:cell.labelTitle];
+    }
+    
+    if(!cell.labelSubTitle) {
+        cell.labelSubTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 50}, {SCREEN_WIDTH -67, 16} }];
+        cell.labelSubTitle.font = [UIFont fontWithName:@"ProximaNova-Regular" size:15];
+        cell.labelSubTitle.textColor = RGB(124,132,148);
+        [cell addSubview:cell.labelSubTitle];
+    }
+    
+    cell.labelTitle   .text = (indexPath.row) ? (indexPath.row == 1) ? @"mapView" : SFMT(@"photo %d", (int)indexPath.row) : @"settings" ;
+    cell.labelSubTitle.text = @"Subtitle";
+    cell.labelTitle.textColor = (self.containerStyle == ContainerStyleDark) ? WHITE_COLOR : BLACK_COLOR;
+    
+    switch (self.containerStyle) {
+        case ContainerStyleDefault: {
+            cell.separatorLine.backgroundColor = GRAYLEVEL(222);
+            cell.separatorLine.alpha = 1;
+        }    break;
+        case ContainerStyleLight:{
+            cell.separatorLine.backgroundColor = GRAYLEVEL(180);
+            cell.separatorLine.alpha = 0.5;
+        }    break;
+        case ContainerStyleDark:{
+            cell.separatorLine.backgroundColor = GRAYLEVEL(222);
+            cell.separatorLine.alpha = 0.2;
+        }    break;
+        case ContainerStyleExtraLight:{
+            cell.separatorLine.backgroundColor = GRAYLEVEL(180);
+            cell.separatorLine.alpha = 0.5;
+        }    break;
+        default:
+            break;
+    }
+    
+    return cell;
+}
+
+
+
+#pragma mark - CollectionView Delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [self selectCellIndex:(SelectType)indexPath.row animated:YES];
@@ -307,7 +335,56 @@
     return .0;
 }
 
-#pragma mark - ScrollView Actions Delegate
+
+#pragma mark - CollectionView DataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.photos.count ;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    DemoCollectionCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"collectionCell" forIndexPath: indexPath];
+    cell.backgroundColor = CLR_COLOR;
+    cell.clipsToBounds = YES;
+    
+    CGFloat indent =  (((SCREEN_WIDTH - ((SCREEN_WIDTH * .437333) * 2)) / 3) / 2);
+    CGFloat imageSize = (SCREEN_WIDTH * .437333);
+    
+    CGSize cellSize = (CGSize)
+    {
+        ((imageSize + (indent * 2)) -1) ,
+        (imageSize +  indent + 36)
+    };
+    
+    if(!cell.imageView )
+    {
+        cell.imageView = [UIImageView new];
+        cell.imageView.clipsToBounds = 1;
+        cell.imageView.backgroundColor = CLR_COLOR;
+        cell.imageView.contentMode =  UIViewContentModeScaleAspectFill;
+        cell.imageView.layer.cornerRadius = 6;
+        [cell addSubview: cell.imageView];
+    }
+    
+    if(!cell.label)
+    {
+        cell.label  = [[UILabel alloc]initWithFrame:(CGRect) {{8, cellSize.height -26}, {cellSize.width -16, 18}}];
+        cell.label.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:14];
+        cell.label.textColor = BLACK_COLOR;
+        [cell addSubview:cell.label];
+    }
+    
+    cell.imageView.frame = (CGRect) {{indent, indent}, {imageSize, imageSize}};
+    cell.imageView.image = self.photos[indexPath.row][@"small"];
+    
+    cell.label.text = (indexPath.row) ? (indexPath.row == 1) ? @"mapView" : SFMT(@"photo %d",(int)indexPath.row) : @"settings" ;
+    cell.label.textColor = (self.containerStyle == ContainerStyleDark) ? WHITE_COLOR : BLACK_COLOR;
+    
+    return cell;
+}
+
+#pragma mark - Select Actions
 
 - (void)selectCellIndex:(SelectType)index animated:(BOOL)animated {
     
@@ -349,7 +426,7 @@
 #pragma mark - SearchBar Delegate
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    if(self.containerView.containerPosition != ContainerMoveTypeTop) [self.containerView containerMove:ContainerMoveTypeTop];
+    if(self.containerPosition != ContainerMoveTypeTop) [self containerMove:ContainerMoveTypeTop];
     GCD_ASYNC_GLOBAL_BEGIN(0) {
         GCD_ASYNC_MAIN_BEGIN {
             [searchBar becomeFirstResponder];
@@ -366,7 +443,7 @@
 }
 
 - (IBAction)changeContainerEnabledMiddle:(UISwitch *)sender {
-    self.containerView.containerAllowMiddlePosition = sender.on;
+    self.containerAllowMiddlePosition = sender.on;
 }
 
 - (IBAction)changeContainerZoom:(UISwitch *)sender {
@@ -378,7 +455,7 @@
 }
 
 - (IBAction)changeContainerShadow:(UISwitch *)sender {
-    self.containerView.containerShadow = sender.on;
+    self.containerShadow = sender.on;
 }
 
 
@@ -388,34 +465,32 @@
 
 - (IBAction)changeContainerMove:(UISegmentedControl *)sender {
     if((ContainerMoveType)sender.selectedSegmentIndex == ContainerMoveTypeMiddle) {
-        self.containerView.containerAllowMiddlePosition = YES;
+        self.containerAllowMiddlePosition = YES;
         [self.switchEnableMiddle setOn:YES animated: YES];
     }
-    [self.containerView containerMove:(ContainerMoveType)sender.selectedSegmentIndex];
+    [self containerMove:(ContainerMoveType)sender.selectedSegmentIndex];
 }
 
 
 - (IBAction)changeContainerTitleType:(UISegmentedControl *)sender {
     
-    ContainerStyle style = self.containerView.containerStyle;
-    
     switch (sender.selectedSegmentIndex) {
-        case 0: self.containerView.headerView = nil; break;
+        case 0: self.headerView = nil; break;
         case 1: {
             HeaderGrib *grib = [DemoHeaderViews createHeaderGrip];
-            [DemoHeaderViews changeColorsHeaderView:grib forStyle:style];
-            self.containerView.headerView = grib;
+            [DemoHeaderViews changeColorsHeaderView:grib forStyle:self.containerStyle];
+            self.headerView = grib;
         } break;
         case 2: {
             HeaderLabel *label = [DemoHeaderViews createHeaderLabel];
-            [DemoHeaderViews changeColorsHeaderView:label forStyle:style];
-            self.containerView.headerView = label;
+            [DemoHeaderViews changeColorsHeaderView:label forStyle:self.containerStyle];
+            self.headerView = label;
         } break;
         case 3: {
             HeaderSearch *search = [DemoHeaderViews createHeaderSearch];
             search.searchBar.delegate = self;
-            [DemoHeaderViews changeColorsHeaderView:search forStyle:style];
-            self.containerView.headerView = search;
+            [DemoHeaderViews changeColorsHeaderView:search forStyle:self.containerStyle];
+            self.headerView = search;
         } break;
         default: break;
     }
@@ -424,13 +499,9 @@
 - (IBAction)changeContainerStyle:(UISegmentedControl *)sender {
     
     ContainerStyle style = sender.selectedSegmentIndex;
+    self.containerStyle = style;
     
-    self.     tableDataSource.containerStyle = style;
-    self.collectionDataSource.containerStyle = style;
-    
-    [self.containerView changeBlurStyle:style];
-    
-    UIView *view = self.containerView.headerView;
+    UIView *view = self.headerView;
     if(view) [DemoHeaderViews changeColorsHeaderView:view forStyle:style];
     
     if(style == ContainerStyleDark) {
@@ -457,30 +528,41 @@
 - (IBAction)changeContainerSizeTop:(UISlider *)sender {
     CGFloat top = sender.value;
     
-    [self.containerView containerMoveCustomPosition:top moveType:ContainerMoveTypeTop animated:YES];
+    [self containerMoveCustomPosition:top moveType:ContainerMoveTypeTop animated:YES];
     
-    self.containerView.containerTop = IS_IPHONE_X ? top -24 : top;
+    self.containerTop = IS_IPHONE_X ? top -24 : top;
     self.containerLabelValueTop.text = SFMT(@"%.0f y", top);
 }
 
 - (IBAction)changeContainerSizeBottom:(UISlider *)sender {
     CGFloat bottom = (SCREEN_HEIGHT -((sender.maximumValue +50) -sender.value));
     
-    [self.containerView containerMoveCustomPosition:bottom moveType:ContainerMoveTypeBottom animated:NO];
+    [self containerMoveCustomPosition:bottom moveType:ContainerMoveTypeBottom animated:NO];
     
-    self.containerView.containerBottom = IS_IPHONE_X ? bottom +34 : bottom;
+    self.containerBottom = IS_IPHONE_X ? bottom +34 : bottom;
     self.containerLabelValueBottom.text = SFMT(@"%.0f y", bottom);
 }
 
 
 - (IBAction)changeContainerCornerRadius:(UISlider *)sender {
-    [self.containerView changeCornerRadius: sender.value];
+    self.changeCornerRadius = sender.value;
     self.containerLabelValueCornerRadius.text = SFMT(@"%d", (int)sender.value);
 }
 
 - (IBAction)changeContainerScrollViewType:(UISegmentedControl *)sender {
     
-    [self removeScrollView];
+    if(_tableView) {
+        [_tableView removeFromSuperview];
+        _tableView = nil;
+    }
+    if(_collectionView) {
+        [_collectionView removeFromSuperview];
+        _collectionView = nil;
+    }
+    if(_textView) {
+        [_textView removeFromSuperview];
+        _textView = nil;
+    }
     
     switch (sender.selectedSegmentIndex) {
         case 0: [self.containerView addSubview:[self createTableView]];      break;

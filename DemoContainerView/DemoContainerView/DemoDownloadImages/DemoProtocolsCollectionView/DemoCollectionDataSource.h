@@ -5,13 +5,6 @@
 #import <UIKit/UIKit.h>
 #import "ContainerTypes.h"
 
-@interface DemoCollectionCell : UICollectionViewCell
-
-@property (strong, nonatomic) UIImageView *imageView;
-@property (strong, nonatomic) UIView *view;
-@property (strong, nonatomic) UILabel *label;
-
-@end
 
 
 @interface DemoCollectionDataSource : NSObject <UICollectionViewDataSource>

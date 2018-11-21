@@ -29,6 +29,8 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [self.view insertSubview:self.bottomView atIndex:0];
+    [self.view addSubview:self.shadowButton];
+    
     
     self.containerShadowView = YES;
     self.containerZoom = YES;
@@ -37,7 +39,6 @@
 }
 
 #pragma mark - Create
-
 
 - (ContainerView *)containerView {
     
@@ -50,6 +51,37 @@
     return _containerView;
 }
 
+- (UIView *)bottomView {
+    if(!_bottomView) {
+        _bottomView = [[UIView alloc]initWithFrame:self.view.bounds];
+        _bottomView.backgroundColor = [UIColor clearColor];
+        _bottomView.clipsToBounds = YES;
+        
+        for( UIView * v in self.view.subviews ) {
+            [_bottomView addSubview:v];
+        }
+    }
+    return _bottomView;
+}
+
+- (UIButton *)shadowButton {
+    
+    if(!_shadowButton) {
+        UIButton *
+        shadow = [UIButton buttonWithType:UIButtonTypeCustom];
+        [shadow addTarget:self action:@selector(shadowButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        shadow.frame = FRAME;
+        shadow.backgroundColor = [UIColor blackColor];
+        shadow.alpha = 0;
+        _shadowButton = shadow;
+
+        [self.view addSubview:_shadowButton];
+    }
+    return _shadowButton;
+}
+
+#pragma mark - ContainerView Delegate
+
 - (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
     
     if(animated) {
@@ -61,34 +93,34 @@
     }
 }
 
-- (UIView *)bottomView {
-    /// боттом вью нужин
-    if(!_bottomView) {
-        _bottomView = [[UIView alloc]initWithFrame:self.view.bounds];
-        _bottomView.backgroundColor = [UIColor clearColor];
-        _bottomView.clipsToBounds = YES;
-        //_bottomView.hidden = YES;
-        
-        for( UIView * v in self.view.subviews ) {
-            //[v removeFromSuperview];
-            [_bottomView addSubview:v];
-        }
-    }
-    return _bottomView;
-}
-
 
 
 #pragma mark - Getter Setter
 
-
-- (void)setContainerHeaderView:(UIView *)containerHeaderView {
-    self.containerView.headerView = containerHeaderView;
+- (void)setDelegate:(id<ContainerViewDelegate>)delegate {
+    self.containerView.delegate = delegate;
 }
 
-- (UIView *)containerHeaderView {
+- (id<ContainerViewDelegate>)delegate {
+    return self.containerView.delegate;
+}
+
+- (void)setHeaderView:(UIView *)headerView {
+    self.containerView.headerView = headerView;
+}
+
+- (UIView *)headerView {
     return self.containerView.headerView;
 }
+
+
+- (void)setContainerShadow:(BOOL)containerShadow {
+    self.containerView.containerShadow =containerShadow;
+}
+- (BOOL)containerShadow {
+    return self.containerView.containerShadow;
+}
+
 
 
 - (void)setContainerBottomButtonToMoveTop:(BOOL)containerBottomButtonToMoveTop {
@@ -100,28 +132,8 @@
 }
 
 
-
 - (void)setContainerShadowView:(BOOL)value {
-    
-    if(value == NO) {
-        _shadowButton.hidden = YES;
-        //[_shadowButton removeFromSuperview];
-        //_shadowButton = nil;
-    } else {
-        
-        if(!_shadowButton) {
-            UIButton *
-            shadow = [UIButton buttonWithType:UIButtonTypeCustom];
-            [shadow addTarget:self action:@selector(shadowButtonAction) forControlEvents:UIControlEventTouchUpInside];
-            shadow.frame = FRAME;
-            shadow.backgroundColor = [UIColor blackColor];
-            shadow.alpha = 0;
-            _shadowButton = shadow;
-//            [self.view insertSubview:_shadowButton aboveSubview:self.bottomView];
-            [self.view addSubview:_shadowButton];
-        }
-        _shadowButton.hidden = NO;
-    }
+    _shadowButton.hidden = (!value);
     _containerShadowView = value;
 }
 
@@ -142,8 +154,6 @@
     return _containerZoom;
 }
 
-
-
 - (void)setContainerAllowMiddlePosition:(BOOL)containerAllowMiddlePosition {
     self.containerView.containerAllowMiddlePosition = containerAllowMiddlePosition;
 }
@@ -152,9 +162,28 @@
     return self.containerView.containerAllowMiddlePosition;
 }
 
+- (void)setContainerStyle:(ContainerStyle)containerStyle {
+    [self.containerView changeBlurStyle:containerStyle];
+}
+
+- (ContainerStyle)containerStyle {
+    return self.containerView.containerStyle;
+}
+
+
+- (void)setChangeCornerRadius:(CGFloat)changeCornerRadius {
+    self.containerView.containerCornerRadius = changeCornerRadius;
+}
+
+- (CGFloat)containerCornerRadius {
+    return self.containerView.containerCornerRadius;
+}
+
 
 
 #pragma mark - Container Set/Get Top/Middle/Bottom position
+
+
 
 - (void)setContainerTop:(CGFloat)containerTop {
     self.containerView.containerTop = containerTop;
@@ -189,11 +218,8 @@
     return self.containerView.containerPosition;
 }
 
-
-
-
-- (void)containerMove:(ContainerMoveType)containerMove {
-    [self.containerView containerMove:containerMove];
+- (void)containerMove:(ContainerMoveType)moveType {
+    [self.containerView containerMove:moveType];
 }
 
 - (void)containerMove:(ContainerMoveType)moveType animated:(BOOL)animated {
