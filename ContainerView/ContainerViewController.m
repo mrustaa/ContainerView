@@ -319,7 +319,9 @@
     //    }
     
     
-    CGFloat top     = self.containerView.containerTop;
+    CGFloat top = self.containerView.containerTop;
+    top += (IS_IPHONE_X ? 24 :0);
+    
     
     if(scrollView.panGestureRecognizer.state == UIGestureRecognizerStateEnded)
         onceScrollingBeginDragging = NO;

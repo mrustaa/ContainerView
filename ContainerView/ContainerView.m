@@ -102,6 +102,9 @@
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         self.scrollView.scrollEnabled = (self.containerPosition == ContainerMoveTypeTop);
+        self.scrollView.indicatorStyle =
+        (self.containerStyle == ContainerStyleDark) ? UIScrollViewIndicatorStyleWhite :UIScrollViewIndicatorStyleDefault;
+        
         [self changeCornerRadius:_containerCornerRadius];
     }
 }
@@ -351,7 +354,10 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 
 - (void)changeBlurStyle:(ContainerStyle)styleType {
+    
     self.containerStyle = styleType;
+    
+    self.scrollView.indicatorStyle = UIScrollViewIndicatorStyleDefault;
     
     CGFloat alpha = 0.5;
     UIColor *graberColor = GRAYLEVEL(180);
@@ -365,6 +371,10 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     
     if      (styleType == ContainerStyleDark)    alpha = 0.2;
     else if (styleType == ContainerStyleDefault) alpha = 1.0;
+    
+    if(styleType == ContainerStyleDark) {
+        self.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    }
     
     if(styleType != ContainerStyleDefault) {
         self.visualEffectView.backgroundColor = CLR_COLOR;

@@ -172,6 +172,7 @@
         textView.delegate = self;
         textView.returnKeyType = UIReturnKeyDone;
         textView.backgroundColor = CLR_COLOR;
+        textView.textColor = (self.containerStyle == ContainerStyleDark) ?WHITE_COLOR :BLACK_COLOR;
         textView.font = FONT_S(15);
         textView.text = @"This example demonstrates a block quote. Because some introductory phrases will lead\
         naturally into the block quote,\
