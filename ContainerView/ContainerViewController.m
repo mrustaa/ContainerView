@@ -36,8 +36,10 @@
     [self.view insertSubview:self.bottomView atIndex:0];
 //    [self.view addSubview:self.bottomView];
     
+    
     /// тень кнопка нужна
     self.containerShadowView = YES;
+    self.containerZoom = YES;
     
     [self.view addSubview:self.containerView];
 }
@@ -77,7 +79,13 @@
     if(!_bottomView) {
         _bottomView = [[UIView alloc]initWithFrame:self.view.bounds];
         _bottomView.backgroundColor = [UIColor clearColor];
-        _bottomView.hidden = YES;
+        _bottomView.clipsToBounds = YES;
+        //_bottomView.hidden = YES;
+        
+        for( UIView * v in self.view.subviews ) {
+            //[v removeFromSuperview];
+            [_bottomView addSubview:v];
+        }
     }
     return _bottomView;
 }
@@ -279,25 +287,24 @@
         
         
         if(self.containerZoom) {
-            for(UIView *v in self.view.subviews) {
-                if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
-                    v.transform = transform;
-                    v.layer.cornerRadius = (procent * 24);
-                    
-                }
-                
-            }
-//            self.bottomView.transform = transform;
-//            self.bottomView.layer.cornerRadius = (procent * 24);
+//            for(UIView *v in self.view.subviews) {
+//                if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
+//                    v.transform = transform;
+//                    v.layer.cornerRadius = (procent * 24);
+//
+//                }
+//            }
+            self.bottomView.transform = transform;
+            self.bottomView.layer.cornerRadius = (procent * 24);
         } else {
-            for(UIView *v in self.view.subviews) {
-                if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
-                    v.transform = CGAffineTransformIdentity;
-                    v.layer.cornerRadius = 0;
-                }
-            }
-//            self.bottomView.transform = CGAffineTransformIdentity;
-//            self.bottomView.layer.cornerRadius = 0;
+//            for(UIView *v in self.view.subviews) {
+//                if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
+//                    v.transform = CGAffineTransformIdentity;
+//                    v.layer.cornerRadius = 0;
+//                }
+//            }
+            self.bottomView.transform = CGAffineTransformIdentity;
+            self.bottomView.layer.cornerRadius = 0;
         }
         
         self.shadowButton.alpha = procent;
@@ -305,14 +312,14 @@
         
     } else {
         
-        for(UIView *v in self.view.subviews) {
-            if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
-                v.transform = CGAffineTransformIdentity;
-                v.layer.cornerRadius = 0;
-            }
-        }
-//        self.bottomView.transform = CGAffineTransformIdentity;
-//        self.bottomView.layer.cornerRadius = 0;
+//        for(UIView *v in self.view.subviews) {
+//            if(![v isKindOfClass:[ContainerView class]] && (v != self.shadowButton)) {
+//                v.transform = CGAffineTransformIdentity;
+//                v.layer.cornerRadius = 0;
+//            }
+//        }
+        self.bottomView.transform = CGAffineTransformIdentity;
+        self.bottomView.layer.cornerRadius = 0;
         
 //        self.bottomView.userInteractionEnabled = NO;
         
