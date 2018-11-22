@@ -8,3 +8,149 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 ![image](http://gdurl.com/p3_L)
 ![image](http://gdurl.com/30Qv)
 
+## Getting Started
+
+```objc
+#import <UIKit/UIKit.h>
+#import "ContainerViewController.h"
+
+@interface ViewController : ContainerViewController
+@end
+```
+
+## Setting
+
+```objc
+@implementation ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // This parameter for changing the rounding corner radius of the Container
+    self.changeCornerRadius = 15;
+
+    // This parameter to add a blur to the background of the Container
+    self.containerStyle = ContainerStyleLight;
+    
+    // This parameter adds 3 position (move to the middle). Default there are 2 positions
+    self.containerAllowMiddlePosition = YES;
+    
+    // This parameter allows you to zoom in on the screen under Container
+    self.containerZoom = YES;
+    
+    // This parameter sets the shadow under Container
+    self.containerShadowView = YES;
+
+    // This parameter sets the shadow in Container
+    self.containerShadow = YES;
+
+    // This parameter indicates whether to add a button when the container is at the bottom to move the container to the top
+    self.containerBottomButtonToMoveTop = YES;
+}
+```
+
+### Change position Top / Middle / Bottom
+
+```objc
+@implementation ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // These parameters set the new position value.
+    self.containerTop     = 50;
+    self.containerMiddle  = 200;
+    self.containerBottom  = 400;
+    
+}
+```
+
+### Move position with an animation
+
+```objc
+- (void)moveTop {
+    [self containerMove:ContainerMoveTypeTop];
+}
+
+- (void)moveMiddle {
+    [self containerMove:ContainerMoveTypeMiddle];
+}
+
+- (void)moveBottom {
+    [self containerMove:ContainerMoveTypeBottom];
+}
+```
+
+## Adding Custom
+
+### `View` under ContainerView
+
+```objc
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UILabel *
+    label = [[UILabel alloc]initWithFrame: CGRectMake(18, 26, 60, 30 )];
+    label.font = [UIFont boldSystemFontOfSize:24];
+    label.textColor = [UIColor redColor];
+    label.text = @"Label";
+    
+    [self.bottomView addSubview:label];
+}
+```
+
+### `ScrollView` in ContainerView
+
+```objc
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UITextView * textView = [[UITextView alloc]initWithFrame:self.view.bounds];
+    textView.delegate = self;
+    textView.returnKeyType = UIReturnKeyDone;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.font = [UIFont systemFontOfSize:46];
+    textView.text = @"This \n example \n more \n text \n\n\n\n\n\n\n\n ....";
+    
+    [self.containerView addSubview:textView];
+}
+```
+
+### `Header` in ContainerView
+
+```objc
+- (void)addHeader {
+
+    CGFloat height = 60;
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, height)];
+    
+    UISearchBar *
+    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 4, self.view.frame.size.width, height -4)];
+    searchBar.barStyle = UIBarStyleDefault;
+    searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    searchBar.placeholder = @"Search";
+    [headerView addSubview:searchBar];
+    
+    self.containerView.headerView = headerView;
+}
+```
+
+## Protocol
+
+### Reports the changes current position of the container, after its use
+
+```objc
+@interface ViewController () <ContainerViewDelegate>
+@end
+
+@implementation ViewController
+
+- (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
+    ...
+}
+```
+
+## License
+
+FloatingPanel is available under the MIT license. See the LICENSE file for more info.
