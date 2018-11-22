@@ -85,7 +85,7 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 
 ### `View` under ContainerView
 
-#### Add a view to a special .bottomView
+#### special .bottomView
 
 ```objc
 - (void)viewDidLoad {
