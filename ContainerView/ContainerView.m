@@ -8,11 +8,11 @@
     CGFloat _containerTop;
     CGFloat _containerMiddle;
     CGFloat _containerBottom;
+    CGFloat _savePositionContainer;
+    CGFloat _containerCornerRadius;
     BOOL _containerAllowMiddlePosition;
     BOOL _containerShadow;
     UIView * _headerView;
-    CGFloat _savePositionContainer;
-    CGFloat _containerCornerRadius;
 }
 
 @property (strong, nonatomic) UIButton *bottomButtonToMoveTop;
@@ -101,7 +101,10 @@
         if (@available(iOS 11.0, *)) {
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        self.scrollView.scrollEnabled = (self.containerPosition == ContainerMoveTypeTop);
+        
+        if(![self.scrollView isKindOfClass:[UITextView class]] ) {
+            self.scrollView.scrollEnabled = (self.containerPosition == ContainerMoveTypeTop);
+        }
         self.scrollView.indicatorStyle =
         (self.containerStyle == ContainerStyleDark) ? UIScrollViewIndicatorStyleWhite :UIScrollViewIndicatorStyleDefault;
         
@@ -437,7 +440,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 - (void)containerMovePosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
     if(_bottomButtonToMoveTop) self.bottomButtonToMoveTop.hidden = (moveType == ContainerMoveTypeTop) ? YES : NO;
     
-    if(self.scrollView) {
+    
+    
+    if(self.scrollView && ![self.scrollView isKindOfClass:[UITextView class]] ) {
         self.scrollView.scrollEnabled = (moveType == ContainerMoveTypeTop);
     }
     

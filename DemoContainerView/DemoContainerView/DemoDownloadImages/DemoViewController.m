@@ -225,8 +225,6 @@
     return _textView;
 }
 
-#pragma mark - Remove ScrollViews
-
 
 #pragma mark - TableView Delegate
 
@@ -510,7 +508,10 @@
     if(view) [DemoHeaderViews changeColorsHeaderView:view forStyle:style];
     
     if(style == ContainerStyleDark) {
-        if(self.textView) self.textView.textColor = WHITE_COLOR;
+        if(self.textView) {
+            self.textView.textColor = WHITE_COLOR;
+            self.textView.keyboardAppearance = UIKeyboardAppearanceDark;
+        }
         self.mapView.mapType = MKMapTypeHybrid;
         self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
         STATUSBAR_STYLE(UIStatusBarStyleLightContent);
@@ -518,7 +519,10 @@
         self.view        .backgroundColor = RGB(55, 55, 55);
         self.settingsView.backgroundColor = RGB(66, 66, 66);
     } else {
-        if(self.textView) self.textView.textColor = BLACK_COLOR;
+        if(self.textView) {
+            self.textView.textColor = BLACK_COLOR;
+            self.textView.keyboardAppearance = UIKeyboardAppearanceDefault;
+        }
         self.mapView.mapType = MKMapTypeStandard;
         self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
         STATUSBAR_STYLE(UIStatusBarStyleDefault);
