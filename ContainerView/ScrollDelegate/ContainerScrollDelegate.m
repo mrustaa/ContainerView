@@ -4,6 +4,9 @@
 
 #import "ContainerScrollDelegate.h"
 
+#import "UIView+Frame.h"
+#import "Defines.h"
+
 @implementation ContainerScrollDelegate {
     BOOL bordersRunContainer;
     BOOL onceEnded;

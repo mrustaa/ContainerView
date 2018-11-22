@@ -9,7 +9,8 @@
 #import "DemoTableCell.h"
 #import "DemoCollectionCell.h"
 
-
+#import "UIView+Frame.h"
+#import "Defines.h"
 
 
 @interface DemoViewController () <ContainerViewDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UITextViewDelegate>

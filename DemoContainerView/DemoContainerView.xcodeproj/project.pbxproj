@@ -136,7 +136,6 @@
 				4689A7B720EC081A00BC7C8A /* AppDelegate.h */,
 				4689A7B820EC081A00BC7C8A /* AppDelegate.m */,
 				4A274AC9219D7B61008900D9 /* PrefixHeader.pch */,
-				46A1F41821A5E96100541435 /* Utils */,
 				46C519222126264600A6F607 /* ContainerView */,
 				46E356C121261C2400850BD8 /* Demo */,
 				46EA455920FD258F00C0FAE0 /* Resources */,
@@ -171,6 +170,7 @@
 		46C519222126264600A6F607 /* ContainerView */ = {
 			isa = PBXGroup;
 			children = (
+				46A1F41821A5E96100541435 /* Utils */,
 				46A1F41921A5EBCD00541435 /* ScrollDelegate */,
 				46C519282126267B00A6F607 /* ContainerTypes.h */,
 				4A94AE7921A3F6C90045A212 /* ContainerViewController.h */,

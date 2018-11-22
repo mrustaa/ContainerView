@@ -5,6 +5,7 @@
 #import "DemoCollectionDataSource.h"
 #import "DemoCollectionCell.h"
 
+#import "Defines.h"
 
 @implementation DemoCollectionDataSource
 

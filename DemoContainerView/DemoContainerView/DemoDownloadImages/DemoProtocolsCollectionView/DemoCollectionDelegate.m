@@ -4,6 +4,9 @@
 
 #import "DemoCollectionDelegate.h"
 
+#import "UIView+Frame.h"
+#import "Defines.h"
+
 @implementation DemoCollectionDelegate
 
 #pragma mark - CollectionView Delegate

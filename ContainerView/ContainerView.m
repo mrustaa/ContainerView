@@ -4,6 +4,9 @@
 
 #import "ContainerView.h"
 
+#import "UIView+Frame.h"
+#import "Defines.h"
+
 @interface ContainerView () <UIGestureRecognizerDelegate, UISearchBarDelegate>  {
     CGFloat _containerTop;
     CGFloat _containerMiddle;
@@ -102,9 +105,9 @@
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         
-        if(![self.scrollView isKindOfClass:[UITextView class]] ) {
-            self.scrollView.scrollEnabled = (self.containerPosition == ContainerMoveTypeTop);
-        }
+        
+        self.scrollView.userInteractionEnabled = (self.containerPosition == ContainerMoveTypeTop);
+        
         self.scrollView.indicatorStyle =
         (self.containerStyle == ContainerStyleDark) ? UIScrollViewIndicatorStyleWhite :UIScrollViewIndicatorStyleDefault;
         
@@ -441,10 +444,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     if(_bottomButtonToMoveTop) self.bottomButtonToMoveTop.hidden = (moveType == ContainerMoveTypeTop) ? YES : NO;
     
     
-    
-    if(self.scrollView && ![self.scrollView isKindOfClass:[UITextView class]] ) {
-        self.scrollView.scrollEnabled = (moveType == ContainerMoveTypeTop);
-    }
+    self.scrollView.userInteractionEnabled = (moveType == ContainerMoveTypeTop);
     
     CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
     
