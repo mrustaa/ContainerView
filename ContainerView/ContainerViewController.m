@@ -41,6 +41,7 @@
 
 #pragma mark - Create
 
+
 - (ContainerView *)containerView {
     
     if(!_containerView) {
@@ -172,8 +173,8 @@
 }
 
 
-- (void)setChangeCornerRadius:(CGFloat)changeCornerRadius {
-    self.containerView.containerCornerRadius = changeCornerRadius;
+- (void)setContainerCornerRadius:(CGFloat)containerCornerRadius {
+    self.containerView.containerCornerRadius = containerCornerRadius;
 }
 
 - (CGFloat)containerCornerRadius {

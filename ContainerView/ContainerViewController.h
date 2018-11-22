@@ -30,7 +30,7 @@
 @property (nonatomic, readonly) ContainerMoveType containerPosition;
 
 /**
- @brief This method to add a blur to the background of the container.
+ @brief This parameter to add a blur to the background of the container.
   
  There are 3 types of blur. Blur with hues of
  1) black,
@@ -41,9 +41,9 @@
 @property (nonatomic) ContainerStyle containerStyle;
 
 /**
- @brief This method for changing the rounding radius
+ @brief This parameter for changing the rounding radius
  */
-@property (nonatomic) CGFloat changeCornerRadius;
+@property (nonatomic) CGFloat containerCornerRadius;
 
 /**
  @brief When moving the container, by default there are 2 positions (this is moving up and down). This parameter adds 3 position (move to the middle)
@@ -59,12 +59,12 @@
 
 
 /**
- @brief This parameter sets the shadow under the container.
+ @brief This parameter sets the shadow under container
  */
 @property (nonatomic) BOOL containerShadowView;
 
 /**
- @brief This parameter sets the shadow for the container.
+ @brief This parameter sets the shadow in container
  */
 @property (nonatomic) BOOL containerShadow;
 

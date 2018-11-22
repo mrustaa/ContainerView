@@ -67,7 +67,7 @@
     
     [self.containerView addSubview:[self createTableView]];
     
-    self.changeCornerRadius = 15;
+    self.containerCornerRadius = 15;
     
     /// [self containerMove:ContainerMoveTypeTop animated:NO];
     /// self.containerBottomButtonToMoveTop = YES;
@@ -75,7 +75,6 @@
     self.delegate = self;
     
 
-    [self.view addSubview: self.containerView];
     
     [self initPhotos];
 
@@ -555,7 +554,7 @@
 
 
 - (IBAction)changeContainerCornerRadius:(UISlider *)sender {
-    self.changeCornerRadius = sender.value;
+    self.containerCornerRadius = sender.value;
     self.containerLabelValueCornerRadius.text = SFMT(@"%d", (int)sender.value);
 }
 

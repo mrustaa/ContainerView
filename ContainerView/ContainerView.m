@@ -18,9 +18,12 @@
     UIView * _headerView;
 }
 
+
+
 @property (strong, nonatomic) UIButton *bottomButtonToMoveTop;
 
 @property (strong, nonatomic) UIScrollView *scrollView;
+
 
 @property (strong, nonatomic) UIVisualEffectView *visualEffectViewOrigin;
 @property (strong, nonatomic) UIView *visualEffectView;
@@ -40,12 +43,15 @@
 - (void)initContainer
 {
     self.backgroundColor     = CLR_COLOR;
-    self.clipsToBounds = NO;
+    self.clipsToBounds       = NO;
+    //self.layer.masksToBounds = NO;
     
     self.layer.shadowOffset  = CGSizeMake(0, 5);
     self.layer.shadowOpacity = 0.75;
     self.layer.shadowRadius  = 5;
     self.layer.shadowColor   = RGB(44, 62, 80).CGColor;
+    
+    
     
     _containerAllowMiddlePosition = NO;
     _containerShadow = YES;
@@ -54,6 +60,8 @@
     containerPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognized:)];
     containerPan.delegate = self;
     [self addGestureRecognizer:containerPan];
+    
+    
     
 //    NSInteger containerBottom_ = (SCREEN_HEIGHT - 92);
 //
@@ -91,7 +99,9 @@
 
 /// Add Subview - Search ScrollView
 - (void)addSubview:(UIView *)subview {
-    [super addSubview:subview];
+    if(subview == self.visualEffectView)
+        [super addSubview:subview];
+    else [self.visualEffectView addSubview:subview];
     
     if([subview isKindOfClass:[UIScrollView class]]) {
         if(self.containerBottomButtonToMoveTop) {
