@@ -85,6 +85,8 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 
 ### `View` under ContainerView
 
+#### Add a view to a special .bottomView
+
 ```objc
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -116,7 +118,7 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 }
 ```
 
-### `Header` in ContainerView
+### `HeaderView` in ContainerView
 
 ```objc
 - (void)addHeader {
