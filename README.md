@@ -85,7 +85,7 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 
 ### `View` under ContainerView
 
-#### special .bottomView
+#### ☝️ Adding all views under the ContainerView necessarily via the `self.bottomView`
 
 ```objc
 - (void)viewDidLoad {
@@ -102,6 +102,8 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 ```
 
 ### `ScrollView` in ContainerView
+
+#### ☝️ For all `ScrollView`, add the `self` delegate. Otherwise, moving the container through scrolling will not work.
 
 ```objc
 - (void)viewDidLoad {
