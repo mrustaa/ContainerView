@@ -39,6 +39,36 @@
     [self.view addSubview:self.containerView];
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    BOOL addedTop    = self.containerView.addedTop;
+    BOOL addedMiddle = self.containerView.addedMiddle;
+    BOOL addedBottom = self.containerView.addedBottom;
+    
+    CGFloat top    = CUSTOM_TOP;
+    CGFloat middle = CUSTOM_MIDDLE;
+    CGFloat bottom = CUSTOM_BOTTOM;
+    
+    
+    bottom = (size.height -92);
+    middle = (size.height * .5);
+
+    top    = addedTop    ? self.containerTop    : top;
+    middle = addedMiddle ? self.containerMiddle : middle;
+    bottom = addedBottom ? self.containerBottom : bottom;
+    
+    [self.containerView transitionToSizeTop:top middle:middle bottom:bottom size:size];
+    
+    self.bottomView.width  = size.width;
+    self.bottomView.height = size.height;
+    
+    self.shadowButton.width  = size.width;
+    self.shadowButton.height = size.height;
+    
+    [self containerMove:self.containerPosition];
+}
+
 #pragma mark - Create
 
 
@@ -313,11 +343,19 @@
     selfTransform = self.containerView.transform;
     
     
-    //    if(NAV_ADDED) {
-    //        UINavigationController *nvc = (UINavigationController *)ROOT_VC;
-    //        if(!nvc.navigationBarHidden) {
-    //            top = (top + nvc.navigationBar.height);
-    //        }
+    // TODO: Implement these.
+    //    if (NAV_ADDED) {
+    //        UINavigationController * nav = (UINavigationController *)ROOT_VC;
+    //        if(!nav.navigationBarHidden) {
+    //            if(!nav.navigationBar.translucent) {
+    //
+    //            }
+    //            if (@available(iOS 11.0, *)) {
+    //                if(!nav.navigationBar.prefersLargeTitles) {
+    //
+    //                }
+    //            }
+    //         }
     //    }
     
     
@@ -415,9 +453,6 @@
         [self.containerView containerMoveForVelocityInView:velocityInViewY];
     }
 }
-
-
-
 
 
 @end

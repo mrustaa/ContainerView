@@ -96,6 +96,7 @@
     searchBar.barStyle = UIBarStyleDefault;
     searchBar.searchBarStyle = UISearchBarStyleMinimal;
     searchBar.placeholder = @"Search";
+    searchBar.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth );
     view.searchBar = searchBar;
     [view addSubview:searchBar];
     
@@ -119,12 +120,14 @@
 + (UIView *)createSeparatorLine {
     CGFloat height = 0.5;
     UIView *line = [[UIView alloc]initWithFrame: CGRectMake( 0, CUSTOM_HEADER_HEIGHT -height, SCREEN_WIDTH, height )];
+    line.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth );
     return line;
 }
 
 + (UIView *)createGrip {
     UIView *
-    grip = [[UIView alloc] initWithFrame: CGRectMake( ((SCREEN_WIDTH / 2) -18), 8 , 36, 4 )];
+    grip = [[UIView alloc] initWithFrame: CGRectMake( ((SCREEN_WIDTH / 2) -18) , 8 , 36, 4 )];
+    grip.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin  );
     grip.layer.cornerRadius = grip.height / 2;
     return grip;
 }

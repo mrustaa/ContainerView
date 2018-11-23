@@ -19,6 +19,14 @@
 @property (nonatomic, weak) id<ContainerViewDelegate> delegate;
 
 
+
+@property (nonatomic) BOOL addedTop;
+@property (nonatomic) BOOL addedMiddle;
+@property (nonatomic) BOOL addedBottom;
+
+
+
+
 /**
  @brief This view sets a custom header for the container.
  */
@@ -84,7 +92,7 @@
  */
 - (void)changeBlurStyle:(ContainerStyle)styleType;
 
-
+- (void)transitionToSizeTop:(CGFloat)top middle:(CGFloat)middle bottom:(CGFloat)bottom size:(CGSize)size;
 
 - (void)containerMoveForVelocityInView:(CGFloat)velocityInViewY;
 

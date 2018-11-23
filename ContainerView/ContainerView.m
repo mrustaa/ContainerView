@@ -62,19 +62,20 @@
     [self addGestureRecognizer:containerPan];
     
     
-    
-//    NSInteger containerBottom_ = (SCREEN_HEIGHT - 92);
-//
+// TODO: Implement these.
 //    if (NAV_ADDED) {
 //        UINavigationController * nav = (UINavigationController *)ROOT_VC;
 //        if(!nav.navigationBarHidden) {
 //            if(!nav.navigationBar.translucent) {
 //
 //            }
-//            containerBottom_ -= nav.navigationBar.height;
-//        }
+//            if (@available(iOS 11.0, *)) {
+//                if(!nav.navigationBar.prefersLargeTitles) {
+//
+//                }
+//            }
+//         }
 //    }
-//    containerBottom_ -= (IS_IPHONE_X ?34 :0);
     
     
     self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom - (IS_IPHONE_X ?34 :0));
@@ -100,7 +101,7 @@
 /// Add Subview - Search ScrollView
 - (void)addSubview:(UIView *)subview {
     if(subview == self.visualEffectView)
-        [super addSubview:subview];
+         [super addSubview:subview];
     else [self.visualEffectView addSubview:subview];
     
     if([subview isKindOfClass:[UIScrollView class]]) {
@@ -187,10 +188,28 @@
 
 
 
-
+- (void)transitionToSizeTop:(CGFloat)top middle:(CGFloat)middle bottom:(CGFloat)bottom size:(CGSize)size {
+    _containerTop = top;
+    _containerMiddle = middle;
+    _containerBottom = bottom;
+    
+    self.width  = size.width;
+    self.height = size.height;
+    
+    self.visualEffectView.width  = size.width;
+    self.visualEffectView.height = size.height;
+    
+    self.visualEffectViewOrigin.width  = size.width;
+    self.visualEffectViewOrigin.height = size.height;
+    
+    if(self.headerView) self.headerView.width = size.width;
+    
+    [self calculationScrollViewHeight:0];
+}
 
 /// Top
 - (void)setContainerTop:(CGFloat)containerTop {
+    if(!_addedTop) _addedTop = YES;
     _containerTop = containerTop;
 }
 
@@ -201,6 +220,7 @@
 
 /// Middle
 - (void)setContainerMiddle:(CGFloat)containerMiddle {
+    if(!_addedMiddle) _addedMiddle = YES;
     // if(IS_IPHONE_X) containerMiddle -= 34;
     _containerMiddle = containerMiddle;
 }
@@ -212,6 +232,7 @@
 
 /// Bottom
 - (void)setContainerBottom:(CGFloat)containerBottom {
+    if(!_addedBottom) _addedBottom = YES;
     _containerBottom = containerBottom;
     if(_bottomButtonToMoveTop) _bottomButtonToMoveTop.height = containerBottom;
 }
@@ -288,6 +309,7 @@
         CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
         
         self.scrollView.y = headerHeight;
+        self.scrollView.width = SCREEN_WIDTH;
         self.scrollView.height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
         self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, iphnXpaddingBottom , 0);
     }
