@@ -51,8 +51,11 @@
     
     if(!_imageView) {
         _imageView = [[UIImageView alloc]initWithFrame:FRAME];
-        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        _imageView.contentMode = (SCREEN_WIDTH < SCREEN_HEIGHT) ?UIViewContentModeScaleAspectFill :UIViewContentModeScaleAspectFit;
         _imageView.clipsToBounds = YES;
+        _imageView.autoresizingMask =
+        (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
+         UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
         _imageView.alpha = 0;
     }
     [self.bottomView addSubview:_imageView];
@@ -83,8 +86,9 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    
-    
+    if(_imageView) {
+        _imageView.contentMode = (size.width < size.height) ?UIViewContentModeScaleAspectFill :UIViewContentModeScaleAspectFit;
+    }
 }
 
 #pragma mark - ContainerView Delegate
@@ -551,9 +555,9 @@
 }
 
 - (IBAction)changeContainerSizeBottom:(UISlider *)sender {
-    CGFloat bottom = (SCREEN_HEIGHT -((sender.maximumValue +50) -sender.value));
+    CGFloat bottom = sender.value; // (SCREEN_HEIGHT -((sender.maximumValue +50) -sender.value));
     
-    [self containerMoveCustomPosition:bottom moveType:ContainerMoveTypeBottom animated:NO];
+    [self containerMoveCustomPosition: (SCREEN_HEIGHT -bottom) moveType:ContainerMoveTypeBottom animated:NO];
     
     self.containerBottom = IS_IPHONE_X ? bottom +34 : bottom;
     self.containerLabelValueBottom.text = SFMT(@"%.0f y", bottom);

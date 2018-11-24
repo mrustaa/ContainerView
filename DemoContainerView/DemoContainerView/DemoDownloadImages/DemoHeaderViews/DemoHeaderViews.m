@@ -127,7 +127,7 @@
 + (UIView *)createGrip {
     UIView *
     grip = [[UIView alloc] initWithFrame: CGRectMake( ((SCREEN_WIDTH / 2) -18) , 8 , 36, 4 )];
-    grip.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin  );
+    grip.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin  );
     grip.layer.cornerRadius = grip.height / 2;
     return grip;
 }

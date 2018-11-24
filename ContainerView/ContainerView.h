@@ -20,12 +20,14 @@
 
 
 
-@property (nonatomic) BOOL addedTop;
-@property (nonatomic) BOOL addedMiddle;
-@property (nonatomic) BOOL addedBottom;
+@property (nonatomic) BOOL portrait;
 
+@property (nonatomic) BOOL firstAddedTop;
+@property (nonatomic) BOOL firstAddedMiddle;
+@property (nonatomic) BOOL firstAddedBottom;
 
-
+- (CGFloat)getContainerBottom;
+- (CGFloat)getContainerMiddle;
 
 /**
  @brief This view sets a custom header for the container.

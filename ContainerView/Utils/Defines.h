@@ -110,8 +110,8 @@
 #define COORDINATE_SAN_FRANCISCO    (MKCoordinateRegionMakeWithDistance( (CLLocationCoordinate2D) { 37.773972, -122.431297 }, 25000, 25000))
 
 #define CUSTOM_TOP                  60.0
-#define CUSTOM_BOTTOM               (SCREEN_HEIGHT -92)
-#define CUSTOM_MIDDLE               (SCREEN_HEIGHT * .5)
+#define CUSTOM_BOTTOM               (92)
+#define CUSTOM_MIDDLE               (0.5)
 
 #define CUSTOM_HEADER_HEIGHT        64.0
 

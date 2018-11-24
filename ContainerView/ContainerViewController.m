@@ -42,31 +42,15 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    BOOL addedTop    = self.containerView.addedTop;
-    BOOL addedMiddle = self.containerView.addedMiddle;
-    BOOL addedBottom = self.containerView.addedBottom;
+    BOOL addedTop    = self.containerView.firstAddedTop;
+    BOOL addedMiddle = self.containerView.firstAddedMiddle;
+    BOOL addedBottom = self.containerView.firstAddedBottom;
     
-    CGFloat top    = CUSTOM_TOP;
-    CGFloat middle = CUSTOM_MIDDLE;
-    CGFloat bottom = CUSTOM_BOTTOM;
-    
-    
-    bottom = (size.height -92);
-    middle = (size.height * .5);
-
-    top    = addedTop    ? self.containerTop    : top;
-    middle = addedMiddle ? self.containerMiddle : middle;
-    bottom = addedBottom ? self.containerBottom : bottom;
+    CGFloat top    = addedTop    ? self.containerTop    : CUSTOM_TOP;
+    CGFloat middle = addedMiddle ? [self.containerView getContainerMiddle] : CUSTOM_MIDDLE;
+    CGFloat bottom = addedBottom ? [self.containerView getContainerBottom] : CUSTOM_BOTTOM;
     
     [self.containerView transitionToSizeTop:top middle:middle bottom:bottom size:size];
-    
-    self.bottomView.width  = size.width;
-    self.bottomView.height = size.height;
-    
-    self.shadowButton.width  = size.width;
-    self.shadowButton.height = size.height;
-    
-    [self containerMove:self.containerPosition];
 }
 
 #pragma mark - Create
@@ -85,10 +69,15 @@
 
 - (UIView *)bottomView {
     if(!_bottomView) {
-        _bottomView = [[UIView alloc]initWithFrame:self.view.bounds];
-        _bottomView.backgroundColor = [UIColor clearColor];
-        _bottomView.clipsToBounds = YES;
         
+        UIView *
+        view = [[UIView alloc]initWithFrame:self.view.bounds];
+        view.backgroundColor = [UIColor clearColor];
+        view.clipsToBounds = YES;
+        view.autoresizingMask =
+        (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
+         UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
+        _bottomView = view;
         for( UIView * v in self.view.subviews ) {
             [_bottomView addSubview:v];
         }
@@ -105,6 +94,8 @@
         shadow.frame = FRAME;
         shadow.backgroundColor = [UIColor blackColor];
         shadow.alpha = 0;
+        shadow.autoresizingMask =
+        (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
         _shadowButton = shadow;
 
         [self.view addSubview:_shadowButton];
@@ -308,7 +299,9 @@
         }
         
         self.shadowButton.alpha = procent;
-        self.shadowButton.height = (containerFrameY +self.containerView.containerCornerRadius +5);
+        if(self.containerView.portrait)
+             self.shadowButton.height = (containerFrameY +self.containerView.containerCornerRadius +5);
+        else self.shadowButton.height = SCREEN_HEIGHT;
         
     } else {
         self.bottomView.transform = CGAffineTransformIdentity;

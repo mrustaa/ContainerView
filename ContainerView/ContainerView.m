@@ -42,6 +42,19 @@
 
 - (void)initContainer
 {
+    
+    if(SCREEN_WIDTH < SCREEN_HEIGHT) {
+        self.portrait = YES;
+        
+        self.height = SCREEN_HEIGHT;
+    } else { 
+        self.portrait = NO;
+        
+        self.x = 10;
+        self.width  = SCREEN_HEIGHT -20;
+        self.height = SCREEN_HEIGHT;
+    }
+    
     self.backgroundColor     = CLR_COLOR;
     self.clipsToBounds       = NO;
     //self.layer.masksToBounds = NO;
@@ -81,20 +94,26 @@
     self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom - (IS_IPHONE_X ?34 :0));
     self.containerPosition = ContainerMoveTypeBottom;
     
-    if(!self.visualEffectView) {
-        self.visualEffectView = [[UIView alloc] initWithFrame: (CGRect){ {0, 0}, self.frame.size } ];
-        self.visualEffectView.clipsToBounds = YES;
-        [self addSubview: self.visualEffectView];
+    if(!_visualEffectView) {
+        _visualEffectView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.width, self.height)];
+        _visualEffectView.clipsToBounds = YES;
+        _visualEffectView.autoresizingMask =
+        (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
+         UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
+        [self addSubview:_visualEffectView];
         
-        if(!self.visualEffectViewOrigin)
+        if(!_visualEffectViewOrigin)
         {
             UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-            self.visualEffectViewOrigin = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-            self.visualEffectViewOrigin.frame = (CGRect){ { 0, 0 }, self.frame.size };
-            [self.visualEffectView addSubview: self.visualEffectViewOrigin];
+            _visualEffectViewOrigin = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+            _visualEffectViewOrigin.frame = CGRectMake(0, 0, self.width, self.height);
+            _visualEffectViewOrigin.autoresizingMask =
+            (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
+             UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
+            [_visualEffectView addSubview: _visualEffectViewOrigin];
         }
-        self.visualEffectView.backgroundColor = WHITE_COLOR;
-        self.visualEffectViewOrigin.hidden = YES;
+        _visualEffectView.backgroundColor = WHITE_COLOR;
+        _visualEffectViewOrigin.hidden = YES;
     }
 }
 
@@ -189,27 +208,45 @@
 
 
 - (void)transitionToSizeTop:(CGFloat)top middle:(CGFloat)middle bottom:(CGFloat)bottom size:(CGSize)size {
-    _containerTop = top;
+    
+    _containerTop    = top;
     _containerMiddle = middle;
     _containerBottom = bottom;
     
-    self.width  = size.width;
-    self.height = size.height;
-    
-    self.visualEffectView.width  = size.width;
-    self.visualEffectView.height = size.height;
-    
-    self.visualEffectViewOrigin.width  = size.width;
-    self.visualEffectViewOrigin.height = size.height;
-    
-    if(self.headerView) self.headerView.width = size.width;
+    if(size.width < size.height) {
+        self.portrait = YES;
+        self.x = 0;
+        self.width  = size.width;
+        self.height = size.height;
+        
+    } else { 
+        self.portrait = NO;
+        
+        self.x = 10;
+        self.width  = size.height -20;
+        self.height = size.height;
+        
+    }
     
     [self calculationScrollViewHeight:0];
+    
+    [self containerMove:self.containerPosition];
+//    CGFloat position;
+//
+//    if(self.containerPosition == ContainerMoveTypeBottom) {
+//        position = size.height - bottom;
+//    } else if(self.containerPosition == ContainerMoveTypeMiddle) {
+//        position = size.height * middle;
+//    } else {
+//        position = top;
+//    }
+//
+//    [self containerMoveCustomPosition:position moveType:self.containerPosition animated:YES ];
 }
 
 /// Top
 - (void)setContainerTop:(CGFloat)containerTop {
-    if(!_addedTop) _addedTop = YES;
+    if(!_firstAddedTop) _firstAddedTop = YES;
     _containerTop = containerTop;
 }
 
@@ -220,26 +257,34 @@
 
 /// Middle
 - (void)setContainerMiddle:(CGFloat)containerMiddle {
-    if(!_addedMiddle) _addedMiddle = YES;
+    if(!_firstAddedMiddle) _firstAddedMiddle = YES;
     // if(IS_IPHONE_X) containerMiddle -= 34;
     _containerMiddle = containerMiddle;
 }
 
+- (CGFloat)getContainerMiddle {
+    return (_containerMiddle);
+}
+
 - (CGFloat)containerMiddle {
     if(!_containerMiddle) _containerMiddle = CUSTOM_MIDDLE;
-    return _containerMiddle;
+    return (self.height *_containerMiddle);
 }
 
 /// Bottom
 - (void)setContainerBottom:(CGFloat)containerBottom {
-    if(!_addedBottom) _addedBottom = YES;
+    if(!_firstAddedBottom) _firstAddedBottom = YES;
     _containerBottom = containerBottom;
     if(_bottomButtonToMoveTop) _bottomButtonToMoveTop.height = containerBottom;
 }
 
+- (CGFloat)getContainerBottom {
+    return (_containerBottom);
+}
+
 - (CGFloat)containerBottom {
     if(!_containerBottom) _containerBottom = CUSTOM_BOTTOM;
-    return _containerBottom;
+    return (self.height -_containerBottom);
 }
 
 
@@ -280,6 +325,9 @@
     if(hv) {
         if(_headerView) [self removeHeaderView];
         _headerView = hv;
+        _headerView.width = (SCREEN_WIDTH < SCREEN_HEIGHT)?SCREEN_WIDTH :(SCREEN_HEIGHT -20);
+        _headerView.autoresizingMask =
+        (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
         [self addSubview:_headerView];
     } else {
         [self removeHeaderView];
@@ -309,7 +357,7 @@
         CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
         
         self.scrollView.y = headerHeight;
-        self.scrollView.width = SCREEN_WIDTH;
+        self.scrollView.width = (self.portrait) ?SCREEN_WIDTH :SCREEN_HEIGHT -20;
         self.scrollView.height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
         self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, iphnXpaddingBottom , 0);
     }
