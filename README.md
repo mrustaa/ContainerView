@@ -7,6 +7,22 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 ## Preview
 ![image](http://gdurl.com/p3_L)
 ![image](http://gdurl.com/30Qv)
+![image(Landscape)](http://gdurl.com/x5p4)
+
+<!-- TOC -->
+
+- [Getting Started](#getting-started)
+- [Setting](#setting)
+  - [Change position Top Middle Bottom](#change-position-top-middle-bottom)
+- [Adding Custom View](#adding-custom)
+  - [`View` under ContainerView](#view-under-containerview)
+  - [`ScrollView` in ContainerView](#scrollview-in-containerview)
+  - [`HeaderView` in ContainerView](#headerview-in-containerview)
+- [Protocol](#protocol)
+  - [Reports the changes current position of the container, after its use](#reports-the-changes-current-position-of-the-container-after-its-use)
+- [License](#license)
+
+<!-- /TOC -->
 
 ## Getting Started
 
@@ -49,7 +65,7 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 }
 ```
 
-### Change position Top / Middle / Bottom
+### Change position Top Middle Bottom
 
 ```objc
 @implementation ViewController
