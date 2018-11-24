@@ -5,7 +5,7 @@
 #import "ContainerView.h"
 
 #import "UIView+Frame.h"
-#import "Defines.h"
+#import "ContainerDefines.h"
 
 @interface ContainerView () <UIGestureRecognizerDelegate, UISearchBarDelegate>  {
     CGFloat _containerTop;
@@ -42,18 +42,7 @@
 
 - (void)initContainer
 {
-    
-    if(SCREEN_WIDTH < SCREEN_HEIGHT) {
-        self.portrait = YES;
-        
-        self.height = SCREEN_HEIGHT;
-    } else { 
-        self.portrait = NO;
-        
-        self.x = 10;
-        self.width  = SCREEN_HEIGHT -20;
-        self.height = SCREEN_HEIGHT;
-    }
+    [self initContainerSize:CGSizeMake(SCREEN_WIDTH,SCREEN_HEIGHT)];
     
     self.backgroundColor     = CLR_COLOR;
     self.clipsToBounds       = NO;
@@ -91,7 +80,7 @@
 //    }
     
     
-    self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom - (IS_IPHONE_X ?34 :0));
+    self.transform = CGAffineTransformMakeTranslation( 0, self.containerBottom - IPHONE_X_PADDING_BOTTOM);
     self.containerPosition = ContainerMoveTypeBottom;
     
     if(!_visualEffectView) {
@@ -192,7 +181,7 @@
         //[btn addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(containerBottomButtonAction)]];
         //[btn addGestureRecognizer: [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(containerBottomButtonAction)]];
         
-        btn.frame = CGRectMake( 0, 0, SCREEN_WIDTH, (SCREEN_HEIGHT - self.containerBottom + (IS_IPHONE_X ?34 :0)) );
+        btn.frame = CGRectMake( 0, 0, SCREEN_WIDTH, (SCREEN_HEIGHT - self.containerBottom + IPHONE_X_PADDING_BOTTOM) );
         btn.backgroundColor = CLR_COLOR;
         _bottomButtonToMoveTop = btn;
     }
@@ -206,6 +195,24 @@
 }
 
 
+- (void)initContainerSize:(CGSize)size {
+    
+    if(size.width < size.height) {
+        self.portrait = YES;
+        
+        self.x = 0;
+        self.width  = size.width;
+        self.height = size.height;
+        
+    } else {
+        self.portrait = NO;
+        
+        self.x = IS_IPHONE_X ? 44 :15;
+        self.width  = size.height -20;
+        self.height = size.height;
+    }
+    
+}
 
 - (void)transitionToSizeTop:(CGFloat)top middle:(CGFloat)middle bottom:(CGFloat)bottom size:(CGSize)size {
     
@@ -213,35 +220,11 @@
     _containerMiddle = middle;
     _containerBottom = bottom;
     
-    if(size.width < size.height) {
-        self.portrait = YES;
-        self.x = 0;
-        self.width  = size.width;
-        self.height = size.height;
-        
-    } else { 
-        self.portrait = NO;
-        
-        self.x = 10;
-        self.width  = size.height -20;
-        self.height = size.height;
-        
-    }
+    [self initContainerSize:size];
     
     [self calculationScrollViewHeight:0];
     
     [self containerMove:self.containerPosition];
-//    CGFloat position;
-//
-//    if(self.containerPosition == ContainerMoveTypeBottom) {
-//        position = size.height - bottom;
-//    } else if(self.containerPosition == ContainerMoveTypeMiddle) {
-//        position = size.height * middle;
-//    } else {
-//        position = top;
-//    }
-//
-//    [self containerMoveCustomPosition:position moveType:self.containerPosition animated:YES ];
 }
 
 /// Top
@@ -258,7 +241,6 @@
 /// Middle
 - (void)setContainerMiddle:(CGFloat)containerMiddle {
     if(!_firstAddedMiddle) _firstAddedMiddle = YES;
-    // if(IS_IPHONE_X) containerMiddle -= 34;
     _containerMiddle = containerMiddle;
 }
 
@@ -352,14 +334,14 @@
     if(self.scrollView) {
         CGFloat headerHeight = (_headerView ?_headerView.height :0);
         CGFloat top = self.containerTop;
-        CGFloat iphnXpaddingTop     = (IS_IPHONE_X ?24:0);
-        CGFloat iphnXpaddingBottom  = (IS_IPHONE_X ?34:0);
+        CGFloat iphnXpaddingTop     = IPHONE_X_PADDING_TOP;
+        CGFloat iphnXpaddingBottom  = IPHONE_X_PADDING_BOTTOM;
         CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
         
         self.scrollView.y = headerHeight;
         self.scrollView.width = (self.portrait) ?SCREEN_WIDTH :SCREEN_HEIGHT -20;
         self.scrollView.height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
-        self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, iphnXpaddingBottom , 0);
+        self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, (self.portrait) ? iphnXpaddingBottom :0 , 0);
     }
 }
 
@@ -496,9 +478,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     CGFloat position = 0;
     
     switch (moveType) {
-        case ContainerMoveTypeTop:      position = self.containerTop + (IS_IPHONE_X ?24 :0); break;
+        case ContainerMoveTypeTop:      position = self.containerTop + IPHONE_X_PADDING_TOP; break;
         case ContainerMoveTypeMiddle:   position = self.containerMiddle; break;
-        case ContainerMoveTypeBottom:   position = self.containerBottom - (IS_IPHONE_X ?34 :0); break;
+        case ContainerMoveTypeBottom:   position = self.containerBottom - IPHONE_X_PADDING_BOTTOM; break;
         case ContainerMoveTypeHide:     position = SCREEN_HEIGHT; break;
     }
     

@@ -5,7 +5,7 @@
 #import "ContainerScrollDelegate.h"
 
 #import "UIView+Frame.h"
-#import "Defines.h"
+#import "ContainerDefines.h"
 
 @implementation ContainerScrollDelegate {
     BOOL bordersRunContainer;
@@ -78,7 +78,7 @@
             
             CGFloat headerHeight = (self.containerView.headerView) ?self.containerView.headerView.height :0;
             CGFloat top = (self.containerView.containerTop == 0) ? CUSTOM_TOP : self.containerView.containerTop;
-            CGFloat iphnX = (IS_IPHONE_X ? 24 :0);
+            CGFloat iphnX = IPHONE_X_PADDING_TOP;
             
             CGFloat height = (SCREEN_HEIGHT - (top + headerHeight + iphnX ));
             

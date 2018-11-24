@@ -10,7 +10,7 @@
 #import "DemoCollectionCell.h"
 
 #import "UIView+Frame.h"
-#import "Defines.h"
+#import "ContainerDefines.h"
 
 
 @interface DemoViewController () <ContainerViewDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UITextViewDelegate>
@@ -53,6 +53,7 @@
         _imageView = [[UIImageView alloc]initWithFrame:FRAME];
         _imageView.contentMode = (SCREEN_WIDTH < SCREEN_HEIGHT) ?UIViewContentModeScaleAspectFill :UIViewContentModeScaleAspectFit;
         _imageView.clipsToBounds = YES;
+        _imageView.backgroundColor = GRAYLEVEL(210);
         _imageView.autoresizingMask =
         (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
          UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
@@ -550,16 +551,16 @@
     
     [self containerMoveCustomPosition:top moveType:ContainerMoveTypeTop animated:YES];
     
-    self.containerTop = IS_IPHONE_X ? top -24 : top;
+    self.containerTop = top - IPHONE_X_PADDING_TOP;
     self.containerLabelValueTop.text = SFMT(@"%.0f y", top);
 }
 
 - (IBAction)changeContainerSizeBottom:(UISlider *)sender {
     CGFloat bottom = sender.value; // (SCREEN_HEIGHT -((sender.maximumValue +50) -sender.value));
     
-    [self containerMoveCustomPosition: (SCREEN_HEIGHT -bottom) moveType:ContainerMoveTypeBottom animated:NO];
+    [self containerMoveCustomPosition: (SCREEN_HEIGHT - bottom) moveType:ContainerMoveTypeBottom animated:NO];
     
-    self.containerBottom = IS_IPHONE_X ? bottom +34 : bottom;
+    self.containerBottom = bottom - IPHONE_X_PADDING_BOTTOM;
     self.containerLabelValueBottom.text = SFMT(@"%.0f y", bottom);
 }
 

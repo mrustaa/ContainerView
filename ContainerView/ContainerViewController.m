@@ -5,7 +5,7 @@
 #import "ContainerViewController.h"
 
 #import "UIView+Frame.h"
-#import "Defines.h"
+#import "ContainerDefines.h"
 
 @interface ContainerViewController () {
     BOOL bordersRunContainer;
@@ -49,6 +49,22 @@
     CGFloat top    = addedTop    ? self.containerTop    : CUSTOM_TOP;
     CGFloat middle = addedMiddle ? [self.containerView getContainerMiddle] : CUSTOM_MIDDLE;
     CGFloat bottom = addedBottom ? [self.containerView getContainerBottom] : CUSTOM_BOTTOM;
+    
+    // self.bottomView.autoresizingMask = UIViewAutoresizingNone;
+    
+//    if(size.width < size.height) {
+//        self.bottomView.frame = (CGRect) { CGPointZero , size };
+//    } else {
+//        self.bottomView.x = IPHONE_X_PADDING_TOP;
+//        self.bottomView.y = 0;
+//        self.bottomView.width = (size.width - (IPHONE_X_PADDING_TOP + IPHONE_X_PADDING_TOP));
+//        self.bottomView.height = size.height;
+//    }
+    
+    //self.bottomView.autoresizingMask =
+    //(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
+    // UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
+    
     
     [self.containerView transitionToSizeTop:top middle:middle bottom:bottom size:size];
 }
@@ -353,7 +369,7 @@
     
     
     CGFloat top = self.containerView.containerTop;
-    top += (IS_IPHONE_X ? 24 :0);
+    top += IPHONE_X_PADDING_TOP;
     
     
     if(scrollView.panGestureRecognizer.state == UIGestureRecognizerStateEnded)
@@ -386,7 +402,7 @@
             
             CGFloat headerHeight = (self.containerView.headerView) ?self.containerView.headerView.height :0;
             CGFloat top = (self.containerView.containerTop == 0) ? CUSTOM_TOP : self.containerView.containerTop;
-            CGFloat iphnX = (IS_IPHONE_X ? 24 :0);
+            CGFloat iphnX = IPHONE_X_PADDING_TOP;
             
             CGFloat height = (SCREEN_HEIGHT - (top + headerHeight + iphnX ));
             

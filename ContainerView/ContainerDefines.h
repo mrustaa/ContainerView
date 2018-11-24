@@ -11,8 +11,6 @@
 #define APP                         ([UIApplication sharedApplication])
 #define WINDOW                      ((UIWindow *)APP.delegate.window)
 
-#define BUNDLE                      [NSBundle mainBundle]
-
 /// ROOT
 #define ROOT_VC                     (APP.keyWindow.rootViewController)
 
@@ -25,19 +23,6 @@
 #define STATUSBAR_STYLE(a)          ([APP setStatusBarStyle:(UIStatusBarStyle)a animated:YES])
 
 
-
-/// LOCAL DATABASE
-#define USER_SDEF                   [NSUserDefaults standardUserDefaults]
-
-#define USER_DEF(key)               [USER_SDEF objectForKey:(NSString * _Nonnull)key]
-#define USER_DEF_SAVE(key, val)     [USER_SDEF setObject:val forKey:key];[USER_SDEF synchronize]
-#define USER_DEF_DEL(key)           [USER_SDEF removeObjectForKey:key];[USER_SDEF synchronize]
-
-
-/// DOCUMENT
-#define DOCUMENTS_PATH              ((NSString *)NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0])
-
-
 /// SIZE
 #define FRAME                       ((CGRect)WINDOW.frame)
 
@@ -47,6 +32,8 @@
 #define SCREEN_HEIGHT               ([[UIScreen mainScreen] bounds].size.height)
 #define SCREEN_MAX_LENGTH           (MAX(SCREEN_WIDTH, SCREEN_HEIGHT))
 #define SCREEN_MIN_LENGTH           (MIN(SCREEN_WIDTH, SCREEN_HEIGHT))
+
+
 
 /// DEVICE
 #define IS_IPAD                     (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
@@ -60,6 +47,8 @@
 #define IS_IPHONE_X                 (IS_IPHONE && SCREEN_MAX_LENGTH == 812.0)
 #define IS_BIG_IPHONE               (IS_IPHONE && SCREEN_MAX_LENGTH >  568.0)
 
+#define IPHONE_X_PADDING_TOP        (IS_IPHONE_X ? 24 :0)
+#define IPHONE_X_PADDING_BOTTOM     (IS_IPHONE_X ? 34 :0)
 
 /// COLOR
 #define RGBA(r,g,b,a)               ([UIColor colorWithRed:(CGFloat)r / 255.0 green:(CGFloat)g / 255.0 blue:(CGFloat)b / 255.0 alpha:(CGFloat)a])
@@ -89,9 +78,6 @@
 #define SFMT(str, ...)                            [NSString stringWithFormat:str, ##__VA_ARGS__]
 #define PRINT(str, ...)             printf("%s\n",[NSString stringWithFormat:str, ##__VA_ARGS__].UTF8String)
 
-/// URL
-#define URL(str)                    [NSURL URLWithString: str]
-
 /// IMAGE
 #define IMG(name)                   [UIImage imageNamed:name]
 
@@ -115,6 +101,6 @@
 
 #define CUSTOM_HEADER_HEIGHT        64.0
 
-#define FRAME_SCROLLVIEW            CGRectMake ( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT -CUSTOM_TOP -(IS_IPHONE_X ?24 :0) )
+#define FRAME_SCROLLVIEW            CGRectMake ( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT -CUSTOM_TOP -IPHONE_X_PADDING_TOP )
 
 
