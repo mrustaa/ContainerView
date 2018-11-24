@@ -146,13 +146,13 @@
 			path = DemoContainerView;
 			sourceTree = "<group>";
 		};
-		46A1F41821A5E96100541435 /* Utils */ = {
+		46A1F41821A5E96100541435 /* UIView+Frame */ = {
 			isa = PBXGroup;
 			children = (
 				4A274ACA219D7BBD008900D9 /* UIView+Frame.h */,
 				4A274ACB219D7BBD008900D9 /* UIView+Frame.m */,
 			);
-			path = Utils;
+			path = "UIView+Frame";
 			sourceTree = "<group>";
 		};
 		46A1F41921A5EBCD00541435 /* ScrollDelegate */ = {
@@ -167,7 +167,7 @@
 		46C519222126264600A6F607 /* ContainerView */ = {
 			isa = PBXGroup;
 			children = (
-				46A1F41821A5E96100541435 /* Utils */,
+				46A1F41821A5E96100541435 /* UIView+Frame */,
 				46A1F41921A5EBCD00541435 /* ScrollDelegate */,
 				46C519242126267B00A6F607 /* ContainerDefines.h */,
 				46C519282126267B00A6F607 /* ContainerTypes.h */,
