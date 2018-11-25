@@ -11,6 +11,8 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 
 <!-- TOC -->
 
+- [Installation](#installation)
+  - [CocoaPods](#cocoapods)
 - [Getting Started](#getting-started)
 - [Setting](#setting)
   - [Change position Top Middle Bottom](#change-position-top-middle-bottom)
@@ -23,6 +25,17 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 - [License](#license)
 
 <!-- /TOC -->
+
+## Installation
+
+### CocoaPods
+
+FloatingPanel is available through [CocoaPods](https://cocoapods.org). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+pod 'ContainerView'
+```
 
 ## Getting Started
 
