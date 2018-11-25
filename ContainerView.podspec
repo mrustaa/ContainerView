@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ContainerView'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of ContainerView.'
+  s.version          = '1.0.2'
+  s.summary          = 'ContainerView is designed to add a cool swim from the bottom to the animation with the effect of scale, controlled by the help of a gesture'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -19,18 +19,19 @@ Pod::Spec.new do |s|
 
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
+'ContainerView is designed to add a cool swim from the bottom to the animation with the effect of scale, controlled by the help of a gesture, scrollView also takes control. The idea is taken from the application: https://www.apple.com/ios/maps/'
                        DESC
 
-  s.homepage         = 'https://github.com/rustamburger@gmail.com/ContainerView'
+  s.homepage         = 'https://github.com/mrustaa/ContainerView'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'rustamburger@gmail.com' => 'r.motigullin@key-g.com' }
-  s.source           = { :git => 'https://github.com/rustamburger@gmail.com/ContainerView.git', :tag => s.version.to_s }
+  s.author           = { 'Rustam Motygullin' => 'rustamburger@gmail.com' }
+  s.source           = { :git => 'https://github.com/mrustaa/ContainerView.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'ContainerView/Classes/**/*'
+  s.source_files = 'ContainerView/Classes/*.{h,m}'
   
   # s.resource_bundles = {
   #   'ContainerView' => ['ContainerView/Assets/*.png']
