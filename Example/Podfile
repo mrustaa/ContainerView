@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'ContainerView_Example' do
+  pod 'ContainerView', :path => '../'
+
+  target 'ContainerView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
