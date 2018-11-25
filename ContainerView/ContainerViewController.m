@@ -4,8 +4,6 @@
 
 #import "ContainerViewController.h"
 
-#import "UIView+Frame.h"
-#import "ContainerDefines.h"
 
 @interface ContainerViewController () {
     BOOL bordersRunContainer;
@@ -50,22 +48,6 @@
     CGFloat middle = addedMiddle ? [self.containerView getContainerMiddle] : CUSTOM_MIDDLE;
     CGFloat bottom = addedBottom ? [self.containerView getContainerBottom] : CUSTOM_BOTTOM;
     
-    // self.bottomView.autoresizingMask = UIViewAutoresizingNone;
-    
-//    if(size.width < size.height) {
-//        self.bottomView.frame = (CGRect) { CGPointZero , size };
-//    } else {
-//        self.bottomView.x = IPHONE_X_PADDING_TOP;
-//        self.bottomView.y = 0;
-//        self.bottomView.width = (size.width - (IPHONE_X_PADDING_TOP + IPHONE_X_PADDING_TOP));
-//        self.bottomView.height = size.height;
-//    }
-    
-    //self.bottomView.autoresizingMask =
-    //(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
-    // UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
-    
-    
     [self.containerView transitionToSizeTop:top middle:middle bottom:bottom size:size];
 }
 
@@ -76,7 +58,7 @@
     
     if(!_containerView) {
         ContainerView *
-        container = [[ContainerView alloc] initWithFrame: (CGRect){ CGPointZero, { SCREEN_WIDTH, SCREEN_HEIGHT +50 }}];
+        container = [[ContainerView alloc] initWithFrame: CGRectMake( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT +50 )];
         container.delegate = self;
         _containerView = container;
     }
@@ -302,9 +284,9 @@
     
     if(containerFrameY < selfCenter) {
         
-        CGFloat procent = (((selfCenter -containerFrameY) / selfCenter) / 2);
+        CGFloat procent = (((selfCenter - containerFrameY) / selfCenter) / 2);
         
-        CGAffineTransform transform = CGAffineTransformMakeScale( 1. -(procent / 5), 1. -(procent / 5));
+        CGAffineTransform transform = CGAffineTransformMakeScale( 1. - (procent / 5), 1. - (procent / 5));
         
         if(self.containerZoom) {
             self.bottomView.transform = transform;
@@ -315,18 +297,19 @@
         }
         
         self.shadowButton.alpha = procent;
-        if(self.containerView.portrait)
-             self.shadowButton.height = (containerFrameY +self.containerView.containerCornerRadius +5);
-        else self.shadowButton.height = SCREEN_HEIGHT;
         
+        CGFloat height;
+        if(self.containerView.portrait)
+             height = (containerFrameY + self.containerView.containerCornerRadius +5);
+        else height = SCREEN_HEIGHT;
+        
+        self.shadowButton.frame = CGRectMake( self.shadowButton.frame.origin.x,self.shadowButton.frame.origin.y, self.shadowButton.frame.size.width, height);
     } else {
         self.bottomView.transform = CGAffineTransformIdentity;
         self.bottomView.layer.cornerRadius = 0;
         
-//        self.shadowButton.hidden = YES;
-        
-        self.shadowButton.alpha = 0.; 
-        self.shadowButton.height = SCREEN_HEIGHT;
+        self.shadowButton.alpha = 0.;
+        self.shadowButton.frame = CGRectMake( self.shadowButton.frame.origin.x, self.shadowButton.frame.origin.y, self.shadowButton.frame.size.width, SCREEN_HEIGHT);
     }
 }
 
@@ -400,17 +383,19 @@
         if((top == selfTransform.ty) && !onceScrollingBeginDragging) {
             onceScrollingBeginDragging = YES;
             
-            CGFloat headerHeight = (self.containerView.headerView) ?self.containerView.headerView.height :0;
+            CGFloat headerHeight = (self.containerView.headerView) ?self.containerView.headerView.frame.size.height :0;
             CGFloat top = (self.containerView.containerTop == 0) ? CUSTOM_TOP : self.containerView.containerTop;
             CGFloat iphnX = IPHONE_X_PADDING_TOP;
             
             CGFloat height = (SCREEN_HEIGHT - (top + headerHeight + iphnX ));
             
-            if(scrollView.height != height) {
+            if(scrollView.frame.size.height != height) {
                 
                 ANIMATION_SPRING( .45, ^(void) {
-                    scrollView.y = headerHeight;
-                    scrollView.height = height;
+                    scrollView.frame = CGRectMake(
+                         scrollView.frame.origin.x, headerHeight ,
+                         scrollView.frame.size.width, height
+                    );
                 });
             }
         }

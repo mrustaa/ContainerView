@@ -40,13 +40,13 @@
     
     if(!cell.label)
     {
-        cell.label  = [[UILabel alloc]initWithFrame:(CGRect) {{8, cellSize.height -26}, {cellSize.width -16, 18}}];
+        cell.label  = [[UILabel alloc]initWithFrame:CGRectMake(8, cellSize.height -26, cellSize.width -16, 18)];
         cell.label.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:14];
         cell.label.textColor = BLACK_COLOR;
         [cell addSubview:cell.label];
     }
     
-    cell.imageView.frame = (CGRect) {{indent, indent}, {imageSize, imageSize}};
+    cell.imageView.frame = CGRectMake( indent, indent, imageSize, imageSize);
     cell.imageView.image = self.photos[indexPath.row][@"small"];
     
     cell.label.text = (indexPath.row) ? (indexPath.row == 1) ? @"mapView" : SFMT(@"photo %d",(int)indexPath.row) : @"settings" ; 

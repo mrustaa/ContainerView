@@ -8,7 +8,6 @@
 
 #import "DemoHeaderViews.h"
 
-#import "UIView+Frame.h"
 #import "ContainerDefines.h"
 
 @implementation HeaderLabel
@@ -70,7 +69,7 @@
     view.clipsToBounds = YES;
     
     UILabel *
-    label = [[UILabel alloc]initWithFrame: (CGRect) { {18, 16}, {161, 30} }];
+    label = [[UILabel alloc]initWithFrame:CGRectMake( 18, 16, 161, 30)];
     label.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:24];
     
     label.text = @"Heading";
@@ -112,7 +111,13 @@
     [view addSubview:view.grip];
     
     view.separatorLine = [self createSeparatorLine];
-    view.separatorLine.y = 19.5;
+    
+    view.frame = CGRectMake(
+        view.frame.origin.x, 19.5 ,
+        view.frame.size.width, view.frame.size.height
+    );
+    
+    
     [view addSubview:view.separatorLine];
     return view;
 }
@@ -128,7 +133,7 @@
     UIView *
     grip = [[UIView alloc] initWithFrame: CGRectMake( ((SCREEN_WIDTH / 2) -18) , 8 , 36, 4 )];
     grip.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin  );
-    grip.layer.cornerRadius = grip.height / 2;
+    grip.layer.cornerRadius = grip.frame.size.height / 2;
     return grip;
 }
 

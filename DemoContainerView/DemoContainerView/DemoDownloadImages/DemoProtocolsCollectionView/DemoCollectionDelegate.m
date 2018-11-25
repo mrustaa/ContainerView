@@ -4,7 +4,6 @@
 
 #import "DemoCollectionDelegate.h"
 
-#import "UIView+Frame.h"
 #import "ContainerDefines.h"
 
 @implementation DemoCollectionDelegate

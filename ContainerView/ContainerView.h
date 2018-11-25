@@ -4,7 +4,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ContainerTypes.h"
-
+#import "ContainerDefines.h"
 
 
 @protocol ContainerViewDelegate <NSObject>

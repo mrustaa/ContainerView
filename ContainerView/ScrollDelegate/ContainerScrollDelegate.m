@@ -3,8 +3,6 @@
 //  Copyright © 2018 mrusta. All rights reserved.
 
 #import "ContainerScrollDelegate.h"
-
-#import "UIView+Frame.h"
 #import "ContainerDefines.h"
 
 @implementation ContainerScrollDelegate {
@@ -76,17 +74,19 @@
         if((top == selfTransform.ty) && !onceScrollingBeginDragging) {
             onceScrollingBeginDragging = YES;
             
-            CGFloat headerHeight = (self.containerView.headerView) ?self.containerView.headerView.height :0;
+            CGFloat headerHeight = (self.containerView.headerView) ?self.containerView.headerView.frame.size.height :0;
             CGFloat top = (self.containerView.containerTop == 0) ? CUSTOM_TOP : self.containerView.containerTop;
             CGFloat iphnX = IPHONE_X_PADDING_TOP;
             
             CGFloat height = (SCREEN_HEIGHT - (top + headerHeight + iphnX ));
             
-            if(scrollView.height != height) {
+            if(scrollView.frame.size.height != height) {
                 
                 ANIMATION_SPRING( .45, ^(void) {
-                    scrollView.y = headerHeight;
-                    scrollView.height = height;
+                    scrollView.frame = CGRectMake(
+                                                  scrollView.frame.origin.x, headerHeight ,
+                                                  scrollView.frame.size.width, height
+                                                  );
                 });
             }
         }

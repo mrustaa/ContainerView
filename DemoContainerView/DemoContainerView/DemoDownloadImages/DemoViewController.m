@@ -9,7 +9,6 @@
 #import "DemoTableCell.h"
 #import "DemoCollectionCell.h"
 
-#import "UIView+Frame.h"
 #import "ContainerDefines.h"
 
 
@@ -66,8 +65,11 @@
     self.mapView.alpha = 0;
     
     self.mapViewStatusBarBlur.alpha = 1;
-    self.mapViewStatusBarBlur.height = SCREEN_STATUS_HEIGHT;
     
+    self.mapViewStatusBarBlur.frame = CGRectMake(
+        self.mapViewStatusBarBlur.frame.origin.x, self.mapViewStatusBarBlur.frame.origin.y ,
+        self.mapViewStatusBarBlur.frame.size.width, SCREEN_STATUS_HEIGHT
+    );
     
     [self.containerView addSubview:[self createTableView]];
     
@@ -126,8 +128,8 @@
 
 - (UIImage *)imageWithImage:(UIImage *)image size:(NSInteger)size {
     
-    CGSize cgSize = (CGSize) {          size, (image.size.height / (image.size.width / size) )};
-    CGRect cgRect = (CGRect) { {0, 0}, {size, (image.size.height / (image.size.width / size) )}};
+    CGSize cgSize = CGSizeMake(       size, (image.size.height / (image.size.width / size) ));
+    CGRect cgRect = CGRectMake( 0, 0, size, (image.size.height / (image.size.width / size) ));
     UIGraphicsBeginImageContextWithOptions( cgSize, NO, 0.0);
     [image drawInRect: cgRect ];
     UIImage * newImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -264,20 +266,20 @@
     }
     
     if(!cell.separatorLine) {
-        cell.separatorLine = [[UIView alloc]initWithFrame:(CGRect){ {16 , 87.5}, {SCREEN_WIDTH -32 , 0.5} }];
+        cell.separatorLine = [[UIView alloc]initWithFrame:CGRectMake( 16 , 87.5, SCREEN_WIDTH -32 , 0.5)];
         cell.separatorLine.backgroundColor = RGB(222, 222, 222);
         [cell addSubview: cell.separatorLine];
     }
     
     if(!cell.labelTitle) {
-        cell.labelTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 20}, {SCREEN_WIDTH -67 , 30} }];
+        cell.labelTitle  = [[UILabel alloc]initWithFrame:CGRectMake( 18 , 20, SCREEN_WIDTH -67 , 30 )];
         cell.labelTitle.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:22];
         cell.labelTitle.textColor = BLACK_COLOR;
         [cell addSubview:cell.labelTitle];
     }
     
     if(!cell.labelSubTitle) {
-        cell.labelSubTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 50}, {SCREEN_WIDTH -67, 16} }];
+        cell.labelSubTitle  = [[UILabel alloc]initWithFrame:CGRectMake( 18 , 50, SCREEN_WIDTH -67, 16 )];
         cell.labelSubTitle.font = [UIFont fontWithName:@"ProximaNova-Regular" size:15];
         cell.labelSubTitle.textColor = RGB(124,132,148);
         [cell addSubview:cell.labelSubTitle];
@@ -378,15 +380,14 @@
         [cell addSubview: cell.imageView];
     }
     
-    if(!cell.label)
-    {
-        cell.label  = [[UILabel alloc]initWithFrame:(CGRect) {{8, cellSize.height -26}, {cellSize.width -16, 18}}];
+    if(!cell.label) {
+        cell.label  = [[UILabel alloc]initWithFrame:CGRectMake( 8, cellSize.height -26, cellSize.width -16, 18)];
         cell.label.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:14];
         cell.label.textColor = BLACK_COLOR;
         [cell addSubview:cell.label];
     }
     
-    cell.imageView.frame = (CGRect) {{indent, indent}, {imageSize, imageSize}};
+    cell.imageView.frame = CGRectMake( indent, indent, imageSize, imageSize);
     cell.imageView.image = self.photos[indexPath.row][@"small"];
     
     cell.label.text = (indexPath.row) ? (indexPath.row == 1) ? @"mapView" : SFMT(@"photo %d",(int)indexPath.row) : @"settings" ;

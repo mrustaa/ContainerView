@@ -4,9 +4,6 @@
 
 #import "ContainerView.h"
 
-#import "UIView+Frame.h"
-#import "ContainerDefines.h"
-
 @interface ContainerView () <UIGestureRecognizerDelegate, UISearchBarDelegate>  {
     CGFloat _containerTop;
     CGFloat _containerMiddle;
@@ -84,7 +81,7 @@
     self.containerPosition = ContainerMoveTypeBottom;
     
     if(!_visualEffectView) {
-        _visualEffectView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.width, self.height)];
+        _visualEffectView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
         _visualEffectView.clipsToBounds = YES;
         _visualEffectView.autoresizingMask =
         (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
@@ -95,7 +92,7 @@
         {
             UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
             _visualEffectViewOrigin = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-            _visualEffectViewOrigin.frame = CGRectMake(0, 0, self.width, self.height);
+            _visualEffectViewOrigin.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
             _visualEffectViewOrigin.autoresizingMask =
             (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin |
              UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
@@ -199,19 +196,11 @@
     
     if(size.width < size.height) {
         self.portrait = YES;
-        
-        self.x = 0;
-        self.width  = size.width;
-        self.height = size.height;
-        
+        self.frame = CGRectMake( 0 , self.frame.origin.y, size.width, size.height);
     } else {
         self.portrait = NO;
-        
-        self.x = IS_IPHONE_X ? 44 :15;
-        self.width  = size.height -20;
-        self.height = size.height;
+        self.frame = CGRectMake( (IS_IPHONE_X ? 44 :15), self.frame.origin.y, (size.height -20), size.height);
     }
-    
 }
 
 - (void)transitionToSizeTop:(CGFloat)top middle:(CGFloat)middle bottom:(CGFloat)bottom size:(CGSize)size {
@@ -250,14 +239,17 @@
 
 - (CGFloat)containerMiddle {
     if(!_containerMiddle) _containerMiddle = CUSTOM_MIDDLE;
-    return (self.height *_containerMiddle);
+    return (self.frame.size.height *_containerMiddle);
 }
 
 /// Bottom
 - (void)setContainerBottom:(CGFloat)containerBottom {
     if(!_firstAddedBottom) _firstAddedBottom = YES;
     _containerBottom = containerBottom;
-    if(_bottomButtonToMoveTop) _bottomButtonToMoveTop.height = containerBottom;
+    if(_bottomButtonToMoveTop) {
+        _bottomButtonToMoveTop.frame = CGRectMake( _bottomButtonToMoveTop.frame.origin.x, _bottomButtonToMoveTop.frame.origin.y,
+                                                  _bottomButtonToMoveTop.frame.size.width, containerBottom );
+    }
 }
 
 - (CGFloat)getContainerBottom {
@@ -266,7 +258,7 @@
 
 - (CGFloat)containerBottom {
     if(!_containerBottom) _containerBottom = CUSTOM_BOTTOM;
-    return (self.height -_containerBottom);
+    return (self.frame.size.height -_containerBottom);
 }
 
 
@@ -307,7 +299,8 @@
     if(hv) {
         if(_headerView) [self removeHeaderView];
         _headerView = hv;
-        _headerView.width = (SCREEN_WIDTH < SCREEN_HEIGHT)?SCREEN_WIDTH :(SCREEN_HEIGHT -20);
+        CGFloat width = (SCREEN_WIDTH < SCREEN_HEIGHT)?SCREEN_WIDTH :(SCREEN_HEIGHT -20);
+        _headerView.frame = CGRectMake( _headerView.frame.origin.x, _headerView.frame.origin.y, width, _headerView.frame.size.height );
         _headerView.autoresizingMask =
         (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
         [self addSubview:_headerView];
@@ -332,15 +325,17 @@
 /// Calculation ScrollView
 - (void)calculationScrollViewHeight:(CGFloat)containerPositionBottom {
     if(self.scrollView) {
-        CGFloat headerHeight = (_headerView ?_headerView.height :0);
+        CGFloat headerHeight = (_headerView ?_headerView.frame.size.height :0);
         CGFloat top = self.containerTop;
         CGFloat iphnXpaddingTop     = IPHONE_X_PADDING_TOP;
         CGFloat iphnXpaddingBottom  = IPHONE_X_PADDING_BOTTOM;
         CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
         
-        self.scrollView.y = headerHeight;
-        self.scrollView.width = (self.portrait) ?SCREEN_WIDTH :SCREEN_HEIGHT -20;
-        self.scrollView.height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
+        CGFloat width = (self.portrait) ?SCREEN_WIDTH :SCREEN_HEIGHT -20;
+        CGFloat height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
+        
+        self.scrollView.frame = CGRectMake(self.scrollView.frame.origin.x, headerHeight, width, height);
+        
         self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, (self.portrait) ? iphnXpaddingBottom :0 , 0);
     }
 }
@@ -363,7 +358,7 @@
             
             CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
             
-            if( (self.scrollView.contentOffset.y + self.scrollView.height + containerPositionBottom) < self.scrollView.contentSize.height) {
+            if( (self.scrollView.contentOffset.y + self.scrollView.frame.size.height + containerPositionBottom) < self.scrollView.contentSize.height) {
                 [self calculationScrollViewHeight:(_transform.ty + 5)];
             }
             
@@ -522,7 +517,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         }, ^(BOOL fin) {
             
             if(self.scrollView) {
-                if( (self.scrollView.contentOffset.y + self.scrollView.height + containerPositionBottom) < self.scrollView.contentSize.height) {
+                if( (self.scrollView.contentOffset.y + self.scrollView.frame.size.height + containerPositionBottom) < self.scrollView.contentSize.height) {
                     [self calculationScrollViewHeight:containerPositionBottom];
                 }
             }

@@ -5,7 +5,6 @@
 #import "DemoTableDataSource.h"
 #import "DemoTableCell.h"
 
-#import "UIView+Frame.h"
 #import "ContainerDefines.h"
 
 @implementation DemoTableDataSource
@@ -23,20 +22,20 @@
     }
     
     if(!cell.separatorLine) {
-        cell.separatorLine = [[UIView alloc]initWithFrame:(CGRect){ {16 , 87.5}, {SCREEN_WIDTH -32 , 0.5} }];
+        cell.separatorLine = [[UIView alloc]initWithFrame:CGRectMake( 16 , 87.5, SCREEN_WIDTH -32 , 0.5)];
         cell.separatorLine.backgroundColor = RGB(222, 222, 222);
         [cell addSubview: cell.separatorLine];
     }
     
     if(!cell.labelTitle) {
-        cell.labelTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 20}, {SCREEN_WIDTH -67 , 30} }];
+        cell.labelTitle  = [[UILabel alloc]initWithFrame:CGRectMake( 18 , 20, SCREEN_WIDTH -67 , 30)];
         cell.labelTitle.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:22];
         cell.labelTitle.textColor = BLACK_COLOR;
         [cell addSubview:cell.labelTitle];
     }
     
     if(!cell.labelSubTitle) {
-        cell.labelSubTitle  = [[UILabel alloc]initWithFrame:(CGRect){ {18 , 50}, {SCREEN_WIDTH -67, 16} }];
+        cell.labelSubTitle  = [[UILabel alloc]initWithFrame:CGRectMake( 18 , 50, SCREEN_WIDTH -67, 16)];
         cell.labelSubTitle.font = [UIFont fontWithName:@"ProximaNova-Regular" size:15];
         cell.labelSubTitle.textColor = RGB(124,132,148);
         [cell addSubview:cell.labelSubTitle];
