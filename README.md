@@ -56,7 +56,7 @@ pod 'ContainerView'
     [super viewDidLoad];
     
     // This parameter for changing the rounding corner radius of the Container
-    self.changeCornerRadius = 15;
+    self.containerCornerRadius = 15;
 
     // This parameter to add a blur to the background of the Container
     self.containerStyle = ContainerStyleLight;
