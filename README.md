@@ -180,6 +180,7 @@ pod 'ContainerView'
 @implementation ViewController
 
 - (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
+    [super changeContainerMove:containerMove containerY:containerY animated:animated];
     ...
 }
 ```
