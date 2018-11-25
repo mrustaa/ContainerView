@@ -143,19 +143,10 @@
 			path = DemoContainerView;
 			sourceTree = "<group>";
 		};
-		46A1F41921A5EBCD00541435 /* ScrollDelegate */ = {
-			isa = PBXGroup;
-			children = (
-				46C519252126267B00A6F607 /* ContainerScrollDelegate.h */,
-				46C519272126267B00A6F607 /* ContainerScrollDelegate.m */,
-			);
-			path = ScrollDelegate;
-			sourceTree = "<group>";
-		};
 		46C519222126264600A6F607 /* ContainerView */ = {
 			isa = PBXGroup;
 			children = (
-				46A1F41921A5EBCD00541435 /* ScrollDelegate */,
+				46F7B73921AAE27B003A3C33 /* ScrollDelegate */,
 				46C519242126267B00A6F607 /* ContainerDefines.h */,
 				46C519282126267B00A6F607 /* ContainerTypes.h */,
 				4A94AE7921A3F6C90045A212 /* ContainerViewController.h */,
@@ -195,6 +186,15 @@
 				4689A7C620EC081C00BC7C8A /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		46F7B73921AAE27B003A3C33 /* ScrollDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				46C519252126267B00A6F607 /* ContainerScrollDelegate.h */,
+				46C519272126267B00A6F607 /* ContainerScrollDelegate.m */,
+			);
+			path = ScrollDelegate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
