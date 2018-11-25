@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ContainerView'
-  s.version          = '1.0.2'
+  s.version          = '1.0.3'
   s.summary          = 'ContainerView is designed to add a cool swim from the bottom to the animation with the effect of scale, controlled by the help of a gesture'
 
 # This description is used to generate tags and improve search results.
