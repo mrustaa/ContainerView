@@ -166,8 +166,7 @@
 				4689A7BA20EC081A00BC7C8A /* DemoViewController.h */,
 				4689A7BB20EC081A00BC7C8A /* DemoViewController.m */,
 			);
-			name = Demo;
-			path = DemoDownloadImages;
+			path = Demo;
 			sourceTree = "<group>";
 		};
 		46EA455920FD258F00C0FAE0 /* Resources */ = {

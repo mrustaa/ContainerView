@@ -25,6 +25,7 @@
 
 @interface HeaderGrib : UIView
  @property (nonatomic, strong) UIView *separatorLine;
+ @property (nonatomic, strong) UIImageView *separatorShadow;
  @property (nonatomic, strong) UIView *grip;
 @end
 

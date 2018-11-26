@@ -61,10 +61,15 @@
     
 }
 
++ (CGFloat)headerSize {
+    CGFloat paddingWidht = (SCREEN_WIDTH < SCREEN_HEIGHT) ?0. :20.;
+    CGFloat widht = ((SCREEN_WIDTH < SCREEN_HEIGHT)?SCREEN_WIDTH:SCREEN_HEIGHT - paddingWidht);
+    return widht;
+}
 
 + (HeaderLabel *)createHeaderLabel {
     
-    HeaderLabel *view = [[HeaderLabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, CUSTOM_HEADER_HEIGHT)];
+    HeaderLabel *view = [[HeaderLabel alloc] initWithFrame:CGRectMake(0, 0, [self headerSize], CUSTOM_HEADER_HEIGHT)];
     view.clipsToBounds = YES;
     
     UILabel *
@@ -86,11 +91,12 @@
 }
 
 + (HeaderSearch *)createHeaderSearch {
-    HeaderSearch *view = [[HeaderSearch alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, CUSTOM_HEADER_HEIGHT)];
+    
+    HeaderSearch *view = [[HeaderSearch alloc] initWithFrame:CGRectMake(0, 0, [self headerSize], CUSTOM_HEADER_HEIGHT)];
     view.clipsToBounds = YES;
     
     UISearchBar *
-    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 4, SCREEN_WIDTH, CUSTOM_HEADER_HEIGHT -4)];
+    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 4, [self headerSize], CUSTOM_HEADER_HEIGHT -4)];
     searchBar.barStyle = UIBarStyleDefault;
     searchBar.searchBarStyle = UISearchBarStyleMinimal;
     searchBar.placeholder = @"Search";
@@ -104,18 +110,22 @@
 }
 
 + (HeaderGrib *)createHeaderGrip {
-    HeaderGrib *view = [[HeaderGrib alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 20)];
+    HeaderGrib *view = [[HeaderGrib alloc] initWithFrame:CGRectMake(0, 0, [self headerSize], 20)];
     
     view.grip = [self createGrip];
     [view addSubview:view.grip];
     
     view.separatorLine = [self createSeparatorLine];
-    
-    view.frame = CGRectMake(
-        view.frame.origin.x, 19.5 ,
-        view.frame.size.width, view.frame.size.height
+    view.separatorLine.frame = CGRectMake(
+        view.separatorLine.frame.origin.x, 19.5 ,
+        view.separatorLine.frame.size.width, view.separatorLine.frame.size.height
     );
     
+    view.separatorShadow = [[UIImageView alloc]initWithFrame:CGRectMake(0, 19.5, [self headerSize], 20)];
+    view.separatorShadow.image = IMG(@"header_shadow2");
+    view.separatorShadow.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth);
+//    view.separatorShadow.alpha = 0.4;
+    [view addSubview:view.separatorShadow];
     
     [view addSubview:view.separatorLine];
     return view;
@@ -123,14 +133,15 @@
 
 + (UIView *)createSeparatorLine {
     CGFloat height = 0.5;
-    UIView *line = [[UIView alloc]initWithFrame: CGRectMake( 0, CUSTOM_HEADER_HEIGHT -height, SCREEN_WIDTH, height )];
+    UIView *
+    line = [[UIView alloc]initWithFrame: CGRectMake( 0, CUSTOM_HEADER_HEIGHT -height, [self headerSize], height )];
     line.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth );
     return line;
 }
 
 + (UIView *)createGrip {
     UIView *
-    grip = [[UIView alloc] initWithFrame: CGRectMake( ((SCREEN_WIDTH / 2) -18) , 8 , 36, 4 )];
+    grip = [[UIView alloc] initWithFrame: CGRectMake( (([self headerSize] / 2) -18) , 8 , 36, 4 )];
     grip.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin  );
     grip.layer.cornerRadius = grip.frame.size.height / 2;
     return grip;

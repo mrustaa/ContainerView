@@ -105,9 +105,12 @@
 
 /// Add Subview - Search ScrollView
 - (void)addSubview:(UIView *)subview {
-    if(subview == self.visualEffectView)
-         [super addSubview:subview];
-    else [self.visualEffectView addSubview:subview];
+    if(subview == self.visualEffectView) {
+        [super addSubview:subview];
+    } else {
+        if(self.headerView) [self.visualEffectView insertSubview:subview belowSubview:self.headerView];
+        else [self.visualEffectView addSubview:subview];
+    }
     
     if([subview isKindOfClass:[UIScrollView class]]) {
         if(self.containerBottomButtonToMoveTop) {
