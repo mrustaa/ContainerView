@@ -4,18 +4,21 @@
 
 
 #import "DemoViewController.h"
+#import "ContainerDefines.h"
 
 #import "DemoHeaderViews.h"
+
+#import "DemoScrollViews.h"
 #import "DemoTableCell.h"
 #import "DemoCollectionCell.h"
 
-#import "ContainerDefines.h"
+
 
 
 @interface DemoViewController () <ContainerViewDelegate, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UITextViewDelegate>
 
 
-@property (strong, nonatomic) NSMutableArray <NSDictionary *> *photos;
+@property (strong, nonatomic) NSMutableArray <NSDictionary *> *photoItems;
 
 @property (strong, nonatomic)          UITableView          *tableView;
 @property (strong, nonatomic)          UICollectionView     *collectionView;
@@ -71,58 +74,41 @@
         self.mapViewStatusBarBlur.frame.size.width, SCREEN_STATUS_HEIGHT
     );
     
-    [self.containerView addSubview:[self createTableView]];
+    _tableView = [DemoScrollViews createTableViewWithProtocols:self];
+    [self changeTableViewSeparatorStyle];
+    [self.containerView addSubview:_tableView];
     
     self.containerCornerRadius = 15;
     
-    /// [self containerMove:ContainerMoveTypeTop animated:NO];
-    /// self.containerBottomButtonToMoveTop = YES;
+    // [self containerMove:ContainerMoveTypeTop animated:NO];
     
     self.delegate = self;
     
 
     
-    [self initPhotos];
+    [self initScrollViewsPhotoItems];
 
 }
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    
-    if(_imageView) {
-        _imageView.contentMode = (size.width < size.height) ?UIViewContentModeScaleAspectFill :UIViewContentModeScaleAspectFit;
-    }
-}
-
-#pragma mark - ContainerView Delegate
-
-- (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
-    [super changeContainerMove:containerMove containerY:containerY animated:animated];
-    if(animated) {
-        self.segmentedContainerMove.selectedSegmentIndex = containerMove;
-    }
-}
-
 
 #pragma mark - Init Photos Items For TableView & CollecionView
 
-- (void)initPhotos {
+- (void)initScrollViewsPhotoItems  {
     
     for (int count =0; count < 46; count++) {
         UIImage *img = IMG( SFMT(@"IMG_%d",count) );
         UIImage *imgSmall = [self imageWithImage:img size:200];
         
-        [self.photos addObject:@{ @"big"   : img,
-                                  @"small" : imgSmall }];
+        [self.photoItems addObject:@{ @"big"   : img,
+                                      @"small" : imgSmall }];
     }
     if(self.tableView)      [self.tableView      reloadData];
     if(self.collectionView) [self.collectionView reloadData];
 }
 
 
-- (NSMutableArray *)photos {
-    if(!_photos) _photos = [NSMutableArray new];
-    return _photos;
+- (NSMutableArray *)photoItems {
+    if(!_photoItems) _photoItems = [NSMutableArray new];
+    return _photoItems;
 }
 
 
@@ -142,103 +128,32 @@
 }
 
 
-#pragma mark - Create ScrollViews
+#pragma mark - UIContentContainer Protocol
 
-- (UITableView *)createTableView {
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    if(!_tableView)
-    {
-        UITableView *
-        table = [[UITableView alloc] initWithFrame:FRAME_SCROLLVIEW style:UITableViewStylePlain];
-        table.separatorStyle = UITableViewCellSeparatorStyleNone;
-        table.showsVerticalScrollIndicator = NO;
-        table.backgroundColor = CLR_COLOR;
-        table.delegate   = self;
-        table.dataSource = self;
-
-        _tableView = table;
+    if(_imageView) {
+        _imageView.contentMode = (size.width < size.height) ?UIViewContentModeScaleAspectFill :UIViewContentModeScaleAspectFit;
     }
-    
-    return _tableView;
+    if(_tableView) {
+        [_tableView reloadData];
+    }
+    if(_collectionView) {
+        [_collectionView reloadData];
+    }
 }
 
+#pragma mark - SearchBar Delegate
 
-- (UICollectionView *)createCollectionView {
-    
-    if(!_collectionView)
-    {
-        UICollectionView *
-        collection = [[UICollectionView alloc]initWithFrame:FRAME_SCROLLVIEW collectionViewLayout:[[UICollectionViewFlowLayout alloc]init]];
-        [collection registerClass:[DemoCollectionCell class] forCellWithReuseIdentifier:@"collectionCell"];
-        collection.backgroundColor = CLR_COLOR;
-        collection.delegate   = self;
-        collection.dataSource = self;
-        _collectionView = collection;
-    }
-    
-    return _collectionView;
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    if(self.containerPosition != ContainerMoveTypeTop) [self containerMove:ContainerMoveTypeTop];
+    GCD_ASYNC_GLOBAL_BEGIN(0) {
+        GCD_ASYNC_MAIN_BEGIN {
+            [searchBar becomeFirstResponder];
+        });
+    });
 }
-
-- (UITextView *)createTextView {
-    
-    if(!_textView) {
-        UITextView * textView = [[UITextView alloc]initWithFrame:FRAME_SCROLLVIEW];
-        textView.delegate = self;
-        textView.returnKeyType = UIReturnKeyDone;
-        textView.backgroundColor = CLR_COLOR;
-        textView.textColor = (self.containerStyle == ContainerStyleDark) ?WHITE_COLOR :BLACK_COLOR;
-        textView.font = FONT_S(15);
-        textView.text = @"This example demonstrates a block quote. Because some introductory phrases will lead\
-        naturally into the block quote,\
-        you might choose to begin the block quote with a lowercase letter. In this and the later\
-        examples we use “Lorem ipsum” text to ensure that each block quotation contains 40 words or\
-        more. Lorem ipsum dolor sit amet, consectetur adipiscing elit. (Organa, 2013, p. 234)\
-        Example 2\
-        This example also demonstrates a block quote. Some introductory sentences end abruptly in a\
-        colon or a period:\
-        In those cases, you are more likely to capitalize the beginning word of the block quotation.\
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nisi mi, pharetra sit amet mi vitae,\
-        commodo accumsan dui. Donec non scelerisque quam. Pellentesque ut est sed neque.\
-        (Calrissian, 2013, para. 3)\
-        Example 3\
-        This is another example of a block quotation. Sometimes, the author(s) being cited will be\
-        included in the introduction. In that case, according to Skywalker and Solo,\
-        because the author names are in the introduction of this quote, the parentheses that follow it\
-        will include only the year and the page number. Lorem ipsum dolor sit amet, consectetur\
-        adipiscing elit. Sed nisi mi, pharetra sit amet mi vitae, commodo accumsan dui. Donec non\
-        scelerisque quam. Pellentesque ut est sed neque. (2013, p. 103)\
-        Copyright © 2013 by the American Psychological Association. This content may be reproduced for classroom or teaching purposes\
-            provided that credit is given to the American Psychological Association. For any other use, please contact the APA Permissions Office.\
-            Example 4\
-            In this example, we have added our own emphasis. This needs to be indicated parenthetically,\
-            so the reader knows that the italics were not in the original text. Amidala (2009) dabbled in hyperbole,\
-            saying,\
-            Random Explosions 2: Revenge of the Dialogue is the worst movie in the history of time\
-        [emphasis added]. . . . it’s [sic] promise of dialogue is a misnomer of explosive proportions. Lorem ipsum\
-            dolor sit amet, consectetur adipiscing elit. Sed nisi mi, pharetra sit amet mi vitae. (p. 13)\
-            This paragraph appears flush left because it is a continuation of the paragraph we began above the block\
-            quote. Note that we also added “[sic]” within the block quotation to indicate that a misspelling was in\
-            the original text, and we’ve included ellipses (with four periods) because we have omitted a sentence\
-            from the quotation (see pp. 172–173 of the Publication Manual of the American Psychological\
-                                Association).\
-            Example 5\
-            This example is similar to the previous one, except that we have continued the quotation to\
-            include text from a second paragraph. Amidala (2009) dabbled in hyperbole, saying,\
-            Random Explosions 2: Revenge of the Dialogue is the worst movie in the history of time\
-            [emphasis added]. . . . it’s [sic] promise of dialogue is a misnomer of explosive proportions.\
-            On the other hand, Delightful Banter on Windswept Mountainside is a film to be\
-            cherished for all time. Filmmakers hoping to top this film should abandon hope. (p. 13)\
-                This paragraph begins with an indent because we do not intend it to continue the paragraph\
-                    that we started above the block quote. Note that we also added “[sic]” within the block quotation to\
-                    indicate that a misspelling was in the original text, and we’ve included ellipses (with four periods)\
-                    because we have omitted a sentence from this quotation (see pp. 172–173 of the Manual).";
-        
-
-        _textView = textView;
-    }
-    return _textView;
-}
-
 
 #pragma mark - TableView Delegate
 
@@ -254,7 +169,7 @@
 #pragma mark - TableView DataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
-    return self.photos.count;
+    return self.photoItems.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -265,12 +180,8 @@
         cell.backgroundColor = CLR_COLOR;
     }
     
-    if(!cell.separatorLine) {
-        cell.separatorLine = [[UIView alloc]initWithFrame:CGRectMake( 16 , 87.5, SCREEN_WIDTH -32 , 0.5)];
-        cell.separatorLine.backgroundColor = RGB(222, 222, 222);
-        [cell addSubview: cell.separatorLine];
-    }
-    
+    cell.separatorInset = UIEdgeInsetsMake(0, 16, 0, 16);
+
     if(!cell.labelTitle) {
         cell.labelTitle  = [[UILabel alloc]initWithFrame:CGRectMake( 18 , 20, SCREEN_WIDTH -67 , 30 )];
         cell.labelTitle.font = [UIFont fontWithName:@"ProximaNova-Extrabld" size:22];
@@ -288,27 +199,6 @@
     cell.labelTitle   .text = (indexPath.row) ? (indexPath.row == 1) ? @"mapView" : SFMT(@"photo %d", (int)indexPath.row) : @"settings" ;
     cell.labelSubTitle.text = @"Subtitle";
     cell.labelTitle.textColor = (self.containerStyle == ContainerStyleDark) ? WHITE_COLOR : BLACK_COLOR;
-    
-    switch (self.containerStyle) {
-        case ContainerStyleDefault: {
-            cell.separatorLine.backgroundColor = GRAYLEVEL(222);
-            cell.separatorLine.alpha = 1;
-        }    break;
-        case ContainerStyleLight:{
-            cell.separatorLine.backgroundColor = GRAYLEVEL(180);
-            cell.separatorLine.alpha = 0.5;
-        }    break;
-        case ContainerStyleDark:{
-            cell.separatorLine.backgroundColor = GRAYLEVEL(222);
-            cell.separatorLine.alpha = 0.2;
-        }    break;
-        case ContainerStyleExtraLight:{
-            cell.separatorLine.backgroundColor = GRAYLEVEL(180);
-            cell.separatorLine.alpha = 0.5;
-        }    break;
-        default:
-            break;
-    }
     
     return cell;
 }
@@ -352,7 +242,7 @@
 #pragma mark - CollectionView DataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.photos.count ;
+    return self.photoItems.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -388,15 +278,16 @@
     }
     
     cell.imageView.frame = CGRectMake( indent, indent, imageSize, imageSize);
-    cell.imageView.image = self.photos[indexPath.row][@"small"];
+    cell.imageView.image = self.photoItems[indexPath.row][@"small"];
     
+    cell.label.frame = CGRectMake( 8, cellSize.height -26, cellSize.width -16, 18);
     cell.label.text = (indexPath.row) ? (indexPath.row == 1) ? @"mapView" : SFMT(@"photo %d",(int)indexPath.row) : @"settings" ;
     cell.label.textColor = (self.containerStyle == ContainerStyleDark) ? WHITE_COLOR : BLACK_COLOR;
     
     return cell;
 }
 
-#pragma mark - Select Actions
+#pragma mark - TableView & Collection Select Cell
 
 - (void)selectCellIndex:(SelectType)index animated:(BOOL)animated {
     
@@ -409,7 +300,7 @@
         
         if((index != SelectTypeSettings) &&
            (index != SelectTypeMap)) {
-            weakSelf.imageView.image = self.photos[index][@"big"];
+            weakSelf.imageView.image = self.photoItems[index][@"big"];
         }
         
         ANIMATION( (animated) ? 0.25 : 0. , ^(void){
@@ -434,19 +325,16 @@
     });
 }
 
+#pragma mark - ContainerView Delegate
 
-#pragma mark - SearchBar Delegate
-
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    if(self.containerPosition != ContainerMoveTypeTop) [self containerMove:ContainerMoveTypeTop];
-    GCD_ASYNC_GLOBAL_BEGIN(0) {
-        GCD_ASYNC_MAIN_BEGIN {
-            [searchBar becomeFirstResponder];
-        });
-    });
+- (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
+    [super changeContainerMove:containerMove containerY:containerY animated:animated];
+    if(animated) {
+        self.segmentedContainerMove.selectedSegmentIndex = containerMove;
+    }
 }
 
-#pragma mark - Changes in ContainerView
+#pragma mark - ContainerView Changes Parameters
 
 - (IBAction)changeStatusbar:(UISwitch *)sender {
     BOOL hidden = (!sender.on);
@@ -525,6 +413,7 @@
             self.textView.textColor = WHITE_COLOR;
             self.textView.keyboardAppearance = UIKeyboardAppearanceDark;
         }
+
         self.mapView.mapType = MKMapTypeHybrid;
         self.mapViewStatusBarBlur.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
         STATUSBAR_STYLE(UIStatusBarStyleLightContent);
@@ -543,8 +432,33 @@
         self.settingsView.backgroundColor = RGB(225, 225, 231);
     }
     
-    if(self.tableView)      [self.tableView      reloadData];
-    if(self.collectionView) [self.collectionView reloadData];
+    if(self.tableView) {
+        [self changeTableViewSeparatorStyle];
+        [self.tableView reloadData];
+    }
+    if(self.collectionView) {
+        [self.collectionView reloadData];
+    }
+    
+}
+
+- (void)changeTableViewSeparatorStyle {
+    UIColor * color;
+    
+    switch (self.containerStyle) {
+        case ContainerStyleDefault:
+            color = RGBA(222,222,222,1);
+            break;
+        case ContainerStyleDark:
+            color = RGBA(222,222,222,0.2);
+            break;
+        case ContainerStyleExtraLight:
+        case ContainerStyleLight:
+            color = RGBA(180,180,180,0.5);
+            break;
+        
+    }
+    [self.tableView setSeparatorColor:color];
 }
 
 - (IBAction)changeContainerSizeTop:(UISlider *)sender {
@@ -587,9 +501,20 @@
     }
     
     switch (sender.selectedSegmentIndex) {
-        case 0: [self.containerView addSubview:[self createTableView]];      break;
-        case 1: [self.containerView addSubview:[self createCollectionView]]; break;
-        case 2: [self.containerView addSubview:[self createTextView]];       break;
+        case 0: {
+            _tableView = [DemoScrollViews createTableViewWithProtocols:self];
+            [self changeTableViewSeparatorStyle];
+            [self.containerView addSubview:_tableView];
+        } break;
+        case 1: {
+            _collectionView = [DemoScrollViews createCollectionViewWithProtocols:self];
+            [self.containerView addSubview:_collectionView];
+        } break;
+        case 2: {
+            _textView = [DemoScrollViews createTextViewWithProtocols:self];
+            _textView.textColor = (self.containerStyle == ContainerStyleDark) ?WHITE_COLOR :BLACK_COLOR;
+            [self.containerView addSubview:_textView];
+        } break;
         default: break;
     }
     
