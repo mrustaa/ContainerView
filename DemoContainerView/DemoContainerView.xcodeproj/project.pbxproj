@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4617423021AC949200730CC5 /* DemoModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4617422F21AC949200730CC5 /* DemoModalViewController.m */; };
 		4620C5FD219F8D480029326D /* DemoHeaderViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 4620C5FC219F8D480029326D /* DemoHeaderViews.m */; };
 		46343B8020F28E4B00EF63F7 /* ProximaNova-Extrabld.otf in Resources */ = {isa = PBXBuildFile; fileRef = 46343B7E20F28E4B00EF63F7 /* ProximaNova-Extrabld.otf */; };
 		46343B8120F28E4B00EF63F7 /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 46343B7F20F28E4B00EF63F7 /* ProximaNova-Regular.otf */; };
@@ -29,6 +30,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4617422E21AC949200730CC5 /* DemoModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoModalViewController.h; sourceTree = "<group>"; };
+		4617422F21AC949200730CC5 /* DemoModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoModalViewController.m; sourceTree = "<group>"; };
 		4620C5FB219F8D480029326D /* DemoHeaderViews.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoHeaderViews.h; sourceTree = "<group>"; };
 		4620C5FC219F8D480029326D /* DemoHeaderViews.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoHeaderViews.m; sourceTree = "<group>"; };
 		46343B7E20F28E4B00EF63F7 /* ProximaNova-Extrabld.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Extrabld.otf"; sourceTree = "<group>"; };
@@ -165,6 +168,8 @@
 				4A0ACB2221AC515100465221 /* DemoScrollViews */,
 				4689A7BA20EC081A00BC7C8A /* DemoViewController.h */,
 				4689A7BB20EC081A00BC7C8A /* DemoViewController.m */,
+				4617422E21AC949200730CC5 /* DemoModalViewController.h */,
+				4617422F21AC949200730CC5 /* DemoModalViewController.m */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -285,6 +290,7 @@
 				4689A7BC20EC081A00BC7C8A /* DemoViewController.m in Sources */,
 				4620C5FD219F8D480029326D /* DemoHeaderViews.m in Sources */,
 				46A1F41F21A5ED8F00541435 /* DemoCollectionCell.m in Sources */,
+				4617423021AC949200730CC5 /* DemoModalViewController.m in Sources */,
 				4689A7C720EC081C00BC7C8A /* main.m in Sources */,
 				4648BFCF210E3FC60007D083 /* DemoCollectionDelegate.m in Sources */,
 				4A9527E520F8EB4D000DFDFB /* DemoCollectionDataSource.m in Sources */,

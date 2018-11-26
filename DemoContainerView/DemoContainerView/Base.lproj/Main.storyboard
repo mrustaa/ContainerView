@@ -309,6 +309,22 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dm6-Bq-jl0">
+                                        <rect key="frame" x="254" y="18" width="43" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Modal"/>
+                                        <connections>
+                                            <segue destination="iRg-Le-yZg" kind="presentation" modalPresentationStyle="overCurrentContext" id="THs-Al-spf"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mxs-bE-zgb">
+                                        <rect key="frame" x="257" y="38" width="40" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Detail"/>
+                                        <connections>
+                                            <action selector="addNewContainer" destination="acE-aC-1gp" eventType="touchUpInside" id="uuo-tI-Adl"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.92156862750000001" green="0.92063152790000002" blue="0.94577074049999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <viewLayoutGuide key="safeArea" id="q5K-Ur-Ffa"/>
@@ -332,6 +348,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c2o-4q-7qL" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2385" y="0.0"/>
+        </scene>
+        <!--Demo Modal View Controller-->
+        <scene sceneID="s4T-uH-6sd">
+            <objects>
+                <viewController modalPresentationStyle="overFullScreen" id="iRg-Le-yZg" customClass="DemoModalViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NWY-z1-xX4">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Pl-Bm-wF9">
+                                <rect key="frame" x="29" y="34" width="39" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Close"/>
+                                <connections>
+                                    <action selector="closeController:" destination="iRg-Le-yZg" eventType="touchUpInside" id="zWq-7J-G3S"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="K0m-Mk-p8r"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="9Mu-X4-dpO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hsw-UF-cI4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3158" y="0.0"/>
         </scene>
     </scenes>
 </document>
