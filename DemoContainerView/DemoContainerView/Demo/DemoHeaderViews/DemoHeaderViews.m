@@ -122,7 +122,7 @@
     );
     
     view.separatorShadow = [[UIImageView alloc]initWithFrame:CGRectMake(0, 19.5, [self headerSize], 20)];
-    view.separatorShadow.image = IMG(@"header_shadow2");
+    view.separatorShadow.image = IMG(@"header_shadow.png");
     view.separatorShadow.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth);
 //    view.separatorShadow.alpha = 0.4;
     [view addSubview:view.separatorShadow];
