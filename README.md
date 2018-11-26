@@ -50,8 +50,6 @@ pod 'ContainerView'
 ## Setting
 
 ```objc
-@implementation ViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -81,8 +79,6 @@ pod 'ContainerView'
 ### Change position Top Middle Bottom
 
 ```objc
-@implementation ViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -90,7 +86,6 @@ pod 'ContainerView'
     self.containerTop     = 50;
     self.containerMiddle  = 200;
     self.containerBottom  = 400;
-    
 }
 ```
 
@@ -117,6 +112,11 @@ pod 'ContainerView'
 #### ☝️ Adding all views under the ContainerView necessarily via the `self.bottomView`
 
 ```objc
+@interface ViewController () <UITextViewDelegate>
+@end
+
+@implementation ViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -128,6 +128,8 @@ pod 'ContainerView'
     
     [self.bottomView addSubview:label];
 }
+
+@end
 ```
 
 ### `ScrollView` in ContainerView
@@ -183,6 +185,8 @@ pod 'ContainerView'
     [super changeContainerMove:containerMove containerY:containerY animated:animated];
     ...
 }
+
+@end
 ```
 
 ## License
