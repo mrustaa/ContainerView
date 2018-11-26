@@ -112,11 +112,6 @@ pod 'ContainerView'
 #### ☝️ Adding all views under the ContainerView necessarily via the `self.bottomView`
 
 ```objc
-@interface ViewController () <UITextViewDelegate>
-@end
-
-@implementation ViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -128,8 +123,6 @@ pod 'ContainerView'
     
     [self.bottomView addSubview:label];
 }
-
-@end
 ```
 
 ### `ScrollView` in ContainerView
@@ -137,6 +130,11 @@ pod 'ContainerView'
 #### ☝️ For all `ScrollView`, add the `self` delegate. Otherwise, moving the container through scrolling will not work.
 
 ```objc
+@interface ViewController () <UITextViewDelegate>
+@end
+
+@implementation ViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -149,6 +147,8 @@ pod 'ContainerView'
     
     [self.containerView addSubview:textView];
 }
+
+@end
 ```
 
 ### `HeaderView` in ContainerView
