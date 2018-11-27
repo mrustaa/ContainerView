@@ -521,12 +521,12 @@
 }
 
 
-- (IBAction)addNewContainer {
-    ContainerView *container = [[ContainerView alloc] initWithFrame: CGRectMake( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT +50 )];
-    [container containerMove:ContainerMoveTypeHide animated:NO];
-    [self.view addSubview:container];
-    [container containerMove:ContainerMoveTypeBottom];
-}
+//- (IBAction)addNewContainer {
+//    ContainerView *container = [[ContainerView alloc] initWithFrame: CGRectMake( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT +50 )];
+//    [container containerMove:ContainerMoveTypeHide animated:NO];
+//    [self.view addSubview:container];
+//    [container containerMove:ContainerMoveTypeBottom];
+//}
 
 
 
