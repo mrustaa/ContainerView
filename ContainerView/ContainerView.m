@@ -199,10 +199,10 @@
     
     if(size.width < size.height) {
         self.portrait = YES;
-        self.frame = CGRectMake( 0 , self.frame.origin.y, size.width, size.height);
+        self.frame = CGRectMake( 0 , self.frame.origin.y, size.width, size.height +50);
     } else {
         self.portrait = NO;
-        self.frame = CGRectMake( (IS_IPHONE_X ? 44 :15), self.frame.origin.y, (size.height -20), size.height);
+        self.frame = CGRectMake( (IS_IPHONE_X ? 44 :15), self.frame.origin.y, (size.height -20), size.height +50);
     }
 }
 
@@ -242,7 +242,7 @@
 
 - (CGFloat)containerMiddle {
     if(!_containerMiddle) _containerMiddle = CUSTOM_MIDDLE;
-    return (self.frame.size.height *_containerMiddle);
+    return ((self.frame.size.height -50) *_containerMiddle);
 }
 
 /// Bottom
@@ -261,7 +261,7 @@
 
 - (CGFloat)containerBottom {
     if(!_containerBottom) _containerBottom = CUSTOM_BOTTOM;
-    return (self.frame.size.height -_containerBottom);
+    return ((self.frame.size.height -50) -_containerBottom);
 }
 
 
