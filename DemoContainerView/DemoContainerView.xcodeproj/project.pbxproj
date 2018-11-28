@@ -148,10 +148,10 @@
 		46C519222126264600A6F607 /* ContainerView */ = {
 			isa = PBXGroup;
 			children = (
-				46C519252126267B00A6F607 /* ContainerScrollDelegate.h */,
-				46C519272126267B00A6F607 /* ContainerScrollDelegate.m */,
 				46C519242126267B00A6F607 /* ContainerDefines.h */,
 				46C519282126267B00A6F607 /* ContainerTypes.h */,
+				46C519252126267B00A6F607 /* ContainerScrollDelegate.h */,
+				46C519272126267B00A6F607 /* ContainerScrollDelegate.m */,
 				4A94AE7921A3F6C90045A212 /* ContainerViewController.h */,
 				4A94AE7821A3F6C90045A212 /* ContainerViewController.m */,
 				46C519232126267A00A6F607 /* ContainerView.h */,

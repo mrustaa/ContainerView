@@ -62,8 +62,8 @@
 }
 
 + (CGFloat)headerSize {
-    CGFloat paddingWidht = (SCREEN_WIDTH < SCREEN_HEIGHT) ?0. :20.;
-    CGFloat widht = ((SCREEN_WIDTH < SCREEN_HEIGHT)?SCREEN_WIDTH:SCREEN_HEIGHT - paddingWidht);
+    CGFloat paddingWidht = SCREEN_PORTRAIT ?0. :20.;
+    CGFloat widht = (SCREEN_PORTRAIT ?SCREEN_WIDTH :SCREEN_HEIGHT - paddingWidht);
     return widht;
 }
 

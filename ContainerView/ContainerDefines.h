@@ -33,7 +33,7 @@
 #define SCREEN_MAX_LENGTH           (MAX(SCREEN_WIDTH, SCREEN_HEIGHT))
 #define SCREEN_MIN_LENGTH           (MIN(SCREEN_WIDTH, SCREEN_HEIGHT))
 
-
+#define SCREEN_PORTRAIT             (SCREEN_WIDTH < SCREEN_HEIGHT)
 
 /// DEVICE
 #define IS_IPAD                     (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)

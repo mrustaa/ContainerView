@@ -199,10 +199,10 @@
     
     if(size.width < size.height) {
         self.portrait = YES;
-        self.frame = CGRectMake( 0 , self.frame.origin.y, size.width, size.height +50);
+        self.frame = CGRectMake( 0 , self.frame.origin.y, size.width, size.height + 50);
     } else {
         self.portrait = NO;
-        self.frame = CGRectMake( (IS_IPHONE_X ? 44 :15), self.frame.origin.y, (size.height -20), size.height +50);
+        self.frame = CGRectMake( (IS_IPHONE_X ? 44 :15), self.frame.origin.y, (size.height - 20), size.height + 50);
     }
 }
 
@@ -242,7 +242,7 @@
 
 - (CGFloat)containerMiddle {
     if(!_containerMiddle) _containerMiddle = CUSTOM_MIDDLE;
-    return ((self.frame.size.height -50) *_containerMiddle);
+    return ((self.frame.size.height - 50) *_containerMiddle);
 }
 
 /// Bottom
@@ -261,7 +261,7 @@
 
 - (CGFloat)containerBottom {
     if(!_containerBottom) _containerBottom = CUSTOM_BOTTOM;
-    return ((self.frame.size.height -50) -_containerBottom);
+    return ((self.frame.size.height - 50) -_containerBottom);
 }
 
 
@@ -302,7 +302,7 @@
     if(hv) {
         if(_headerView) [self removeHeaderView];
         _headerView = hv;
-        CGFloat width = (SCREEN_WIDTH < SCREEN_HEIGHT)?SCREEN_WIDTH :(SCREEN_HEIGHT -20);
+        CGFloat width = SCREEN_PORTRAIT ?SCREEN_WIDTH :(SCREEN_HEIGHT - 20);
         _headerView.frame = CGRectMake( _headerView.frame.origin.x, _headerView.frame.origin.y, width, _headerView.frame.size.height );
         _headerView.autoresizingMask =
         (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
@@ -334,12 +334,12 @@
         CGFloat iphnXpaddingBottom  = IPHONE_X_PADDING_BOTTOM;
         CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
         
-        CGFloat width = (self.portrait) ?SCREEN_WIDTH :SCREEN_HEIGHT -20;
+        CGFloat width = (self.portrait) ?(SCREEN_WIDTH) :(SCREEN_HEIGHT - 20);
         CGFloat height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
         
         self.scrollView.frame = CGRectMake(self.scrollView.frame.origin.x, headerHeight, width, height);
         
-        self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, (self.portrait) ? iphnXpaddingBottom :0 , 0);
+        self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake( scrollIndicatorInsetsBottom, 0, (self.portrait) ? iphnXpaddingBottom : 0 , 0);
     }
 }
 

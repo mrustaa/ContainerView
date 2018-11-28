@@ -53,7 +53,7 @@
     
     if(!_imageView) {
         _imageView = [[UIImageView alloc]initWithFrame:FRAME];
-        _imageView.contentMode = (SCREEN_WIDTH < SCREEN_HEIGHT) ?UIViewContentModeScaleAspectFill :UIViewContentModeScaleAspectFit;
+        _imageView.contentMode = SCREEN_PORTRAIT ?UIViewContentModeScaleAspectFill :UIViewContentModeScaleAspectFit;
         _imageView.clipsToBounds = YES;
         _imageView.backgroundColor = GRAYLEVEL(210);
         _imageView.autoresizingMask =
@@ -213,8 +213,10 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    CGFloat indent =  (((SCREEN_WIDTH - ((SCREEN_WIDTH * .437333) * 2)) / 3) / 2);
-    CGFloat imageSize = (SCREEN_WIDTH * .437333);
+    CGFloat widht = SCREEN_PORTRAIT ?SCREEN_WIDTH :(SCREEN_HEIGHT - 20);
+    
+    CGFloat indent =  (((widht - ((widht * .437333) * 2)) / 3) / 2);
+    CGFloat imageSize = (widht * .437333);
     
     CGSize size = (CGSize) {
         ((imageSize + (indent * 2)) -1),
@@ -225,8 +227,10 @@
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+
+    CGFloat widht = SCREEN_PORTRAIT ?SCREEN_WIDTH :(SCREEN_HEIGHT - 20);
     
-    CGFloat indent = (((SCREEN_WIDTH - ((SCREEN_WIDTH * .437333) * 2)) / 3) / 2);
+    CGFloat indent = (((widht - ((widht * .437333) * 2)) / 3) / 2);
     return UIEdgeInsetsMake(indent,indent,0,indent);
 }
 
@@ -251,8 +255,10 @@
     cell.backgroundColor = CLR_COLOR;
     cell.clipsToBounds = YES;
     
-    CGFloat indent =  (((SCREEN_WIDTH - ((SCREEN_WIDTH * .437333) * 2)) / 3) / 2);
-    CGFloat imageSize = (SCREEN_WIDTH * .437333);
+    CGFloat widht = SCREEN_PORTRAIT ?SCREEN_WIDTH :(SCREEN_HEIGHT - 20);
+    
+    CGFloat indent =  (((widht - ((widht * .437333) * 2)) / 3) / 2);
+    CGFloat imageSize = (widht * .437333);
     
     CGSize cellSize = (CGSize)
     {
