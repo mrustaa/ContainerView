@@ -115,8 +115,7 @@ pod 'ContainerView'
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UILabel *
-    label = [[UILabel alloc]initWithFrame: CGRectMake(18, 26, 60, 30 )];
+    UILabel *label = [[UILabel alloc]initWithFrame: CGRectMake(18, 26, 60, 30 )];
     label.font = [UIFont boldSystemFontOfSize:24];
     label.textColor = [UIColor redColor];
     label.text = @"Label";
@@ -138,7 +137,7 @@ pod 'ContainerView'
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UITextView * textView = [[UITextView alloc]initWithFrame:self.view.bounds];
+    UITextView *textView = [[UITextView alloc]initWithFrame:self.view.bounds];
     textView.delegate = self;
     textView.returnKeyType = UIReturnKeyDone;
     textView.backgroundColor = [UIColor clearColor];
@@ -160,8 +159,7 @@ pod 'ContainerView'
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, height)];
     
-    UISearchBar *
-    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 4, self.view.frame.size.width, height -4)];
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 4, self.view.frame.size.width, height -4)];
     searchBar.barStyle = UIBarStyleDefault;
     searchBar.searchBarStyle = UISearchBarStyleMinimal;
     searchBar.placeholder = @"Search";
