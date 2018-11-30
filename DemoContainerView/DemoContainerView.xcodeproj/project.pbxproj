@@ -25,6 +25,11 @@
 		46C519292126267B00A6F607 /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519262126267B00A6F607 /* ContainerView.m */; };
 		46C5192A2126267B00A6F607 /* ContainerScrollDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519272126267B00A6F607 /* ContainerScrollDelegate.m */; };
 		4A0ACB2521AC517B00465221 /* DemoScrollViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A0ACB2421AC517B00465221 /* DemoScrollViews.m */; };
+		4A164E8E21B140EF0056DCF4 /* 2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4A164E8B21B140EF0056DCF4 /* 2.gif */; };
+		4A164E8F21B140EF0056DCF4 /* 3.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4A164E8C21B140EF0056DCF4 /* 3.gif */; };
+		4A164E9021B140EF0056DCF4 /* 1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 4A164E8D21B140EF0056DCF4 /* 1.gif */; };
+		4A164E9221B1418B0056DCF4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4A164E9121B1418B0056DCF4 /* README.md */; };
+		4A164E9421B1418F0056DCF4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 4A164E9321B1418F0056DCF4 /* LICENSE */; };
 		4A94AE7A21A3F6C90045A212 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A94AE7821A3F6C90045A212 /* ContainerViewController.m */; };
 		4A9527E520F8EB4D000DFDFB /* DemoCollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A9527E320F8EB4D000DFDFB /* DemoCollectionDataSource.m */; };
 /* End PBXBuildFile section */
@@ -64,6 +69,11 @@
 		46C519282126267B00A6F607 /* ContainerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerTypes.h; sourceTree = "<group>"; };
 		4A0ACB2321AC517B00465221 /* DemoScrollViews.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoScrollViews.h; sourceTree = "<group>"; };
 		4A0ACB2421AC517B00465221 /* DemoScrollViews.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoScrollViews.m; sourceTree = "<group>"; };
+		4A164E8B21B140EF0056DCF4 /* 2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 2.gif; sourceTree = "<group>"; };
+		4A164E8C21B140EF0056DCF4 /* 3.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 3.gif; sourceTree = "<group>"; };
+		4A164E8D21B140EF0056DCF4 /* 1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 1.gif; sourceTree = "<group>"; };
+		4A164E9121B1418B0056DCF4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		4A164E9321B1418F0056DCF4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		4A94AE7821A3F6C90045A212 /* ContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
 		4A94AE7921A3F6C90045A212 /* ContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
 		4A9527E320F8EB4D000DFDFB /* DemoCollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoCollectionDataSource.m; sourceTree = "<group>"; };
@@ -115,6 +125,10 @@
 		4689A7AB20EC081A00BC7C8A = {
 			isa = PBXGroup;
 			children = (
+				4A164E9121B1418B0056DCF4 /* README.md */,
+				4A164E9321B1418F0056DCF4 /* LICENSE */,
+				4A164E8A21B140D20056DCF4 /* Assets */,
+				46C519222126264600A6F607 /* ContainerView */,
 				4689A7B620EC081A00BC7C8A /* DemoContainerView */,
 				4689A7B520EC081A00BC7C8A /* Products */,
 			);
@@ -133,7 +147,6 @@
 			children = (
 				4689A7B720EC081A00BC7C8A /* AppDelegate.h */,
 				4689A7B820EC081A00BC7C8A /* AppDelegate.m */,
-				46C519222126264600A6F607 /* ContainerView */,
 				46E356C121261C2400850BD8 /* Demo */,
 				46EA455920FD258F00C0FAE0 /* Resources */,
 				4689A7BD20EC081A00BC7C8A /* Main.storyboard */,
@@ -158,7 +171,7 @@
 				46C519262126267B00A6F607 /* ContainerView.m */,
 			);
 			name = ContainerView;
-			path = ../../ContainerView;
+			path = ../ContainerView;
 			sourceTree = "<group>";
 		};
 		46E356C121261C2400850BD8 /* Demo */ = {
@@ -212,6 +225,17 @@
 				46A1F41E21A5ED8F00541435 /* DemoCollectionCell.m */,
 			);
 			path = DemoCells;
+			sourceTree = "<group>";
+		};
+		4A164E8A21B140D20056DCF4 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				4A164E8D21B140EF0056DCF4 /* 1.gif */,
+				4A164E8B21B140EF0056DCF4 /* 2.gif */,
+				4A164E8C21B140EF0056DCF4 /* 3.gif */,
+			);
+			name = Assets;
+			path = ../Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,7 +298,12 @@
 			files = (
 				4689A7C420EC081C00BC7C8A /* LaunchScreen.storyboard in Resources */,
 				46343B8120F28E4B00EF63F7 /* ProximaNova-Regular.otf in Resources */,
+				4A164E9021B140EF0056DCF4 /* 1.gif in Resources */,
 				4689A7C120EC081C00BC7C8A /* Assets.xcassets in Resources */,
+				4A164E9421B1418F0056DCF4 /* LICENSE in Resources */,
+				4A164E8F21B140EF0056DCF4 /* 3.gif in Resources */,
+				4A164E8E21B140EF0056DCF4 /* 2.gif in Resources */,
+				4A164E9221B1418B0056DCF4 /* README.md in Resources */,
 				46343B8020F28E4B00EF63F7 /* ProximaNova-Extrabld.otf in Resources */,
 				4689A7BF20EC081A00BC7C8A /* Main.storyboard in Resources */,
 			);
