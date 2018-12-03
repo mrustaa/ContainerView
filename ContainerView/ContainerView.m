@@ -328,11 +328,20 @@
 /// Calculation ScrollView
 - (void)calculationScrollViewHeight:(CGFloat)containerPositionBottom {
     if(self.scrollView) {
-        CGFloat headerHeight = (_headerView ?_headerView.frame.size.height :0);
+        CGFloat headerHeight = 0;
         CGFloat top = self.containerTop;
         CGFloat iphnXpaddingTop     = IPHONE_X_PADDING_TOP;
         CGFloat iphnXpaddingBottom  = IPHONE_X_PADDING_BOTTOM;
-        CGFloat scrollIndicatorInsetsBottom = (!_headerView) ? (0.66 * self.containerCornerRadius) :0;
+        CGFloat scrollIndicatorInsetsBottom = 0;
+        
+        if(_headerView) {
+            headerHeight = _headerView.frame.size.height;
+            if(_headerView.frame.size.height < (0.66 * self.containerCornerRadius)) {
+                scrollIndicatorInsetsBottom = ((0.66 * self.containerCornerRadius) - _headerView.frame.size.height);
+            }
+        } else {
+            scrollIndicatorInsetsBottom = (0.66 * self.containerCornerRadius);
+        }
         
         CGFloat width = (self.portrait) ?(SCREEN_WIDTH) :(SCREEN_HEIGHT - 20);
         CGFloat height = (SCREEN_HEIGHT + containerPositionBottom - (top + headerHeight + iphnXpaddingTop));
@@ -361,7 +370,7 @@
             
             CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
             
-            if( (self.scrollView.contentOffset.y + self.scrollView.frame.size.height + containerPositionBottom) < self.scrollView.contentSize.height) {
+            if( (self.scrollView.contentOffset.y + self.scrollView.frame.size.height + containerPositionBottom) < (int)self.scrollView.contentSize.height) {
                 [self calculationScrollViewHeight:(_transform.ty + 5)];
             }
             
