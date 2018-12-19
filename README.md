@@ -5,9 +5,9 @@ ContainerView is designed to add a cool swim from the bottom to the animation wi
 The idea is taken from the application: https://www.apple.com/ios/maps/
 
 ## Preview
-![image](https://github.com/mrustaa/ContainerView/blob/master/Assets/1.gif)
-![image](https://github.com/mrustaa/ContainerView/blob/master/Assets/2.gif)
-![image(Landscape)](https://github.com/mrustaa/ContainerView/blob/master/Assets/3.gif)
+![image](https://github.com/mrustaa/gif_presentation/blob/master/Assets/1.gif)
+![image](https://github.com/mrustaa/gif_presentation/blob/master/Assets/2.gif)
+![image(Landscape)](https://github.com/mrustaa/gif_presentation/blob/master/Assets/3.gif)
 
 <!-- TOC -->
 
