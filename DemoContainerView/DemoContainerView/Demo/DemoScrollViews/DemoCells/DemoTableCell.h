@@ -15,5 +15,7 @@
 @property (strong, nonatomic) UIView *separatorLine;
 @property (strong, nonatomic) UIImageView *imageAvatar;
 
+@property (strong, nonatomic) UITapGestureRecognizer *tapGesture;
+
 @end
 

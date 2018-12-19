@@ -79,7 +79,7 @@
     [self.containerView addSubview:_tableView];
     
     self.containerCornerRadius = 15;
-    
+    self.containerBottomButtonToMoveTop = YES;
     // [self containerMove:ContainerMoveTypeTop animated:NO];
     
     self.delegate = self;
@@ -200,7 +200,21 @@
     cell.labelSubTitle.text = @"Subtitle";
     cell.labelTitle.textColor = (self.containerStyle == ContainerStyleDark) ? WHITE_COLOR : BLACK_COLOR;
     
+    cell.tag = indexPath.row;
+    cell.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTableCellTap:)];
+    [cell addGestureRecognizer:cell.tapGesture];
+    
     return cell;
+}
+
+- (void)handleTableCellTap:(UIGestureRecognizer *)gestureRecognizer {
+    NSInteger i = gestureRecognizer.view.tag;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+    
+    [_tableView selectRowAtIndexPath:indexPath
+                            animated:YES
+                      scrollPosition:UITableViewScrollPositionNone];
+    [self tableView:_tableView didSelectRowAtIndexPath:indexPath];
 }
 
 
@@ -290,7 +304,19 @@
     cell.label.text = (indexPath.row) ? (indexPath.row == 1) ? @"mapView" : SFMT(@"photo %d",(int)indexPath.row) : @"settings" ;
     cell.label.textColor = (self.containerStyle == ContainerStyleDark) ? WHITE_COLOR : BLACK_COLOR;
     
+    cell.tag = indexPath.row;
+    cell.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleColletionCellTap:)];
+    [cell addGestureRecognizer:cell.tapGesture];
+    
     return cell;
+}
+
+- (void)handleColletionCellTap:(UIGestureRecognizer *)gestureRecognizer {
+    NSInteger i = gestureRecognizer.view.tag;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+    
+    [_collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+    [self collectionView:_collectionView didSelectItemAtIndexPath:indexPath];
 }
 
 #pragma mark - TableView & Collection Select Cell

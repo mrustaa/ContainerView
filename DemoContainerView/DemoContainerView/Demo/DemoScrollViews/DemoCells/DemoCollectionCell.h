@@ -14,4 +14,6 @@
 @property (strong, nonatomic) UIView *view;
 @property (strong, nonatomic) UILabel *label;
 
+@property (strong, nonatomic) UITapGestureRecognizer *tapGesture;
+
 @end

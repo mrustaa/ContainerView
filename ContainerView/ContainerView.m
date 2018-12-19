@@ -11,6 +11,7 @@
     CGFloat _savePositionContainer;
     CGFloat _containerCornerRadius;
     BOOL _containerAllowMiddlePosition;
+    BOOL _containerBottomButtonToMoveTop;
     BOOL _containerShadow;
     UIView * _headerView;
 }
@@ -113,19 +114,22 @@
     }
     
     if([subview isKindOfClass:[UIScrollView class]]) {
-        if(self.containerBottomButtonToMoveTop) {
-            self.containerBottomButtonToMoveTop = NO;
+        
+        if(_bottomButtonToMoveTop) {
+            [_bottomButtonToMoveTop removeFromSuperview];
+            _bottomButtonToMoveTop = nil;
         }
         
-        [super addSubview:self.bottomButtonToMoveTop];
+        if(_containerBottomButtonToMoveTop) {
+            [self addSubview:self.bottomButtonToMoveTop];
+        }
         
         self.scrollView = (UIScrollView *)subview;
         if (@available(iOS 11.0, *)) {
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         
-        
-        self.scrollView.userInteractionEnabled = (self.containerPosition == ContainerMoveTypeTop);
+        self.scrollView.scrollEnabled = (self.containerPosition == ContainerMoveTypeTop);
         
         self.scrollView.indicatorStyle =
         (self.containerStyle == ContainerStyleDark) ? UIScrollViewIndicatorStyleWhite :UIScrollViewIndicatorStyleDefault;
@@ -135,6 +139,7 @@
 }
 
 - (void)setContainerBottomButtonToMoveTop:(BOOL)newValue {
+    _containerBottomButtonToMoveTop = newValue;
     if(newValue) {
         [self addSubview: self.bottomButtonToMoveTop];
     } else if (!newValue && _bottomButtonToMoveTop) {
@@ -144,7 +149,7 @@
 }
 
 - (BOOL)containerBottomButtonToMoveTop {
-    return _bottomButtonToMoveTop != nil;
+    return _containerBottomButtonToMoveTop;
 }
 
 - (void)setContainerCornerRadius:(CGFloat)containerCornerRadius {
@@ -512,8 +517,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 - (void)containerMovePosition:(CGFloat)position moveType:(ContainerMoveType)moveType animated:(BOOL)animated completion:(void (^)(void))completion {
     if(_bottomButtonToMoveTop) self.bottomButtonToMoveTop.hidden = (moveType == ContainerMoveTypeTop) ? YES : NO;
     
-    
-    self.scrollView.userInteractionEnabled = (moveType == ContainerMoveTypeTop);
+    self.scrollView.scrollEnabled = (moveType == ContainerMoveTypeTop);
     
     CGFloat containerPositionBottom = (self.containerPosition == ContainerMoveTypeBottom) ?(self.containerTop + 5) :0;
     
