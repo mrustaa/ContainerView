@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UITextView * textView = [DemoScrollViews createTextViewWithProtocols:self];
+    UITextView *textView = [DemoScrollViews createTextViewWithProtocols:self];
     [self.containerView addSubview:textView];
     
 }

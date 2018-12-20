@@ -105,6 +105,10 @@
 
 - (void)changeContainerMove:(ContainerMoveType)containerMove containerY:(CGFloat)containerY animated:(BOOL)animated {
     
+    if(containerMove == ContainerMoveTypeBottom) {
+        [self.view endEditing:YES];
+    }
+    
     if(animated) {
         ANIMATION_SPRING(.45,^(void){
             [self changeScalesImageAndShadowLevel:containerY];
@@ -277,7 +281,6 @@
 #pragma mark - Change ShadowLevel
 
 - (void)changeScalesImageAndShadowLevel:(CGFloat)containerFrameY {
-    [self.view endEditing:YES];
     
     CGFloat selfCenter = self.containerView.containerMiddle;
     
@@ -320,8 +323,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat velocityInViewY    = [scrollView.panGestureRecognizer velocityInView:   WINDOW].y;
-    CGFloat translationInViewY = [scrollView.panGestureRecognizer translationInView:WINDOW].y;
+    CGFloat velocityInViewY    = [scrollView.panGestureRecognizer velocityInView:   self.view].y;
+    CGFloat translationInViewY = [scrollView.panGestureRecognizer translationInView:self.view].y;
+    
+    if(scrollView.panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
+        [self.view endEditing:YES];
+    }
     
     if((scrollView.panGestureRecognizer.state) && (scrollView.contentOffset.y <= 0)) {
         scrollView.showsVerticalScrollIndicator = NO;

@@ -280,8 +280,7 @@
         (imageSize +  indent + 36)
     };
     
-    if(!cell.imageView )
-    {
+    if(!cell.imageView ) {
         cell.imageView = [UIImageView new];
         cell.imageView.clipsToBounds = 1;
         cell.imageView.backgroundColor = CLR_COLOR;
@@ -545,6 +544,7 @@
         case 2: {
             _textView = [DemoScrollViews createTextViewWithProtocols:self];
             _textView.textColor = (self.containerStyle == ContainerStyleDark) ?WHITE_COLOR :BLACK_COLOR;
+            _textView.delegate = self;
             [self.containerView addSubview:_textView];
         } break;
         default: break;
@@ -552,7 +552,11 @@
     
 }
 
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    [self containerMove:ContainerMoveTypeTop animated:YES];
+}
 
+// TODO: add New Container
 //- (IBAction)addNewContainer {
 //    ContainerView *container = [[ContainerView alloc] initWithFrame: CGRectMake( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT +50 )];
 //    [container containerMove:ContainerMoveTypeHide animated:NO];
