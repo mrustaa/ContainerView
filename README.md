@@ -30,7 +30,7 @@ The idea is taken from the application: https://www.apple.com/ios/maps/
 
 ### CocoaPods
 
-FloatingPanel is available through [CocoaPods](https://cocoapods.org). To install
+ContainerView is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
@@ -189,4 +189,4 @@ pod 'ContainerView'
 
 ## License
 
-FloatingPanel is available under the MIT license. See the LICENSE file for more info.
+ContainerView is available under the MIT license. See the LICENSE file for more info.
