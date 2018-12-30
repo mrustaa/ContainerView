@@ -247,7 +247,11 @@
 
 - (CGFloat)containerMiddle {
     if(!_containerMiddle) _containerMiddle = CUSTOM_MIDDLE;
-    return ((self.frame.size.height - 50) *_containerMiddle);
+    
+    CGFloat bottom = SCREEN_HEIGHT - _containerBottom;
+    CGFloat middle = (((bottom - _containerTop) * _containerMiddle) + _containerTop);
+    
+    return middle;// ((self.frame.size.height - 50) *_containerMiddle);
 }
 
 /// Bottom
