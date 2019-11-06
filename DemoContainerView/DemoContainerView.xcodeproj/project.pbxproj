@@ -24,6 +24,14 @@
 		46A1F41F21A5ED8F00541435 /* DemoCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 46A1F41E21A5ED8F00541435 /* DemoCollectionCell.m */; };
 		46C519292126267B00A6F607 /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519262126267B00A6F607 /* ContainerView.m */; };
 		46C5192A2126267B00A6F607 /* ContainerScrollDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46C519272126267B00A6F607 /* ContainerScrollDelegate.m */; };
+		46D4AB4023730E1C005D519C /* AppCenterData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D4AB3823730E1C005D519C /* AppCenterData.framework */; };
+		46D4AB4123730E1C005D519C /* AppCenterCrashes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D4AB3923730E1C005D519C /* AppCenterCrashes.framework */; };
+		46D4AB4223730E1C005D519C /* AppCenterPush.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D4AB3A23730E1C005D519C /* AppCenterPush.framework */; };
+		46D4AB4323730E1C005D519C /* AppCenterAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D4AB3B23730E1C005D519C /* AppCenterAuth.framework */; };
+		46D4AB4423730E1C005D519C /* AppCenterDistributeResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 46D4AB3C23730E1C005D519C /* AppCenterDistributeResources.bundle */; };
+		46D4AB4523730E1C005D519C /* AppCenterDistribute.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D4AB3D23730E1C005D519C /* AppCenterDistribute.framework */; };
+		46D4AB4623730E1C005D519C /* AppCenterAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D4AB3E23730E1C005D519C /* AppCenterAnalytics.framework */; };
+		46D4AB4723730E1C005D519C /* AppCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D4AB3F23730E1C005D519C /* AppCenter.framework */; };
 		4A0ACB2521AC517B00465221 /* DemoScrollViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A0ACB2421AC517B00465221 /* DemoScrollViews.m */; };
 		4A164E9221B1418B0056DCF4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4A164E9121B1418B0056DCF4 /* README.md */; };
 		4A164E9421B1418F0056DCF4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 4A164E9321B1418F0056DCF4 /* LICENSE */; };
@@ -64,6 +72,14 @@
 		46C519262126267B00A6F607 /* ContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerView.m; sourceTree = "<group>"; };
 		46C519272126267B00A6F607 /* ContainerScrollDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerScrollDelegate.m; sourceTree = "<group>"; };
 		46C519282126267B00A6F607 /* ContainerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerTypes.h; sourceTree = "<group>"; };
+		46D4AB3823730E1C005D519C /* AppCenterData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCenterData.framework; sourceTree = "<group>"; };
+		46D4AB3923730E1C005D519C /* AppCenterCrashes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCenterCrashes.framework; sourceTree = "<group>"; };
+		46D4AB3A23730E1C005D519C /* AppCenterPush.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCenterPush.framework; sourceTree = "<group>"; };
+		46D4AB3B23730E1C005D519C /* AppCenterAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCenterAuth.framework; sourceTree = "<group>"; };
+		46D4AB3C23730E1C005D519C /* AppCenterDistributeResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AppCenterDistributeResources.bundle; sourceTree = "<group>"; };
+		46D4AB3D23730E1C005D519C /* AppCenterDistribute.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCenterDistribute.framework; sourceTree = "<group>"; };
+		46D4AB3E23730E1C005D519C /* AppCenterAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCenterAnalytics.framework; sourceTree = "<group>"; };
+		46D4AB3F23730E1C005D519C /* AppCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AppCenter.framework; sourceTree = "<group>"; };
 		4A0ACB2321AC517B00465221 /* DemoScrollViews.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoScrollViews.h; sourceTree = "<group>"; };
 		4A0ACB2421AC517B00465221 /* DemoScrollViews.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoScrollViews.m; sourceTree = "<group>"; };
 		4A164E9121B1418B0056DCF4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -79,6 +95,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46D4AB4223730E1C005D519C /* AppCenterPush.framework in Frameworks */,
+				46D4AB4523730E1C005D519C /* AppCenterDistribute.framework in Frameworks */,
+				46D4AB4023730E1C005D519C /* AppCenterData.framework in Frameworks */,
+				46D4AB4123730E1C005D519C /* AppCenterCrashes.framework in Frameworks */,
+				46D4AB4723730E1C005D519C /* AppCenter.framework in Frameworks */,
+				46D4AB4623730E1C005D519C /* AppCenterAnalytics.framework in Frameworks */,
+				46D4AB4323730E1C005D519C /* AppCenterAuth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +144,7 @@
 			children = (
 				4A164E9121B1418B0056DCF4 /* README.md */,
 				4A164E9321B1418F0056DCF4 /* LICENSE */,
+				46D4AB3623730E07005D519C /* Frameworks */,
 				46C519222126264600A6F607 /* ContainerView */,
 				4689A7B620EC081A00BC7C8A /* DemoContainerView */,
 				4689A7B520EC081A00BC7C8A /* Products */,
@@ -165,6 +189,29 @@
 			);
 			name = ContainerView;
 			path = ../ContainerView;
+			sourceTree = "<group>";
+		};
+		46D4AB3623730E07005D519C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				46D4AB3723730E1C005D519C /* AppCenter */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
+		46D4AB3723730E1C005D519C /* AppCenter */ = {
+			isa = PBXGroup;
+			children = (
+				46D4AB3823730E1C005D519C /* AppCenterData.framework */,
+				46D4AB3923730E1C005D519C /* AppCenterCrashes.framework */,
+				46D4AB3A23730E1C005D519C /* AppCenterPush.framework */,
+				46D4AB3B23730E1C005D519C /* AppCenterAuth.framework */,
+				46D4AB3C23730E1C005D519C /* AppCenterDistributeResources.bundle */,
+				46D4AB3D23730E1C005D519C /* AppCenterDistribute.framework */,
+				46D4AB3E23730E1C005D519C /* AppCenterAnalytics.framework */,
+				46D4AB3F23730E1C005D519C /* AppCenter.framework */,
+			);
+			path = AppCenter;
 			sourceTree = "<group>";
 		};
 		46E356C121261C2400850BD8 /* Demo */ = {
@@ -285,6 +332,7 @@
 				4A164E9221B1418B0056DCF4 /* README.md in Resources */,
 				46343B8020F28E4B00EF63F7 /* ProximaNova-Extrabld.otf in Resources */,
 				4689A7BF20EC081A00BC7C8A /* Main.storyboard in Resources */,
+				46D4AB4423730E1C005D519C /* AppCenterDistributeResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,7 +499,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y7546NLJW9;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/AppCenter",
+				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "$(SRCROOT)/DemoContainerView/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -468,7 +519,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y7546NLJW9;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks/AppCenter",
+				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "$(SRCROOT)/DemoContainerView/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
