@@ -2,7 +2,9 @@
 
 ContainerView is designed to add a cool swim from the bottom to the animation with the effect of scale, controlled by the help of a gesture, scrollView also takes control. 
 
-The idea is taken from the application: https://www.apple.com/ios/maps/
+The idea is taken from the application [Apple Maps](https://www.apple.com/ios/maps/)
+
+Also, ☝️ See the new version `Swift` [ContainerController](https://github.com/mrustaa/ContainerController/) 
 
 ## Preview
 ![image](https://github.com/mrustaa/gif_presentation/blob/master/Assets/1.gif)
