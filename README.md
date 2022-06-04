@@ -190,6 +190,10 @@ pod 'ContainerView'
 @end
 ```
 
+## Author
+
+<motionrustam@gmail.com> 📩| [mrustaa](https://github.com/mrustaa/) NOVEMBER 2018 
+
 ## License
 
 ContainerView is available under the MIT license. See the LICENSE file for more info.
